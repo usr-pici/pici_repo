@@ -1,0 +1,123 @@
+<div class="container">
+
+    <form id="formModalAddQuestion" method="POST">
+		
+        <input type="hidden" name="reg[idPregunta]" id="idPregunta">
+        <input type="hidden" name="reg[idFormulario]" value="<?php echo $idFormulario ?>">
+
+        <div class="row mt-3">
+            <h5 class="required text-end">* Campos obligatorios</h5>
+        </div>
+
+        <div class="mb-3 row">
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="col-md-12 col-12 mb-2">
+                    <h6 class="fw-bold">Posici&oacute;n:&nbsp;<span class="required">*</span></h6>
+                    <select id="consecutivo" name="reg[consecutivo]" class="form-select form-control form-control-lg">
+                        <?php for($i=1; $i<=$posicion; $i++): ?>
+                            <?php if($i == $question['consecutivo']){ ?>
+                                <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
+                            <?php } else { ?>
+                                <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <?php } ?>
+                        <?php endfor; ?>
+                    </select> 
+                </div>
+                <div class="col-md-12 col-12 mb-2">
+                    <h6 class="fw-bold">Pregunta:&nbsp;<span class="required">*</span></h6>
+                    <input type="text" class="form-control" name="reg[etiqueta]" id="txtEtiqueta" placeholder="Etiqueta" value="<?php echo $question['etiqueta'] ?>">
+                </div> 
+                <div class="col-md-12 col-12 mb-2">
+                    <h6 class="fw-bold">Tipo de campo:&nbsp;<span class="required">*</span></h6>
+                    <select id="idTipoCampo" name="reg[idTipoCampo]" class="form-select form-control form-control-lg" onChange="tipoCampoOnChange(this)">
+                        <?php echo $listaTipoCampo ?>
+                    </select> 
+                </div> 
+                <div class="col-md-12 col-12 mb-2">
+                    <h6 class="fw-bold">Obligatorio:&nbsp;<span class="required">*</span></h6>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="reg[requerido]" id="radSiM" value="1" <?php echo !empty($question['activo']) ? ($question['activo'] == '1' ? 'checked' : '') : ''; ?>>
+                        <label class="form-check-label" for="radSiM">Si</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="reg[requerido]" id="radNoM" value="0" <?php echo !empty($question['activo']) ? ($question['activo'] == '0' ? 'checked' : '') : ''; ?>>
+                        <label class="form-check-label" for="radNoM">No</label>
+                    </div>
+                </div>
+                <div class="col-md-12 col-12 mb-2">
+                    <h6 class="fw-bold">Visible para rol(es):</h6>
+                    <div class="custom_select">
+                        <select id="idRol" name="reg[idRol][]" class="form-control selectpicker" title=" - Elegir - " multiple data-actions-box="true">
+                            <?php echo !empty($cat_rol) ? $cat_rol : ''; ?>
+                        </select>
+                    </div>
+                </div>                                    
+            </div> 
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div id="divFormato" class="col-md-12 col-12 mt-1 mb-2" style="display: none;">
+                    <h6 class="form-label fw-bold">Formato:</h6>
+                    <select id="formato" name="reg[formato]" class="form-select">
+                        <option value="dd/mm/aaaa">dd/mm/aaaa</option>
+                        <option value="dd/mm/aaaa">dd-mm-aaaa</option>
+                    </select> 
+                </div>
+                <div id="divLong" class="col-md-12 col-12 mb-2" style="display: none;">
+                    <div class="form-group">
+                        <h6 class="fw-bold">Longitud de campo:</h6>
+                        <input type="text" class="form-control" name="reg[longitud]" id="txtLongitud" placeholder="Longitud" > 
+                    </div>                  
+                </div>
+                <div id="divDependencia" class="col-md-12 col-12 mb-2" style="display: none;">
+                    <h6 class="fw-bold">Dependencia - Pregunta:</h6>
+                    <select id="idPreguntaDependencia" name="reg[idPreguntaDependencia]" class="form-select form-control form-control-lg">
+                        
+                    </select> 
+                </div> 
+                <div id="divDependenciaOpcion" class="col-md-12 col-12 mb-2" style="display: none;">
+                    <h6 class="fw-bold">Depedencia - Opci&oacute;n:</h6>
+                    <select id="idPreguntaOpcion" name="reg[idPreguntaOpcion]" class="form-select form-control form-control-lg">
+                        
+                    </select> 
+                </div> 
+                
+            </div>
+        </div>
+
+        <div id="divOpciones" class="row mb-3" style="display: none;">
+            <div class="col-sm-2">
+                <select id="posicion" name="reg[posicion]" class="form-select form-control form-control-lg">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    
+                </select> 
+            </div>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="reg[opcion]" id="txtOpcion" placeholder="Opci&oacute;n" >
+            </div>
+            <div class="col-sm-4">
+                <button onclick="saveOptionQuestion()" type="button" class="btn btn-success">Agregar opci&oacute;n</button>
+            </div>
+        </div>
+
+        <div id="divTblOpciones" class="row text-center" style="display: none;">
+            <div class="col-md-12 col-12">
+                <table class="table table-bordered" id="tblOptions">
+                    <thead>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Opci&oacute;n</th>
+                        <th class="text-center">Acci&oacute;n</th>
+                    </thead>
+                    <tbody>
+       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </form>
+</div>

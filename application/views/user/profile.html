@@ -1,0 +1,145 @@
+<!-- START SECTION BREADCRUMB -->
+<div class="breadcrumb_section bg_gray page-title-mini">
+    <div class="container"><!-- STRART CONTAINER -->
+        <div class="row align-items-center">
+        	<div class="col-md-6">
+                <div class="page-title">
+            		<h1>Actualizar usuario</h1>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <ol class="breadcrumb justify-content-md-end">
+                    <li class="breadcrumb-item"><a href="<?php echo site_url(); ?>">Inicio</a></li>
+                    <!--<li class="breadcrumb-item"><a href="#">Pages</a></li>-->
+                    <li class="breadcrumb-item active">Actualizar usuario</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- END CONTAINER-->
+</div>
+<!-- END SECTION BREADCRUMB -->
+
+<!-- START MAIN CONTENT -->
+<div class="main_content">
+
+<!-- START LOGIN SECTION -->
+<div class="login_register_wrap">
+    <div class="container">
+
+        <form id="formUpdatePerfil" method="post" class="mt-3">
+            <input type="hidden" name="medioContactoCel[idContacto]" value="<?php echo $idContactoCelular; ?>">
+            <input type="hidden" name="medioContactoCel[claveMedioContacto]" value="CEL">
+            <input type="hidden" name="medioContactoCel[etiqueta]" value="celular">
+            <input type="hidden" name="medioContactoCel[prioridad]" value="2">
+            <input type="hidden" name="idPersona" value="<?php echo $persona['idPersona'] ?>">
+			<input id="tokenRecaptcha" type="hidden" value="" name="token" />
+
+            <div class="row justify-content-center mb-2">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center mt-3">
+                    <img style="width: 180px !important; height: 180px !important;" id="img" class="img-thumbnail mb-2" src="<?php echo !empty($file) ? $file['file'] : ''?>" alt="" /> 
+                    <div class="col-md-8 offset-md-2 text-center">
+                        <input accept="image/*" type='file' id="imgInput" name="foto" class="form-control form-control-sm" />  
+                    </div>
+                    <div id="reempImg" class="text-center mt-3 mb-2">
+                        <input class="form-check-input" type="checkbox" id="changeImg">
+                        <label class="form-check-label" for="changeImg"> Reemplazar imagen</label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <div class="col-md-12 mb-2">
+                        <h5 class="required text-end">* Campos obligatorios</h5>
+                    </div>
+                    <div class="col-md-12 mb-2">
+                        <h6 class="fw-bold">Nombre(s):&nbsp;<span class="required">*</span></h6>
+                        <input type="text" class="form-control" id="nombre" placeholder="Nombre" name="persona[nombre]" value="<?php echo $persona['nombre']; ?>">
+                    </div>
+                    <div class="col-md-12 mb-2">
+                        <h6 class="fw-bold">Apellido(s):&nbsp;<span class="required">*</span></h6>
+                        <input type="text" class="form-control" id="apellidos" placeholder="Apellidos" name="persona[apellidos]" value="<?php echo $persona['apellidos']; ?>">
+                    </div>
+                    <div class="col-md-12 mb-2">
+                        <h6 class="fw-bold">Fecha de nacimiento:&nbsp;<span class="required">*</span></h6>
+                        <input type="text" id="txtFechaNacimiento" class="form-control fecha" name="persona[fechaNacimiento]" placeholder="Ingresa fecha de nacimiento"  value="<?php echo $fechaNac; ?>" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row justify-content-center mb-2">
+                <div class="col-md-6 col-12  mb-2">
+                    <label for="last_name2">M&aacute;ximo grado de estudios:</label>
+                    <div class="custom_select">
+                        <select class="form-control" name="persona[idGradoEstudio]" id="idGradoEstudio">
+                            <?php echo $cat_gradoestudio; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12">
+                    <label for="last_name2">Ocupaci&oacute;n:</label>
+                    <div class="custom_select">
+                        <select class="form-control" name="persona[idOcupacion]" id="idOcupacion">
+                            <?php echo $cat_ocupacion; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center mb-2">
+                <div class="col-md-6 col-12 mb-2">
+                    <h6 class="fw-bold">C&eacute;lular:&nbsp;<span class="required">*</span></h6>
+                    <input type="text" class="form-control" name="medioContactoCel[celular]" placeholder="C&eacute;lular" value="<?php echo !empty($celular['valor']) ? $celular['valor'] : ''; ?>">
+                </div>
+                <div class="col-md-6 col-12 mb-2">
+                    <h6 class="fw-bold">Correo electr&oacute;nico:&nbsp;<span class="required">*</span></h6>
+                    <input disabled type="text" class="form-control" name="medioContactoMail[email]" placeholder="Ejemplo: usuario@mail.com" value="<?php echo $email['valor']; ?>">
+                </div>
+            </div>
+
+            <?php if($tipo == 'APP_WEB' || $tipo == 'INVITADO' || $tipo == 'APP_ADM') { ?>
+            <div class="row mb-2">
+                <div class="col-md-6 mb-3">
+                    <label for="changePwd">Cambiar contrase&ntilde;a:</label>
+                    <input type="checkbox" style="width: 5%;" id="changePwd" value="1" />
+                </div>
+                <div id="divActual" class="col-md-6 mb-3 d-none">
+                    <h6 class="fw-bold">Contraseña Actual <span class="required">*</span></h6>
+                    <input id="inputPasswordActual" class="form-control" name="usuario[passwordActual]" type="password" placeholder="Contraseña Actual">
+                </div>
+            </div>
+            <?php } ?>
+
+            <div class="row justify-content-center mb-2">
+                <div id="divNueva" class="col-md-6 col-12 d-none">
+                    <h6 class="fw-bold">Contraseña:&nbsp;<span class="required">*</span></h6>
+                    <input id="inputPassword" class="form-control" type="password" name="usuario[password]" placeholder="Contraseña">
+                </div>                
+                <div id="divReglas" class="col-md-6 col-12 d-none mt-3">
+                  <div id="Numbers" class="glyphicon glyphicon-remove"><i id="imgNumbers" class="fas fa-times"></i> Compuesta &uacute;nicamente de letras y n&uacute;meros</div>
+                  <div id="UpperCase" class="glyphicon glyphicon-remove"><i id="imgUpperCase" class="fas fa-times"></i> Al menos una letra mayuscula</div>
+                  <div id="Length" class="glyphicon glyphicon-remove"><i id="imgLength" class="fas fa-times"></i> Entre 8 y 20 caracteres</div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center mb-3">
+                <div id="divConfirmar" class="col-md-6 col-12 d-none">
+                    <h6 class="fw-bold">Confirmar contraseña:&nbsp;<span class="required">*</span></h6>
+                    <input id="inputPassword2" class="form-control" type="password" name="inputPassword2" placeholder="Confirmar Contraseña">
+                </div>
+                <div class="col-md-6 col-12">
+          
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
+                <button id="btnActualizarUsuario" type="button" class="btn btn-success validEdit" name="register">Actualizar</button>
+                <a style="margin-left: 0px;" href="<?php echo site_url(); ?>" id="btnRegresarInicio" class="btn btn-secondary">Regresar</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+<!-- END LOGIN SECTION -->
+
+<script>
+    let bandera = '<?php echo $bandera; ?>';
+    const keySiteWeb = '<?php echo $keySiteWeb; ?>';
+</script>

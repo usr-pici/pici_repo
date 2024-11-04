@@ -1,0 +1,89 @@
+
+<div class="login_register_wrap">
+    <div class="container">
+        <form class="mt-5" id="form_search" method="POST">
+            
+            <div class="row mb-4">
+                
+                <div class="col-md-3 mb-2">
+                    <h6 class="fw-bold">Clave:</h6>
+                    <input type="text" class="form-control" id="txtClave" name="clave" placeholder="Clave">
+                </div>
+                
+                <div class="col-md-3 mb-2">
+                    <h6 class="fw-bold">Nombre:</h6>
+                    <input type="text" class="form-control" id="txtNombre" name="nombre" placeholder="Nombre">
+                </div>
+
+                <div class="col-md-2 mb-2">
+                    <h6 class="fw-bold">Estatus:</h6>
+                    <select id="idEstatus" name="idEstatus" class="form-select form-control">
+                        <option value="">- Elegir -</option>
+                        <option value="ALL">- Todas -</option>
+                        <option value="1">Activo</option>
+                        <option value="NOT">Inactivo</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-4 mb-2">
+                    <div class="form-group">
+                        <h6 class="fw-bold">Vigencia:</h6>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Del</span>
+                                    </div>
+                                    <input id="txtFechaIni" type="text" name="vigenciaIni" class="form-control fecha" placeholder="dd/mm/aaaa" />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Al</span>
+                                    </div>
+                                    <input id="txtFechaFin" type="text" name="vigenciaFin" class="form-control fecha" placeholder="dd/mm/aaaa" />
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3 justify-content-end">
+                <div class="col-md-4 mb-3">
+                    <button type="button" id="btn_buscar" class="btn btn-primary w-100">Buscar</button>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a onclick="cleanFilter();" href="javascript:void(0);" class="btn btn-secondary w-100">Limpiar Filtros</a>
+                </div>
+                <div class="col-md-4">
+                    <a href="<?php echo site_url('formulario/addQuestion'); ?>" class="btn btn-success w-100">Nuevo</a>
+                </div>
+            </div>
+                
+            <div class="row mb-3">
+                <div class="col-md-12 col-12">
+                    <table class="table table-striped table-condensed table-bordered table-hover w-100" id="tblFormularios">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" width="60">ID</th>
+                                <th rowspan="2" width="80">Clave</th>
+                                <th rowspan="2" width="150">Nombre</th>
+                                <th rowspan="2" width="60">Estatus</th>
+                                <th class="text-center" colspan="2" width="140" style="vertical-align: bottom;" data-orderable="false">Vigencia</th>  
+                                <th rowspan="2" width="60">Acci&oacute;n</th>
+                            </tr> 
+                            <tr>
+                                <th width="70">Del</th>
+                                <th width="70">Al</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

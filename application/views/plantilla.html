@@ -1,0 +1,1383 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class="no-js" lang="es" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Refaccionaria Mendoza</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo URL_VIEWS; ?>assets/images/favicon.ico" />
+
+
+    <!-- CSS
+            ============================================ -->
+    <!-- Bootstrap CSS -->
+    <link href="<?php echo URL_VIEWS; ?>bootstrap_theme/bootstrap.css" rel="stylesheet" type="text/css" />
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="<?php echo URL_VIEWS; ?>assets/css/vendor/font-awesome.css" />
+    <!-- Fontawesome Star -->
+    <link rel="stylesheet" href="<?php echo URL_VIEWS; ?>assets/css/vendor/fontawesome-stars.css" />
+    <!-- Ion Icon -->
+    <link rel="stylesheet" href="<?php echo URL_VIEWS; ?>assets/css/vendor/ion-fonts.css" />
+    <!-- Slick CSS -->
+    <link rel="stylesheet" href="<?php echo URL_VIEWS; ?>assets/css/plugins/slick.css" />
+
+    <!--<link rel="stylesheet" href="<?php echo URL_VIEWS; ?>css/linetime.scss" type="text/css" media="screen">-->
+    <!--<link rel="stylesheet" href="<?php echo URL_VIEWS; ?>css/timeliner.css" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?php echo URL_VIEWS; ?>css/responsive.css" type="text/css" media="screen">-->
+
+    <!-- Vendor & Plugins CSS (Please remove the comment from below vendor.min.css & plugins.min.css for better website load performance and remove css files from the above) -->
+    <!--
+        <script src="<?php echo URL_VIEWS; ?>assets/js/vendor/vendor.min.js"></script>
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/plugins.min.js"></script>
+        -->
+    <!-- Main Style CSS (Please use minify version for better website load performance) -->
+    <link rel="stylesheet" href="<?php echo URL_VIEWS; ?>assets/css/style.css" />
+    
+    <!--<link rel="stylesheet" href="<?php echo URL_VIEWS; ?>assets/css/style.min.css">-->
+
+    <!--
+        <link href="<?php echo URL_VIEWS; ?>bootstrap_4/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="<?php echo URL_VIEWS; ?>fontawesome-free-5.6.3-web/css/all.css" rel="stylesheet" />
+        -->
+    <?php if($loadPickerUser) { ?>
+        <link href="<?php echo URL_VIEWS; ?>js/datapicker/bootstrap-datepicker3.css" rel="stylesheet" />
+    <?php } ?>
+
+    <link href="<?php echo URL_VIEWS; ?>js/toastr/toastr.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="<?php echo URL_VIEWS; ?>js/datatables/datatables.min.css" />
+    <link href="<?php echo URL_VIEWS; ?>css/estilo_app.css" rel="stylesheet" />
+
+    <?php if($loadLibrary) { ?>
+        <!-- jQuery Ui -->
+        <link rel="stylesheet" href="<?php echo URL_VIEWS; ?>assets/css/plugins/jquery-ui.min.css" />
+        <!-- Animation -->
+        <link rel="stylesheet" href="<?php echo URL_VIEWS; ?>assets/css/plugins/animate.css" />
+        <!-- Nice Select -->
+        <link rel="stylesheet" href="<?php echo URL_VIEWS; ?>assets/css/plugins/nice-select.css" />
+        <!-- Timecircles -->
+        <link rel="stylesheet" href="<?php echo URL_VIEWS; ?>assets/css/plugins/timecircles.css" />
+        <!-- Lightgallery -->
+        <link rel="stylesheet" href="<?php echo URL_VIEWS; ?>assets/css/plugins/lightgallery.min.css" />
+        
+        <link href="<?php echo URL_VIEWS; ?>js/chosen_v1.8.2/chosen.min.css" rel="stylesheet" />
+        <link href="<?php echo URL_VIEWS; ?>js/multiselect/css/bootstrap-multiselect.css" rel="stylesheet" />
+        <link rel="stylesheet" href="<?php echo URL_VIEWS; ?>css/dev.css" />
+    <?php } ?>
+
+</head>
+
+
+<body class="template-color-1">
+
+    <div class="filtroAuto">
+        <a href="#filtroAuto" class="minicart-btn toolbar-btn text-white">Búsqueda
+            <i id="iconAuto" class="fas fa-car color-white" style="font-size: 35px; line-height: 40px;"></i>
+        </a>
+    </div>
+    <div>
+        <div class="filtroMoto"> <a href="#filtroAuto" class="text-white minicart-btn  toolbar-btn ">Búsqueda <i
+                    id="iconMoto" class="fas fa-motorcycle color-white" style="font-size: 35px; line-height: 40px;"></i>
+            </a>
+        </div>
+    </div>
+    <div class="main-wrapper">
+        <!-- Begin Loading Area -->
+        <div class="loading">
+            <div class="text-center middle">
+                <div class="lds-ellipsis">
+                    <div><svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 21.18 36.28"
+                            style="enable-background:new 0 0 21.18 36.28;" xml:space="preserve">
+                            <style type="text/css">
+                                .st0 {
+                                    fill: #F4B223;
+                                }
+                            </style>
+                            <polygon class="st0" points="19.04,18.29 19.04,18.29 19.04,18.29 19.04,18.29 14.93,1.39 8.62,1.39 12.74,18.29 2.14,34.89 
+                       8.45,34.89 19.04,18.29 " />
+                        </svg>
+                    </div>
+                    <div> <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 21.18 36.28"
+                            style="enable-background:new 0 0 21.18 36.28;" xml:space="preserve">
+                            <style type="text/css">
+                                .st0 {
+                                    fill: #F4B223;
+                                }
+                            </style>
+                            <polygon class="st0" points="19.04,18.29 19.04,18.29 19.04,18.29 19.04,18.29 14.93,1.39 8.62,1.39 12.74,18.29 2.14,34.89 
+                       8.45,34.89 19.04,18.29 " />
+                        </svg>
+                    </div>
+                    <div> <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 21.18 36.28"
+                            style="enable-background:new 0 0 21.18 36.28;" xml:space="preserve">
+                            <style type="text/css">
+                                .st0 {
+                                    fill: #F4B223;
+                                }
+                            </style>
+                            <polygon class="st0" points="19.04,18.29 19.04,18.29 19.04,18.29 19.04,18.29 14.93,1.39 8.62,1.39 12.74,18.29 2.14,34.89 
+                       8.45,34.89 19.04,18.29 " />
+                        </svg>
+                    </div>
+                    <div><svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 21.18 36.28"
+                            style="enable-background:new 0 0 21.18 36.28;" xml:space="preserve">
+                            <style type="text/css">
+                                .st0 {
+                                    fill: #F4B223;
+                                }
+                            </style>
+                            <polygon class="st0" points="19.04,18.29 19.04,18.29 19.04,18.29 19.04,18.29 14.93,1.39 8.62,1.39 12.74,18.29 2.14,34.89 
+                       8.45,34.89 19.04,18.29 " />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Loading Area End Here -->
+        <!-- Begin Hiraola's Header Main Area -->
+        <header class="header-main_area header-main_area-2">
+            <div class="fixed-top">
+                <div class="header-bottom_area">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 d-lg-none d-block">
+                                <div class="row mt-1">
+
+                                    <div class="col-1"><a href="#mobileMenu"
+                                            class="mobile-menu_btn toolbar-btn color--white">
+                                            <i class="ion-navicon" style="font-size: 30px; color:#fff;"></i>
+                                        </a></div>
+                                    <div class="col-4 header-logo text-center">
+                                        <a href="<?php echo URL_SITE; ?>">
+                                            <img src="<?php echo URL_VIEWS; ?>assets/images/menu/logo/2.png"
+                                                alt="Logo Mendoza" /> </a>
+                                    </div>
+                                    <div class="col-5 text-left mt-2">
+                                        <?php if(LOGGED) { ?>
+                                        <div class="text-left">
+                                            <span style="color: white;">
+                                                <img style="width: 25px; height:25px"
+                                                    src="<?php echo !empty($this->session->userdata()['fotoPerfil']) ? $this->session->userdata()['fotoPerfil'] : ''; ?>" />
+
+                                                <span style="font-size: 10px;"
+                                                    title="<?php echo $this->session->userdata()['persona']['nombre']; ?>">
+                                                    <?php echo ellipsize($this->session->userdata()['persona']['nombre'], 18, 1); ?>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <?php } else { ?>
+                                        <div class="text-left">
+                                            <span style="font-size: 10px;">
+                                                <a style="color: white;"
+                                                    href="<?php echo site_url('login'); ?>"><strong>Iniciar
+                                                        sesi&oacute;n</strong></a><strong style="color: white;">  /  </strong><a style="color: white;"
+                                                        href="<?php echo site_url('usuario'); ?>"><strong>Reg&iacute;strarme</strong></a>
+                                                    </span>
+                                        </div>
+                                        <?php } ?>
+                                    </div>
+
+
+                                    <div class="col-2">
+                                        <a id="iconShoppingCartMovil" class="toolbar-btn" href="#miniCart">
+                                            <div id="prodsOrderAmountMovil"
+                                                style="background-color: #043CAC !important;
+                                                color: white; border-radius:15px; height:15px; width:15px; line-height: 15px; font-size: 8px;
+                                                font-weight: 500; text-align: center; display: block; position:absolute; z-index: 18; margin-top: 0px; right: 5px">
+
+                                            </div>
+                                            <img src="<?php echo URL_VIEWS; ?>assets/images/menu/icon/cart-01.png"
+                                                style="color:#e4002b; font-size: 25px; display: block: height:24px; width: 40px; padding-top: 5px;  padding-left:10px "
+                                                alt="Carrito de compras" title="Carrito de compras">
+                                        </a>
+                                    </div>
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                            <form id="formBusquedaMovil" class="hm-searchbox mb-2">
+                                                <input class="cssSearchOrigen" style="width: 78%; height: 30px;" id="txtBuscarMovil" type="text"
+                                                    name="reg[descripcionMovil]" placeholder="Escriba su producto ..."
+                                                    value="<?php echo !empty($this->session->userdata()['descripcionFiltro']) ? $this->session->userdata()['descripcionFiltro'] : ''; ?>" />
+                                                <button onclick="buscarProductos()" class="search_btn" type="button">
+                                                    <i style="font-size: 22px; color: white;" class="ion-ios-search-strong ml-1"></i>
+                                                </button>
+                                                
+                                                <span class="ml-1" style="font-size: 22px; color: white;" onclick="limpiarCamposBusqueda()"><i
+                                                        class="fa fa-times"></i></span>
+
+                                                <span data-html="true" data-placement="right" data-trigger="hover"
+                                                    data-toggle="popover" title=""
+                                                    data-content="S&oacute;lo ingresa palabras clave, evita preposiciones (de, en, para, con). </br></br>Si deseas buscar por la clave, usa la siguiente palabra <b>cve:</b> seguido de la clave de producto; ejemplo: <b>cve:13302</b>"
+                                                    data-original-title="Instrucciones" style="font-size: 20px;"
+                                                    class="instruccion-popover ml-2"><i style="margin-top: 12px; color: white;"
+                                                        class="fa fa-question-circle" aria-hidden="true"></i></span>
+                                            </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--div class="col-lg-3 col-md-8 col-sm-8 d-lg-none d-block">
+                            
+                                <div class="header-right_area">
+                                    <ul>
+                                        <li>
+                                            <?php if(LOGGED) { ?>
+                                            <div class="text-center mt-1">
+                                                <span style="color: white;">
+                                                    <img style="width: 25px; height:25px"
+                                                        src="<?php echo !empty($this->session->userdata()['fotoPerfil']) ? $this->session->userdata()['fotoPerfil'] : ''; ?>" />
+
+                                                    <span
+                                                        title="<?php echo $this->session->userdata()['persona']['nombre']; ?>">
+                                                        <?php echo ellipsize($this->session->userdata()['persona']['nombre'], 20, .5); ?>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <?php } else { ?>
+                                            <div class="text-center mt-2">
+                                                <span>
+                                                    <a style="color: white;"
+                                                        href="<?php echo site_url('login'); ?>"><strong>Inicia
+                                                            sesi&oacute;n ó reg&iacute;strate</strong></a>
+                                                </span>
+                                            </div>
+                                            <?php } ?>
+                                        </li>
+                                        <li>
+                                            <a href="<?php echo URL_SITE . 'pedido/wishlist'; ?>" class="wishlist-btn">
+                                                <div id="wishlistAmountMovil"
+                                                    style="background-color: #043CAC !important;
+                                            color: white; border-radius:15px; height:15px; width:15px; line-height: 15px; font-size: 8px;
+                                            font-weight: 500; text-align: center; display: block; position:absolute; z-index: 18; margin-top: 0px    ">
+
+                                                </div>
+                                                <img src="<?php echo URL_VIEWS; ?>assets/images/menu/icon/fav.png"
+                                                    style="color:#e4002b; font-size: 25px; display: block: height:24px; width: 40px; padding-top: 0px;  padding-left:10px "
+                                                    alt="favoritos" title="Favoritos">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn color--white ">
+                                                <i class="ion-navicon"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a id="iconShoppingCartMovil" class="toolbar-btn" href="#miniCart">
+                                                <div id="prodsOrderAmountMovil"
+                                                    style="background-color: #043CAC !important;
+                                                color: white; border-radius:15px; height:15px; width:15px; line-height: 15px; font-size: 8px;
+                                                font-weight: 500; text-align: center; display: block; position:absolute; z-index: 18; margin-top: 0px    ">
+
+                                                </div>
+                                                <img src="<?php echo URL_VIEWS; ?>assets/images/menu/icon/cart-01.png"
+                                                    style="color:#e4002b; font-size: 25px; display: block: height:24px; width: 40px; padding-top: 5px;  padding-left:10px "
+                                                    alt="Carrito de compras" title="Carrito de compras">
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div-->
+
+                            <div class="col-lg-3 d-none d-lg-flex justify-content-end position-static">
+
+                                <div class="mendoza-social_link">
+                                    <ul>
+                                        <li class="facebook">
+                                            <a href="https://www.facebook.com/RefaccionariaMendozaOficial"
+                                                data-toggle="tooltip" target="_blank"><i title="Facebook"
+                                                    class="fab fa-facebook"></i></a>
+                                        </li>
+                                        <li class="twitter">
+                                            <a href="https://twitter.com/Refa_Mendoza?t=IrNP2g9Meur7_KdrOdJgMg&s=08"
+                                                data-toggle="tooltip" target="_blank"><i title="Twitter"
+                                                    class="fab fa-twitter-square"></i></a>
+                                        </li>
+                                        <li class="google-plus">
+                                            <a href="https://www.youtube.com/c/RefaccionariaMendozaOficial"
+                                                data-toggle="tooltip" target="_blank"><i title="YouTube"
+                                                    class="fab fa-youtube"></i></a>
+                                        </li>
+                                        <li class="instagram">
+                                            <a href="https://instagram.com/refamendozaoficial?igshid=YmMyMTA2M2Y="
+                                                data-toggle="tooltip" target="_blank"><i title="Instagram"
+                                                    class="fab fa-instagram"></i></a>
+                                        </li>
+                                        <li class="instagram">
+                                            <a href="https://www.tiktok.com/@refamendozaoficial?_t=8WCh7w4xcKk&_r=1"
+                                                data-toggle="tooltip" target="_blank"><img title="Tiktok"
+                                                    src="<?php echo URL_VIEWS; ?>assets/images/tiktok-b.png"
+                                                    style="width: 15px "></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9 d-none d-lg-flex justify-content-end position-static">
+                                <div class="main-menu_area">
+                                    <nav>
+                                        <ul>
+                                            <li class="megamenu-holder">
+                                                <a href="#">
+                                                    <?php echo !empty($this->session->userdata()['sucursal']) ? $this->session->userdata()['sucursal'] : 'Sucursal No Seleccionada'; ?>
+                                                    <i class="fa fa-chevron-down"></i>
+                                                </a>
+                                                <ul class="hm-megamenu">
+                                                    <li>
+                                                        <span class="megamenu-title">Nuestras sucursales</span>
+                                                        <ul>
+                                                            <?php foreach($sucursales as $tienda) { ?>
+                                                            <li>
+                                                                <div class="row mt-2">
+                                                                    <div class="col-md-8">
+                                                                        <a href="#" class="text-red"
+                                                                            onmouseover="mostrarVistaPrevia('<?php echo $tienda['clave']; ?>')"
+                                                                            onclick="asignarPoint('<?php echo $tienda['clave']; ?>')">
+                                                                            <i
+                                                                                class="<?php echo (!empty($this->session->userdata()['almacen']) ? $this->session->userdata()['almacen'] : '') == $tienda['clave'] ? 'fa fa-chevron-right' : '' ?>"></i>
+                                                                            <?php echo $tienda['nombre']; ?>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="col-md-1">
+                                                                        <?php if($tienda['clave'] == '001' || $tienda['clave'] == '004' || $tienda['clave'] == '003') { ?>
+                                                                        <i title="Compra en el Portal"
+                                                                            class="fas fa-shopping-cart text-primary"></i>
+                                                                        <?php } ?>
+                                                                    </div>
+                                                                    <div class="col-md-1">
+                                                                        <a href="#"
+                                                                            onclick="verMapa('<?php echo $tienda['clave']; ?>')"
+                                                                            class="text-red"><i
+                                                                                title="Compra en la Sucursal"
+                                                                                class="fas fa-map-marked text-secondary"></i></a>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <?php } ?>
+
+                                                            <li class="pt-3">
+                                                                <label class="text-secondary">Encuentra la sucursal
+                                                                    m&aacute;s
+                                                                    cercana <br>
+                                                                    <input type="text" name="con_name" id="cpField"
+                                                                        class="mt-1" required=""
+                                                                        placeholder="Escribe tu código postal"></label>
+
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+
+                                                    <?php foreach($sucursales as $tienda) { ?>
+                                                    <li id="liDatos<?php echo $tienda['clave'] ?>"
+                                                        class="d-none liDatos">
+                                                        <span class="megamenu-title">Dirección</span>
+                                                        <ul>
+                                                            <li>
+                                                                <a href="#">
+                                                                    <!--Oriente 146 No. 127 y Eje 1 Norte, Moctezuma
+                                                                        2da
+                                                                        Secc. México D.F.-->
+                                                                    <?php echo !empty($tienda['direccion']) ? $tienda['direccion'] : ''; ?>
+
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">Tel:<br>
+
+                                                                    <!--(01 55) 5572-7575-->
+                                                                    <?php echo !empty($tienda['telefono']) ? '(01 ' . substr($tienda['telefono'],0,2) .') ' . substr($tienda['telefono'],2,4) . '-' . substr($tienda['telefono'],6,8) : ''; ?>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">Horarios:<br>
+                                                                    <!--Lunes a Domingo 08:00 a.m. a 08:00 p.m.--> Lunes
+                                                                    a Domingo
+                                                                    <?php echo !empty($tienda['horarioIni']) ? date("h:i", strtotime($tienda['horarioIni'])) . ' a.m.' : ''; ?>
+                                                                    a
+                                                                    <?php echo !empty($tienda['horarioFin']) ? date("h:i", strtotime($tienda['horarioFin']))  . ' p.m.' : '' ?>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <!--<a href="<?php echo site_url('busqueda/sucursal'); ?>">Ver m&aacute;s </a>-->
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <?php } ?>
+
+                                                    <?php foreach($sucursales as $tienda) { ?>
+                                                    <li style="background-repeat:no-repeat ; background-position: center; max-width: 100%; background-size: cover; background-image: url('<?php echo $tienda['logo']; ?>');"
+                                                        class="menu-item_img d-none liImagen"
+                                                        id="liImagen<?php echo $tienda['clave'] ?>"></li>
+                                                    <?php } ?>
+
+                                                </ul>
+                                            </li>
+
+
+                                            <li>
+                                                <div>
+                                                    <a onclick="abrirVentana()" href="#filtroAuto"
+                                                        class="minicart-btn toolbar-btn" style="color: white">
+                                                        <?php echo !empty($this->session->userdata()['busquedaVehiculo']) ? $this->session->userdata()['busquedaVehiculo'] : 'B&uacute;squeda con veh&iacute;culo'; ?>
+                                                        <i class="fa fa-chevron-down"></i>
+                                                    </a>
+                                                    <?php if(!empty($this->session->userdata()['busquedaVehiculo'])) { ?>
+                                                    <a href="#" class="minicart-btn toolbar-btn"><i
+                                                            id="lblLimpiarVehiculo" style="color: yellow;"
+                                                            class="fas fa-times ml-3"></i></a>
+                                                    <?php } ?>
+                                                </div>
+                                            </li>
+
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-middle_area d-none d-lg-block">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="header-logo"> <a href="<?php echo URL_SITE; ?>"> <img
+                                            src="<?php echo URL_VIEWS; ?>assets/images/menu/logo/5.png"
+                                            alt="Mendoza Header Logo" /></a> </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="hm-form_area pt-1">
+                                    <div d="formBusqueda" class="hm-searchbox">
+                                        <!--<select id="idCategoria" name="idCategoria"
+                                            class="nice-select select-search-category">
+                                            <?php echo $listaCategoria; ?>
+                                        </select>-->
+                                        <div class="input-group">
+                                            <input class="cssSearchOrigen" id="txtBuscar" autocomplete="off" style="width: 84%; padding-left: 15px;" type="text"
+                                                name="reg[descripcion]" placeholder="Escriba su producto ..."
+                                                value="<?php echo !empty($this->session->userdata()['descripcionFiltro']) ? $this->session->userdata()['descripcionFiltro'] : ''; ?>" />
+                                            <div class="input-group-append">
+                                                <button onclick="limpiarCamposBusqueda()" style="position: relative;"
+                                                    class="li-btn" type="button"><i class="fa fa-times"></i> </button>
+                                                <button onclick="buscarProductos()" class="li-btn" type="button"><i
+                                                        class="fa fa-search"></i> </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span data-html="true" data-placement="right" data-trigger="hover"
+                                        data-toggle="popover" title=""
+                                        data-content="S&oacute;lo ingresa palabras clave, evita preposiciones (de, en, para, con). </br></br>Si deseas buscar por la clave, usa la siguiente palabra <b>cve:</b> seguido de la clave de producto; ejemplo: <b>cve:13302</b>"
+                                        data-original-title="Instrucciones" style="font-size: 20px;"
+                                        class="mt-2 ml-2 instruccion-popover"><i
+                                            class="fa fa-question-circle text-primary" aria-hidden="true"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="d-flex flex-row bd-highlight">
+                                    <div class="bd-highlight">
+                                        <div>
+                                            <div class="dropdown">
+                                                <?php if(!LOGGED) { ?>
+                                                <!--<div class="mt-3">
+                                                    <a href="<?php echo site_url('login'); ?>"><strong>Iniciar Sesi&oacute;n</strong></a>
+                                                </div>-->
+                                                <button class="btn btn-sm dropdown-toggle mt-2" type="button"
+                                                    id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                    <span>Inicia sesi&oacute;n ó reg&iacute;strate</span>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item" href="<?php echo site_url('login'); ?>">
+                                                        Iniciar sesi&oacute;n</a>
+                                                    <a class="dropdown-item" href="<?php echo URL_SITE . 'usuario'; ?>">
+                                                        Reg&iacute;strate</a>
+                                                </div>
+
+                                                <?php } else { ?>
+                                                <button class="btn btn-sm   dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                    <!--<i class="fa-user fa" title="Seleccionar Auto" style="color:#5c0000"></i>-->
+                                                    <img style="width: 32px; height:32px"
+                                                        src="<?php echo !empty($this->session->userdata()['fotoPerfil']) ? $this->session->userdata()['fotoPerfil'] : ''; ?>" />
+                                                    <strong>Bienvenido:</strong>
+                                                    &nbsp;
+                                                    <span
+                                                        title="<?php echo $this->session->userdata()['persona']['nombre']; ?>">
+                                                        <?php echo ellipsize($this->session->userdata()['persona']['nombre'], 20, .5); ?>
+                                                    </span>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item"
+                                                        href="<?php echo site_url('usuario/perfil'); ?>"> <i
+                                                            class="fa fa-user"> </i> Mi perfil</a>
+                                                    <a class="dropdown-item"
+                                                        href="<?php echo URL_SITE . 'direccion/getAdressesModal/1'; ?>">
+                                                        <i class="fa fa-location-arrow"> </i> Direcciones de envio</a>
+                                                    <a class="dropdown-item"
+                                                        href="<?php echo URL_SITE . 'checkout/getCards/1'; ?>"> <i
+                                                            class="fa fa-credit-card"></i> Formas de pago</a>
+                                                    <a class="dropdown-item"
+                                                        href="<?php echo URL_SITE . 'usuario/facturacion/1'; ?>"> <i
+                                                            class="fa fa-check"> </i> Datos de facturacion</a>
+                                                    <a class="dropdown-item" href="<?php echo URL_SITE . 'pedido/'; ?>">
+                                                        <i class="fa fa-truck"> </i>
+                                                        Historial de pedidos</a>
+                                                    <a class="dropdown-item" href="javascript:logout()"> <i
+                                                            class="fa fa-door-closed"> </i>Cerrar sesi&oacute;n</a>
+                                                </div>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bd-highlight">
+                                        <a class="toolbar-btn" href="#filtroAuto" id="imgBarraAuto">
+                                            <i class="fa-car-alt fa" title="Seleccionar Auto"
+                                                style="color:#e4002b; font-size: 25px; display: block: height:25px; width: 35px; padding-top: 10px; margin-left: 25px "></i>
+                                        </a>
+                                    </div>
+
+                                    <div>
+                                        <div class="bd-highlight">
+                                            <a class="toolbar-btn" href="#filtroAuto" id="imgBarraMoto">
+                                                <i class="fa fa-motorcycle" title="Seleccionar Moto"
+                                                    style="color:#e4002b; font-size: 25px; display: block: height:25px; width: 35px; padding-top: 10px "></i>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-1 bd-highlight">
+                                        <a href="<?php echo URL_SITE . 'pedido/wishlist'; ?>">
+                                            <div id="wishlistAmount"
+                                                style="background-color: #043CAC !important;
+                                           color: white; border-radius:15px; height:15px; width:15px; line-height: 15px; font-size: 8px;
+                                           font-weight: 500; text-align: center; display: block; position:absolute; z-index: 18; margin-top: 0px    ">
+                                                <?php //echo !empty($this->session->userdata()['wishlist_prods']) ? $this->session->userdata()['wishlist_prods'] : 0; ?>
+                                            </div>
+                                            <a href="<?php echo URL_SITE . 'pedido/wishlist'; ?>">
+                                                <i class="fa fa-heart" title="Lista de deseos"
+                                                    style="color:#e4002b; font-size: 25px; display: block: height:25px; width: 40px; padding-top: 5px; padding-left:10px  "></i>
+                                            </a>
+                                        </a>
+                                    </div>
+
+                                    <div class="bd-highlight">
+                                        <a id="iconShoppingCart" class="toolbar-btn" href="#miniCart">
+                                            <div id="prodsOrderAmount"
+                                                style="background-color: #043CAC !important;
+                                            color: white; border-radius:15px; height:15px; width:15px; line-height: 15px; font-size: 8px;
+                                            font-weight: 500; text-align: center; display: block; position:absolute; z-index: 18; margin-top: 0px    ">
+
+                                            </div>
+                                            <img src="<?php echo URL_VIEWS; ?>assets/images/menu/icon/cart-red.png"
+                                                style="color:#e4002b; font-size: 25px; display: block: height:25px; width: 40px; padding-top: 10px;  padding-left:10px "
+                                                alt="Carrito de compras" title="Carrito de compras">
+
+
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-top_area">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="ht-left_area">
+                                    <div class="welcome_text" style="height:15px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="offcanvas-minicart_wrapper" id="miniCart">
+                    <div id="miniCartSec" class="offcanvas-menu-inner"> <a href="#" class="btn-close"><i
+                                class="ion-android-close"></i></a>
+                        <div class="minicart-content">
+                            <div class="minicart-heading">
+                                <h4>Resumen del Pedido</h4>
+                            </div>
+                            <ul id="minicartList" class="minicart-list">
+                            </ul>
+                        </div>
+                        <div class="minicart-item_total"> <span>Subtotal de la Compra</span> <span id="fullAmount"
+                                class="ammount"> - </span>
+                        </div>
+                        <!--div class="minicart-btn_area">
+                           <a href="cart.html" class="hiraola-btn hiraola-btn_dark hiraola-btn_fullwidth">Minicart</a>
+                       </div-->
+                        <div class="minicart-btn_area">
+                            <button id="btnToCheckout" class="btn-primary hiraola-btn_fullwidth mb-1">
+                                Pagar
+                                <!-- <a href="<?php echo URL_SITE . 'checkout'; ?>" >Pagar</a> -->
+                            </button>
+                            <a id="btnCerrarModalCar" href="#" class="btn-tertiary w-100 text-center">Seguir
+                                Comprando</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Menu filtro  -->
+                <div class="offcanvas-minicart_wrapper" id="filtroAuto">
+                    <div class="offcanvas-menu-inner"> <a href="#" class="btn-close"><i id="opcCerrar"
+                                class="ion-android-close"></i></a>
+                        <div class="minicart-content">
+                            <div class="minicart-heading text-center">
+                                <h4 class="d-none" id="tituloAuto">Ingresa los datos de tu Autom&oacute;vil o selecciona
+                                    uno registrado</h4>
+                                <h4 class="d-none" id="tituloMoto">Ingresa los datos de tu Motocicleta o selecciona uno
+                                    registrado</h4>
+                            </div>
+
+                            <div class="text-center">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="reg[tipoVehiculo]" id="auto"
+                                        value="AUTO">
+                                    <label class="form-check-label" for="auto">Autom&oacute;vil</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="reg[tipoVehiculo]" id="moto"
+                                        value="MOTO">
+                                    <label class="form-check-label" for="moto">Motocicleta</label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <i id="iconAutoFiltro" class="fas fa-car d-none"
+                                    style="font-size: 35px; line-height: 40px;"></i>
+                                <i id="iconMotoFiltro" class="fas fa-motorcycle d-none"
+                                    style="font-size: 35px; line-height: 40px;"></i>
+                            </div>
+
+                            <div class="mt-3">
+                                <select id="idMarca" class="form-control" name="reg[idMarca]" onchange="cambioMarca()">
+                                    <?php echo $listaMarca; ?>
+                                </select>
+                            </div>
+                            <div class="mt-3">
+                                <select id="idModelo" class="form-control" name="reg[idModelo]">
+                                    <?php echo $listaModelo; ?>
+                                </select>
+                            </div>
+                            <div class="mt-3">
+                                <select id="anioSelect" class="form-control" name="reg[anio]"
+                                    onchange="buscarProductosConfig()">
+                                    <?php echo $listaAnio; ?>
+                                </select>
+                            </div>
+
+                            <hr style="height: 1rem;">
+
+                            <div class="mt-3">
+                                <button onclick="buscarSinVehiculo()" type="button" id="btnBuscar"
+                                    class="btn btn-danger w-100">Buscar sin veh&iacute;culo</button>
+                            </div>
+
+                            <div id="divTblAuto" class="mt-3 d-none">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr class="bg-primary text-white text-center">
+                                            <th>Auto</th>
+                                            <th>Opciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php echo $tbody; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div id="divTblMoto" class="mt-3 d-none">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr class="bg-primary text-white text-center">
+                                            <th>Moto</th>
+                                            <th>Opciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php echo $tbodyMoto; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Menu filtro  -->
+                <div class="offcanvas-search_wrapper" id="searchBar">
+                    <div class="offcanvas-menu-inner">
+                        <div class="container"> <a href="#" class="btn-close"><i class="ion-android-close"></i></a>
+                            <!-- Begin Offcanvas Search Area -->
+                            <div class="offcanvas-search">
+                                <form id="formBusquedaMovil" class="hm-searchbox">
+                                    <input style="width: 70%;" id="txtBuscarMovi" type="text"
+                                        name="reg[descripcionMovi]" placeholder="Escriba su búsqueda..."
+                                        value="<?php echo !empty($this->session->userdata()['descripcionFiltro']) ? $this->session->userdata()['descripcionFiltro'] : ''; ?>" />
+                                    <button onclick="buscarProductos()" class="search_btn" type="button">
+                                        <i class="ion-ios-search-strong"></i>
+                                    </button>
+                                    <span data-html="true" data-placement="right" data-trigger="hover"
+                                        data-toggle="popover" title=""
+                                        data-content="S&oacute;lo ingresa palabras clave, evita preposiciones (de, en, para, con). </br></br>Si deseas buscar por la clave, usa la siguiente palabra <b>cve:</b> seguido de la clave de producto; ejemplo: <b>cve:13302</b>"
+                                        data-original-title="Instrucciones" style="font-size: 20px;"
+                                        class="instruccion-popover"><i style="margin-top: 11px;"
+                                            class="fa fa-question-circle text-primary" aria-hidden="true"></i></span>
+                                </form>
+                            </div>
+                            <!-- Offcanvas Search Area End Here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="mobile-menu_wrapper" id="mobileMenu">
+                    <div class="offcanvas-menu-inner" style="padding-top: 25px;">
+                        <div id="containerMenu" class="container"> <a href="#" class="btn-close"><i
+                                    class="ion-android-close"></i></a>
+                            <nav class="offcanvas-navigation">
+                                <?php if(LOGGED) { ?>
+                                <h6 class="text-primary">Menú de usuario</h6>
+                                <ul class="mobile-menu">
+                                    <li class="menu-item-has-children">
+                                        <a href="<?php echo site_url('usuario/perfil'); ?>">
+                                            <i class="fa fa-user"> </i> Mi perfil</a>
+                                    </li>
+                                    <li class="menu-item-has-children ">
+                                        <a href="<?php echo URL_SITE . 'direccion/getAdressesModal/1'; ?>"><span
+                                                class="mm-text">
+                                                <i class="fa fa-location-arrow"></i> Direcciones de env&iacute;o</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item-has-children ">
+                                        <a href="<?php echo URL_SITE . 'checkout/getCards/1'; ?>"><span class="mm-text">
+                                                <i class="fa fa-credit-card"></i>Formas de pago</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item-has-children">
+                                        <a href="<?php echo URL_SITE . 'usuario/facturacion/1'; ?>"><span
+                                                class="mm-text">
+                                                <i class="fa fa-check"> </i>Datos de facturaci&oacute;n</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item-has-children">
+                                        <a href="<?php echo URL_SITE . 'pedido/'; ?>"><span class="mm-text">
+                                                <i class="fa fa-truck"> </i>Historial de pedidos</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item-has-children">
+                                        <a href="javascript:logout()"><span class="mm-text">
+                                                <i class="fa fa-door-closed"> </i>Cerrar sesi&oacute;n</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <?php } ?>
+                            </nav>
+
+                            <nav class="offcanvas-navigation">
+                                <h6 class="text-primary mt-4">Sucursales</h6>
+                                <ul class="mobile-menu">
+
+                                    <?php foreach($sucursales as $tienda) { ?>
+                                    <li>
+                                        <div class="row mt-2">
+                                            <div class="col-9">
+                                                <a onclick="asignarPoint('<?php echo $tienda['clave']; ?>')"
+                                                    href="javascript:void(0)">
+                                                    <i
+                                                        class="<?php echo (!empty($this->session->userdata()['almacen']) ? $this->session->userdata()['almacen'] : '') == $tienda['clave'] ? 'fa fa-chevron-right' : '' ?>"></i>
+                                                    <?php echo $tienda['nombre']; ?>
+                                                </a>
+                                            </div>
+                                            <div class="col-1">
+                                                <?php if($tienda['clave'] == '001' || $tienda['clave'] == '004' || $tienda['clave'] == '003') { ?>
+                                                <a href="#"><i title="Compra en el Portal"
+                                                        class="fas fa-shopping-cart text-primary"></i></a>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="col-1">
+                                                <a href="#" onclick="verMapa('<?php echo $tienda['clave']; ?>')"><i
+                                                        title="Compra en la Sucursal"
+                                                        class="fas fa-map-marked text-secondary"></i></a>
+                                            </div>
+                                    </li>
+                                    <?php } ?>
+
+                                </ul>
+                                <div class="col-lg-3 pt-4 d-lg-flex justify-content-end position-static">
+                                    <div class="mendoza-social_link">
+                                        <ul>
+                                            <li class="facebook">
+                                                <a href="https://www.facebook.com/RefaccionariaMendozaOficial"
+                                                    data-toggle="tooltip" target="_blank">
+                                                    <i title="Facebook" class="text-primary fab fa-facebook"
+                                                        style="font-size:24px;"></i>
+                                                </a>
+                                            </li>
+                                            <li class="twitter">
+                                                <a href="https://twitter.com/Refa_Mendoza?t=IrNP2g9Meur7_KdrOdJgMg&s=08"
+                                                    data-toggle="tooltip" target="_blank">
+                                                    <i title="Twitter" class="text-primary fab fa-twitter-square"
+                                                        style="font-size:24px;"></i>
+                                                </a>
+                                            </li>
+                                            <li class="instagram">
+                                                <a href="https://instagram.com/refamendozaoficial?igshid=YmMyMTA2M2Y="
+                                                    data-toggle="tooltip" target="_blank">
+                                                    <i title="Instagram" class="text-primary fab fa-instagram"
+                                                        style="font-size:24px;"></i></a>
+                                            </li>
+                                            <li class="google-plus">
+                                                <a href="https://www.youtube.com/c/RefaccionariaMendozaOficial"
+                                                    data-toggle="tooltip" target="_blank">
+                                                    <i title="YouTube" class="text-primary fab fa-youtube"
+                                                        style="font-size:24px;"></i>
+                                                </a>
+                                            </li>
+                                            <li class="instagram">
+                                                <a href="https://www.tiktok.com/@refamendozaoficial?_t=8WCh7w4xcKk&_r=1"
+                                                    data-toggle="tooltip" target="_blank" title="Tiktok">
+                                                    <img src="<?php echo URL_VIEWS; ?>assets/images/tiktok-r.png"
+                                                        style="width: 22px; margin-top:-10px ">
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <?php
+
+            if ( !empty($pageTitle) ) {
+
+        ?>
+        <!-- Título de página -->
+        <div id="dummy-header" class="breadcrumb-area">
+            <div class="container">
+                <div class="breadcrumb-content">
+                    <h2>
+                        <?php echo $pageTitle['title']; ?>
+                    </h2>
+                    <?php
+
+                            if ( !empty($pageTitle['breadcrumb']) ) { ?>
+
+                    <ul>
+                        <?php
+
+                                    foreach ( $pageTitle['breadcrumb'] as $bc ) {
+
+                                        if ( empty($bc['url']) ) { ?>
+
+                        <li class="active">
+                            <?php echo $bc['title']; ?>
+                        </li>
+                        <?php
+
+                                        } else { ?>
+
+                        <li><a href="<?php echo $bc['url']; ?>">
+                                <?php echo $bc['title']; ?>
+                            </a></li>
+                        <?php
+                                        }
+
+                                    } ?>
+
+                    </ul>
+                    <?php
+
+                            } ?>
+                </div>
+            </div>
+        </div>
+
+        <?php
+
+            }
+
+        ?>
+
+        <?php
+
+            $numCols = in_array($controller, ['', 'welcome']) ? 12 : 10;
+            $offsetCol = in_array($controller, ['', 'welcome']) ? 0 : 1;
+
+            if ( !empty($content_center) ) {
+
+        ?>
+
+        <!-- Contenido central -->
+        <div id="content-center" class="row" style="margin-top:<?php echo empty($pageTitle) ? '100' : '0'; ?>px;">
+            <div class="col col-<?php echo $numCols; ?> offset-<?php echo $offsetCol; ?>"
+                style="min-height:400px; margin-top:0px; margin-bottom: 1rem;">
+                <?php echo $content_center; ?>
+            </div>
+        </div>
+
+        <?php
+
+            }
+
+        ?>
+
+        <!-- Begin Hiraola's Footer Area -->
+        <div class="hiraola-footer_area">
+            <div class="footer-top_area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="footer-widgets_info">
+                                <div class="footer-widgets_logo"> <a href="<?php echo URL_SITE; ?>"> <img
+                                            src="<?php echo URL_VIEWS; ?>assets/images/footer/logo/1.png"
+                                            alt="Mendoza Footer Logo" /></a>
+                                </div>
+                                <div class="widget-short_desc">
+                                    <p>Síguenos en nuestras redes sociales</p>
+                                </div>
+                                <div class="hiraola-social_link">
+                                    <ul>
+                                        <li class="facebook">
+                                            <a href="https://www.facebook.com/RefaccionariaMendozaOficial"
+                                                data-toggle="tooltip" target="_blank">
+                                                <i title="Facebook" class="fab fa-facebook"></i>
+                                            </a>
+                                        </li>
+                                        <li class="twitter">
+                                            <a href="https://twitter.com/Refa_Mendoza?t=IrNP2g9Meur7_KdrOdJgMg&s=08"
+                                                data-toggle="tooltip" target="_blank">
+                                                <i title="Twitter" class="fab fa-twitter-square"></i>
+                                            </a>
+                                        </li>
+                                        <li class="google-plus">
+                                            <a href="https://www.youtube.com/c/RefaccionariaMendozaOficial"
+                                                data-toggle="tooltip" target="_blank">
+                                                <i title="YouTube" class="fab fa-youtube"></i>
+                                            </a>
+                                        </li>
+                                        <li class="instagram">
+                                            <a href="https://instagram.com/refamendozaoficial?igshid=YmMyMTA2M2Y="
+                                                data-toggle="tooltip" target="_blank">
+                                                <i title="Instagram" class="fab fa-instagram"></i>
+                                            </a>
+                                        </li>
+                                        <li class="instagram">
+                                            <a href="https://www.tiktok.com/@refamendozaoficial?_t=8WCh7w4xcKk&_r=1"
+                                                data-toggle="tooltip" target="_blank">
+                                                <img title="Tiktok"
+                                                    src="<?php echo URL_VIEWS; ?>assets/images/tiktok.svg">
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="footer-widgets_area">
+                                <div class="row">
+                                    <div class="col-12 col-lg-4 col-md-6 col-sm-6">
+                                        <div class="footer-widgets_title">
+                                            <h6>Productos</h6>
+                                        </div>
+                                        <div class="footer-widgets">
+                                            <ul>
+                                                <li>
+                                                    <a href="<?php echo site_url('#homeEspeciales'); ?>">Productos con
+                                                        precios especiales</a>
+                                                </li>
+                                                <li>
+                                                    <a href="<?php echo site_url('#homeNuevos'); ?>">Nuevos
+                                                        productos</a>
+                                                </li>
+                                                <li>
+                                                    <a href="<?php echo site_url('#homePopulares'); ?>">Productos
+                                                        populares</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-4 col-md-6 col-sm-6">
+                                        <div class="footer-widgets_title">
+                                            <h6>Nosotros</h6>
+                                        </div>
+                                        <div class="footer-widgets">
+                                            <ul>
+                                                <li>
+                                                    <a target="_blank"
+                                                        href="<?php echo site_url('service/informacion/sucursales'); ?>">Sucursales</a>
+                                                </li>
+                                                <li>
+                                                    <a target="_blank"
+                                                        href="<?php echo site_url('service/informacion/bolsa'); ?>">Bolsa
+                                                        de trabajo</a>
+                                                </li>
+                                                <li>
+                                                    <a target="_blank"
+                                                        href="<?php echo site_url('service/informacion/contacto'); ?>">Contacto</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-4 col-md-6 col-sm-6">
+                                        <div class="footer-widgets_title">
+                                            <h6>Pol&iacute;ticas</h6>
+                                        </div>
+                                        <div class="footer-widgets">
+                                            <ul>
+                                                <li> <a target="_blank"
+                                                        href="<?php echo site_url('service/informacion/privacidad'); ?>">Aviso
+                                                        de privacidad</a>
+                                                </li>
+                                                <li> <a target="_blank"
+                                                        href="<?php echo site_url('service/informacion/terminos'); ?>">Términos
+                                                        y condiciones</a>
+                                                </li>
+                                                <li> <a target="_blank"
+                                                        href="<?php echo site_url('service/informacion/cancelacion'); ?>">Política
+                                                        de cancelación </a>
+                                                </li>
+                                                <li> <a target="_blank"
+                                                        href="<?php echo site_url('service/informacion/devolucion'); ?>">Política
+                                                        de devolución </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!--<div class="col-12 col-lg-3 col-md-6 col-sm-6">
+                                        <div class="instagram-container footer-widgets_area">
+                                            <div class="footer-widgets_title">
+                                                <h6>Newsletter</h6>
+                                            </div>
+                                            <div class="widget-short_desc">
+                                                <p>Recibe ofertas de nuevos productos</p>
+                                            </div>
+                                            <div class="Nuevosletter-form_wrap">
+                                                <form class="subscribe-form" id="mc-form" action="#">
+                                                    <input class="Nuevosletter-input" id="txtEmailOfertas" type="email" autocomplete="off" name="email" placeholder="Escriba su correo" />
+                                                    <button class="Nuevosletter-btn" id="mc-submit"> 
+                                                        <i class="ion-android-mail"></i>
+                                                    </button>
+                                                </form>
+                    
+                                                <div class="mailchimp-alerts mt-3">
+                                                    <div class="mailchimp-submitting"></div>
+                                                    <div class="mailchimp-success"></div>
+                                                    <div class="mailchimp-error"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom_area">
+                <div class="container">
+                    <div class="footer-bottom_nav">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!--div class="payment">
+                                        <a href="#">
+                                            <img src="<?php echo URL_VIEWS; ?>assets/images/footer/payment/1.png" alt="Mendoza Payment Method">
+                                        </a>
+                                    </div-->
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="copyright"> <span>Copyright &copy; 2019 <a
+                                            href="<?php echo URL_SITE; ?>">Refaccionaria Mendoza
+                                        </a> Derechos
+                                        reservados</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modales para uso en cualquier parte del sistema -->
+    <div id="dialog-confirm"></div>
+    <div id="dialog-alert"></div>
+    <div id="dialog-update-password">
+        <div id="dialog-update-password-load"></div>
+    </div>
+    <div id="dialog-estatus-oxxo">
+        <div id="update_status_load_oxxo"></div>
+    </div>
+    <div id="dialog-estatus-prods">
+        <div id="update_status_load_prods"></div>
+    </div>
+    <div id="dialog-estatus-img">
+        <div id="update_img_status_load"></div>
+    </div>
+    <div id="dialog-estatus-address">
+        <div id="update_status_load_address"></div>
+    </div>
+    <div id="dialog-estatus-cotizacion">
+        <div id="update_status_load_cotizacion"></div>
+    </div>
+    <div id="dialog-estatus-producto">
+        <div id="update_status_load_producto"></div>
+    </div>
+    <div id="dialog-estatus-grupo">
+        <div id="update_status_load_grupo"></div>
+    </div>
+    <div id="dialog-estatus-clone-grupo">
+        <div id="update_status_load_clone_grupo"></div>
+    </div>
+    <div id="dialog-estatus-element-group">
+        <div id="update_status_load_element_group"></div>
+    </div>
+    <div id="dialog-estatus-element-config">
+        <div id="update_status_load_element_config"></div>
+    </div>
+    <div id="dialog-estatus-cards">
+        <div id="update_status_load_cards"></div>
+    </div>
+    <div id="dialog-estatus-schedules-generic">
+        <div id="update_status_load_schedule_generic"></div>
+    </div>
+    <div id="dialog-estatus-aviso">
+        <div id="update_status_load_aviso"></div>
+    </div>
+    <div id="dialog-estatus-aviso-solicitud">
+        <div id="update_status_load_aviso-solicitud"></div>
+    </div>
+    <div id="dialog-estatus-aviso-solicitud-registro">
+        <div id="update_status_load_aviso-solicitud-registro"></div>
+    </div>
+
+    <div id="dialog-estatus-aviso-token">
+        <div id="update_status_load_aviso-token"></div>
+    </div>
+
+    <div id="dialog-estatus-rfc">
+        <div id="update_status_load_rfc"></div>
+    </div>
+
+    <div id="dialog-agregar-evaluacion">
+        <div id="update_status_load_agregar-evaluacion"></div>
+    </div>
+
+    <div id="dialog-agregar-cvv">
+        <div id="update_status_load_agregar-cvv"></div>
+    </div>
+
+
+    <!-- JS
+    ============================================ -->
+    <!-- jQuery JS -->
+    <script src="<?php echo URL_VIEWS; ?>assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <!-- Popper JS -->
+    <script src="<?php echo URL_VIEWS; ?>assets/js/vendor/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="<?php echo URL_VIEWS; ?>assets/js/vendor/bootstrap.min.js"></script>
+    <!-- Slick Slider JS -->
+    <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/slick.min.js"></script>
+    <!-- Jquery-ui JS -->
+    <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/jquery-ui.min.js"></script>
+     <!-- ElevateZoom JS -->
+     <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/jquery.elevateZoom-3.0.8.min.js"></script>
+    <!-- Vendor & Plugins JS (Please remove the comment from below vendor.min.js & plugins.min.js for better website load performance and remove js files from avobe) -->
+    <!--
+    <script src="<?php echo URL_VIEWS; ?>assets/js/vendor/vendor.min.js"></script>
+    <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/plugins.min.js"></script>
+    -->
+
+    <!--<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/gsap-latest-beta.min.js?r=435" type="text/javascript"></script>
+    <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js" type="text/javascript"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Draggable3.min.js?r=897" type="text/javascript"></script>-->
+    <!-- Main JS -->
+    <script src="<?php echo URL_VIEWS; ?>assets/js/main.js"></script>
+
+    <script type="text/javascript">
+        var URL_SITE = "<?php echo defined('URL_SITE') ? URL_SITE : ''; ?>";
+        var URL_VIEWS = "<?php echo defined('URL_VIEWS') ? URL_VIEWS : ''; ?>";
+        var API_KEYS_MODE = "<?php echo defined('API_KEYS_MODE') ? API_KEYS_MODE : ''; ?>";
+        var GOOGLE_API_KEYS = "<?php echo defined('GOOGLE_API_KEYS') ? GOOGLE_API_KEYS : ''; ?>";
+    </script>
+
+    <script src="<?php echo URL_VIEWS; ?>js/jquery.blockUI.js" type="text/javascript"></script>
+
+    <script src="<?php echo URL_VIEWS; ?>js/jquery.form.js" type="text/javascript"></script>
+
+    <script src="<?php echo URL_VIEWS; ?>js/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
+
+    <script src="<?php echo URL_VIEWS; ?>js/toastr/toastr.min.js" type="text/javascript"></script>
+
+    <?php if($loadPickerUser) { ?>
+    <!-- Data picker -->
+    <script src="<?php echo URL_VIEWS; ?>js/datapicker/bootstrap-datepicker.min.js"></script>
+    <?php } ?>
+
+    <!-- Jquery Validate -->
+    <script src="<?php echo URL_VIEWS; ?>js/validate/jquery.validate.min.js"></script>
+    <script src="<?php echo URL_VIEWS; ?>js/validate/localization/messages_es.js"></script>
+
+    <!-- jQuery-Autocomplete -->
+    <script src="<?php echo URL_VIEWS; ?>js/prueba/bootstrap-typeahead.js"></script>
+    <!--<script src="<?php echo URL_VIEWS; ?>js/jQuery-Autocomplete/jquery.autocomplete.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo URL_VIEWS; ?>js/jQuery-Autocomplete/styles.css" />-->
+
+    <!--<script src="<?php echo URL_VIEWS; ?>bootstrap_4/js/bootstrap.min.js" type="text/javascript"></script>-->
+
+    <script src="<?php echo URL_VIEWS; ?>js/datatables/datatables.min.js"></script>
+
+    <?php if($loadBarcodeOxxo) { ?>
+    <!-- Barcode -->
+    <script src="<?php echo URL_VIEWS; ?>js/barcode/barcode.js"></script>
+    <?php } ?>
+
+    <!-- CHECK STRIPE -->
+    <?php if($loadStripe) { ?>
+    <!-- CHECK STRIPE -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <?php } ?>
+
+    <?php if($loadGoogle) { ?>
+    <!-- Login Redes Sociales -->
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-database.js"></script>
+    <?php } ?>
+
+    <!-- Jquery Cards -->
+    <?php if($loadCardStyle) { ?>
+        <script src="<?php echo URL_VIEWS; ?>card-master/dist/jquery.card.js"></script>
+        <!-- OR -->
+        <script src="<?php echo URL_VIEWS; ?>card-master/dist/card.js"></script>
+    <?php } ?>
+
+    <?php if($loadInputMask) { ?><!-- 03 a 0.5 seg-->
+        <script src="<?php echo URL_VIEWS; ?>js/hideShowPassword/hideShowPassword.min.js"></script>
+    <?php } ?>
+
+    <!-- Configuraciï¿½n global del sistema -->
+    <script src="<?php echo URL_VIEWS; ?>js/config_ini.js" type="text/javascript"></script>
+
+    <?php
+
+        if ( !empty($archivos) ) {
+
+            foreach($archivos as $archivo) {
+
+                if ( preg_match("/css$/", $archivo) ) { ?>
+
+    <link rel="stylesheet" type="text/css" href="<?php echo URL_VIEWS . $archivo; ?>" />
+    <?php
+
+                } else { ?>
+
+    <script src="<?php echo URL_VIEWS . $archivo; ?>" type="text/javascript"></script>
+    <?php
+                }
+            }
+        }
+
+        ?>
+
+    <?php if($loadLibrary) { ?>
+        <!-- Scroll Top JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/scroll-top.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+        integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+        crossorigin="anonymous"></script>
+        <script src="<?php echo URL_VIEWS; ?>js/validate/additional-methods.min.js"></script>
+        <!--<script src="<?php echo URL_VIEWS; ?>js/jquery-3.2.1.min.js" type="text/javascript"></script>-->
+        <script src="https://rawgit.com/lanre-ade/jQuery-slimScroll/master/jquery.slimscroll.js"></script>
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/jquery.ui.touch-punch.min.js"></script>
+        <!-- Theia Sticky Sidebar JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/theia-sticky-sidebar.min.js"></script>
+        <!-- Waypoints JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/waypoints.min.js"></script>
+        <!-- Instafeed JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/instafeed.min.js"></script>
+        <!-- Mailchimp Ajax JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/mailchimp-ajax.js"></script>
+        <!-- Countdown JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/countdown.js"></script>
+        <!-- Barrating JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/jquery.barrating.min.js"></script>
+        <!-- Counterup JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/jquery.counterup.js"></script>
+        <!-- Sticky Sidebar JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/jquery.sticky-sidebar.js"></script>
+        <!-- Modernizer JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/vendor/modernizr-2.8.3.min.js"></script>
+        <!-- Nice Select JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/jquery.nice-select.js"></script>
+        <!-- Timecircles JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/timecircles.js"></script>
+        <!-- Lightgallery JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/plugins/lightgallery.min.js"></script>        
+        <script src="<?php echo URL_VIEWS; ?>js/multiselect/js/bootstrap-multiselect.js"></script>
+        <script src="<?php echo URL_VIEWS; ?>js/chosen_v1.8.2/chosen.jquery.min.js" type="text/javascript"></script>
+        <!-- Ajax Mail JS -->
+        <script src="<?php echo URL_VIEWS; ?>assets/js/ajax-mail.js"></script>
+    <?php } ?>
+
+    <!-- GOOGLE MAPS -->
+    <?php if($loadMaps) { ?>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_API_KEYS; ?>&libraries=places&callback=initMap"></script>
+    <?php } ?>
+
+    <!-- Load the JS SDK asynchronously -->
+    <?php if($loadFacebook) { ?>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <?php } ?>
+
+    <!--<script type="text/javascript" src="<?php echo URL_VIEWS; ?>js/timeliner/timeliner.js"></script>-->
+
+</body>
+
+</html>
+
+<script>
+    let claveSeleccionada = "<?php echo !empty($this->session->userdata()['almacen']) ? $this->session->userdata()['almacen'] : ''; ?>";
+    let estatusLogin = "<?php echo LOGGED ?>";
+    let avisoSucursal = "<?php echo !empty($this->session->userdata()['AVISO_SUCURSAL']) ? $this->session->userdata()['AVISO_SUCURSAL'] : ''; ?>";
+    let urlGO = "<?php echo !empty($this->session->userdata()['urlGo']) ? $this->session->userdata()['urlGo'] : URL_SITE; ?>";
+    let marcaVehiculo = "<?php echo !empty($this->session->userdata()['marca']) ? $this->session->userdata()['marca'] : ''; ?>";
+    let controladorActual = "<?php echo CONTROLLER; ?>";
+
+    let LOGGED = "<?php echo LOGGED; ?>";
+
+    /*$(document).ready(function() {
+			
+        $.timeliner({
+            
+        });
+		
+	});*/
+</script>

@@ -1,0 +1,37 @@
+<!-- START LOGIN SECTION -->
+<div class="login_register_wrap section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-md-10">
+                <div class="login_wrap">
+            		<div class="padding_eight_all bg-white">
+                        <form id="form_login" method="post">
+                            <input type="hidden" value="APP_WEB" name="APP_KEY" />
+							<input id="tokenRecaptcha" type="hidden" value="" name="token" />
+                            <div class="mb-3">
+                                <input type="text" class="form-control" name="usuario" placeholder="Usuario">
+                            </div>
+                            <div class="mb-3">
+                                <input id="password" class="form-control" type="password" name="password" placeholder="Contraseña">
+                            </div>
+                            <div class="login_footer mb-3">
+                                <div class="chek-form">
+                                    <div class="custome-checkbox d-none">
+                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
+                                        <label class="form-check-label" for="exampleCheckbox1"><span>Recuerdame</span></label>
+                                    </div>
+                                </div>
+                                <a id="linkOlvidastePass" href="<?php echo site_url('login/recuperar'); ?>">¿Has olvidado tu contraseña?</a>
+                            </div>
+                            <div class="mb-3">
+                                <button id="btn_enviar" type="submit" class="btn btn-fill-out btn-block" name="login">Iniciar sesi&oacute;n</button>
+                            </div>
+                        </form>
+                        <div class="form-note text-center">¿No tienes una cuenta? <a id="registrate" href="<?php echo site_url('user/register'); ?>">Reg&iacute;strate ahora</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    

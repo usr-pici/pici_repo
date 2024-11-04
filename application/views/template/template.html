@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Meta -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="Anil z" name="author">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- SITE TITLE -->
+<title>Programa Integral de Cuestionarios para Investigaci&oacute;n</title>
+<!-- Favicon Icon -->
+<link rel="shortcut icon" type="image/x-icon" href="<?php echo URL_VIEWS . 'images/banner_pici.jpg'; ?>">	
+
+<link href="<?php echo URL_VIEWS; ?>bootstrap-5.1.3/css/bootstrap.min.css" rel="stylesheet">
+
+<link href="<?php echo URL_VIEWS; ?>js/toastr/toastr.min.css" rel="stylesheet" />
+
+<link href="<?php echo URL_VIEWS; ?>fontawesome-free-5.6.3-web/css/all.css" rel="stylesheet" />
+
+<link href="<?php echo URL_VIEWS; ?>js/datapicker/bootstrap-datepicker.min.css" rel="stylesheet"/>
+
+<link rel="stylesheet" href="<?php echo URL_VIEWS; ?>js/bootstrap-select-1.14.0/dist/css/bootstrap-select.min.css">
+<!-- Datatable -->
+<link href="<?php echo URL_VIEWS; ?>js/DataTables/datatables.min.css" rel="stylesheet"/>
+
+<link href="<?php echo URL_VIEWS; ?>css/estilo_app.css" rel="stylesheet" />
+
+
+</head>
+
+<body>
+
+    <header>
+
+        <div class="row mt-5">
+            <div class="col-md-2 text-end">
+                <img src="<?php echo URL_VIEWS; ?>images/ticSocial.png" alt="Tic Social" style="width: 11rem;">
+            </div>
+            <div class="col-md-8 text-center">
+                <h4 class="mt-2 fw-bold">Plataforma Integral de Cuestionarios para Investigaci&oacute;n</h4>
+            </div>
+            <div class="col-md-2">
+                <img src="<?php echo URL_VIEWS; ?>images/imgForms.png" alt="Tic Social" style="width: 3.5rem;">
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-8 text-center">
+                <label class="medium"><?php echo !empty($title) ? $title : '' ?></label>
+            </div>
+            <div class="col-md-2">
+
+            </div>
+        </div>
+	
+        
+    </header>
+    
+<!-- START MAIN CONTENT -->
+<div class="main_content">
+    
+    <?php
+    
+        if ( !empty($main_content) ) {
+        
+            echo $main_content;
+        }
+        
+    ?>
+
+
+</div>
+<!-- END MAIN CONTENT -->
+
+<a title="Ir al inicio" href="javascript:void(0);" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a> 
+
+<script src="<?php echo URL_VIEWS; ?>js/jquery-3.2.1.min.js" type="text/javascript"></script>
+
+<script src="<?php echo URL_VIEWS; ?>bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
+
+<script src="<?php echo URL_VIEWS; ?>js/DataTables/datatables.min.js"></script>
+
+<script type="text/javascript">
+    const URL_SITE = "<?php echo defined('URL_SITE') ? URL_SITE : ''; ?>";
+    const URL_VIEWS = "<?php echo defined('URL_VIEWS') ? URL_VIEWS : ''; ?>";
+</script>
+
+<!-- Mostrar password -->
+<script src="<?php echo URL_VIEWS; ?>js/hideShowPassword/hideShowPassword.min.js"></script>
+<!-- Jquery Validate -->
+<script src="<?php echo URL_VIEWS; ?>js/validate/jquery.validate.min.js"></script>
+<script src="<?php echo URL_VIEWS; ?>js/validate/localization/messages_es.js"></script>
+<!-- Configuracion global del sistema -->
+<script src="<?php echo URL_VIEWS; ?>js/config_ini.js" type="text/javascript"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="<?php echo URL_VIEWS; ?>js/bootstrap-select-1.14.0/dist/js/bootstrap-select.min.js"></script>
+<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+<script src="<?php echo URL_VIEWS; ?>js/bootstrap-select-1.14.0/dist/js/i18n/defaults-es_ES.min.js"></script>
+
+<script defer src="<?php echo URL_VIEWS; ?>js/jquery.blockUI.js" type="text/javascript"></script>
+
+<script defer src="<?php echo URL_VIEWS; ?>js/jquery.form.js" type="text/javascript"></script>
+
+<script defer src="<?php echo URL_VIEWS; ?>js/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
+
+<script defer src="<?php echo URL_VIEWS; ?>js/toastr/toastr.min.js" type="text/javascript"></script>
+
+<script defer src="<?php echo URL_VIEWS; ?>js/datapicker/bootstrap-datepicker.min.js"></script>
+
+<script defer src="<?php echo URL_VIEWS; ?>js/validate/additional-methods.min.js"></script>
+   
+<?php
+
+    if ( !empty($fileToLoad) ) {
+
+        foreach($fileToLoad as $file) {
+
+            if ( preg_match("/css$/", $file) ) { ?>
+
+                <link rel="stylesheet" type="text/css" href="<?php echo URL_VIEWS . $file; ?>" /> <?php
+
+            } else { ?>
+
+                <script src="<?php echo URL_VIEWS . $file; ?>" type="text/javascript"></script> <?php
+            }
+        }
+    }
+
+?>
+
+<div id="dialog-alert"></div>
+<div id="dialog-confirm"></div>
+</body>
+</html>

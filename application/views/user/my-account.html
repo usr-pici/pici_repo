@@ -1,0 +1,201 @@
+<!-- START SECTION BREADCRUMB -->
+<div class="breadcrumb_section bg_gray page-title-mini">
+    <div class="container"><!-- STRART CONTAINER -->
+        <div class="row align-items-center">
+        	<div class="col-md-6">
+                <div class="page-title">
+            		<h1>Mi Cuenta</h1>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <ol class="breadcrumb justify-content-md-end">
+                    <li class="breadcrumb-item"><a href="<?php echo site_url(); ?>">Inicio</a></li>
+                    <!--<li class="breadcrumb-item"><a href="#">Pages</a></li>-->
+                    <li class="breadcrumb-item active">Mi cuenta</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- END CONTAINER-->
+</div>
+<!-- END SECTION BREADCRUMB -->
+
+<!-- START MAIN CONTENT -->
+<div class="main_content">
+
+<!-- START SECTION SHOP -->
+<div class="section">
+	<div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-4">
+                <div class="dashboard_menu">
+                    <ul class="nav nav-tabs flex-column" role="tablist">
+                      <li class="nav-item">
+                        <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false"><i class="ti-layout-grid2"></i>Dashboard</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="ti-shopping-cart-full"></i>Pedidos</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="ti-location-pin"></i>Mis direcciones</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="ti-id-badge"></i>Perfil</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="javascript:logout()"><i class="ti-lock"></i>Cerrar sesi&oacute;n</a>
+                      </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-8">
+                <div class="tab-content dashboard_content">
+                  	<div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                    	<div class="card">
+                        	<div class="card-header">
+                                <h3>Dashboard</h3>
+                            </div>
+                            <div class="card-body">
+                    			<p>Desde el panel de tu cuenta. puede verificar y ver f&aacute;cilmente sus pedidos recientes, 
+                                   administrar sus direcciones de env&iacute;o y facturaci&oacute;n y editar su contraseña y los 
+                                   detalles de su cuenta.</a></p>
+                            </div>
+                        </div>
+                  	</div>
+                  	<div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                    	<div class="card">
+                        	<div class="card-header">
+                                <h3>Pedidos</h3>
+                            </div>
+                            <div class="card-body">
+                    			<div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Order</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                <th>Total</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>#1234</td>
+                                                <td>March 15, 2020</td>
+                                                <td>Processing</td>
+                                                <td>$78.00 for 1 item</td>
+                                                <td><a href="#" class="btn btn-fill-out btn-sm">View</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td>#2366</td>
+                                                <td>June 20, 2020</td>
+                                                <td>Completed</td>
+                                                <td>$81.00 for 1 item</td>
+                                                <td><a href="#" class="btn btn-fill-out btn-sm">View</a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                  	</div>
+					<div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                    	<div class="row">
+                        	<div class="col-lg-6">
+                                <div class="card mb-3 mb-lg-0">
+                                    <div class="card-header">
+                                        <h3>Direcci&oacute;n de Env&iacute;o</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <address>House #15<br>Road #1<br>Block #C <br>Angali <br> Vedora <br>1212</address>
+                                        <p>New York</p>
+                                        <a href="#" class="btn btn-fill-out">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3>Shipping Address</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <address>House #15<br>Road #1<br>Block #C <br>Angali <br> Vedora <br>1212</address>
+                                        <p>New York</p>
+                                        <a href="#" class="btn btn-fill-out">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+					</div>
+                    <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+						<div class="card">
+                        	<div class="card-header">
+                                <h3>Perfil</h3>
+                            </div>
+                            <div class="card-body">
+                    			<!--<p>Already have an account? <a href="#">Log in instead!</a></p>-->
+
+                                <div class="row form-group">
+                                    <div class="col-md-4"> 
+                                        <a href="#"> 
+                                            <img id="img" class="w-100 h-100 img-thumbnail" src="<?php echo !empty($img['file']) ? $img['file'] : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'; ?>" alt="" /> 
+                                        </a>
+                                        <div class="form-check text-left">
+                                            <input class="form-check-input" type="checkbox" id="changeImg">
+                                            <label class="form-check-label" for="changeImg">
+                                              Cambiar imagen
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 mt-5">
+                                        <p><i class="fa fa-envelope "></i> Correo electrónico</p>
+                                        <p> <?php echo $email; ?></p>
+                                        <input accept="image/*" type='file' id="imgInput" name="foto" class="form-control" />                                        
+                                    </div>
+                                </div>
+
+                                <form id="formUpdatePerfil" class="mt-5" method="post">
+                                    <input type="hidden" name="idPersona" value="<?php echo $persona['idPersona'] ?>">
+                                    <input type="hidden" name="medioContactoCel[idContacto]" value="<?php echo $idContactoCelular;  ?>">
+                                    <input type="hidden" name="medioContactoCel[claveMedioContacto]" value="CEL">
+                                    <input type="hidden" name="medioContactoCel[etiqueta]" value="celular">
+                                    <input type="hidden" name="medioContactoCel[prioridad]" value="2">
+                                    <div class="row">
+                                        <div class="form-group col-md-6 mb-3">
+                                        	<label>Nombre <span class="required">*</span></label>
+                                            <input class="form-control" name="persona[nombre]" type="text" value="<?php echo $persona['nombre']; ?>">
+                                         </div>
+                                         <div class="form-group col-md-6 mb-3">
+                                        	<label>C&eacute;lular <span class="required">*</span></label>
+                                            <input class="form-control" name="medioContactoCel[celular]" value="<?php echo $celular; ?>">
+                                        </div>
+                                        <div class="form-group col-md-12 mb-3">
+                                            <label for="changePwd">Cambiar contrase&ntilde;a:</label>
+                                            <input type="checkbox" style="width: 5%;" id="changePwd" value="1" />
+                                        </div>
+                                        <div id="divActual" class="form-group col-md-12 mb-3 d-none">
+                                        	<label>Contraseña Actual <span class="required">*</span></label>
+                                            <input id="inputPasswordActual" class="form-control" name="usuario[passwordActual]" type="password">
+                                        </div>
+                                        <div id="divNueva" class="form-group col-md-12 mb-3 d-none">
+                                        	<label>Nueva Contraseña <span class="required">*</span></label>
+                                            <input id="inputPassword" class="form-control" name="usuario[password]" type="password">
+                                        </div>
+                                        <div id="divConfirmar" class="form-group col-md-12 mb-3 d-none">
+                                        	<label>Confirmar Contraseña <span class="required">*</span></label>
+                                            <input id="inputPassword2" class="form-control" name="inputPassword2" type="password">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button id="btnActualizar" type="submit" class="btn btn-fill-out" value="Guardar">Guardar</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END SECTION SHOP -->

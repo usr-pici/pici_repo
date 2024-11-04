@@ -1,0 +1,65 @@
+<!-- START SECTION BREADCRUMB -->
+<div class="breadcrumb_section bg_gray page-title-mini">
+    <div class="container"><!-- STRART CONTAINER -->
+        <div class="row align-items-center">
+        	<div class="col-md-6">
+                <div class="page-title">
+            		<h1>C&oacute;digo de verificaci&oacute;n</h1>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <ol class="breadcrumb justify-content-md-end">
+                    <li class="breadcrumb-item"><a href="<?php echo site_url('login'); ?>">Login</a></li>
+                    <li class="breadcrumb-item active">C&oacute;digo de verificaci&oacute;n</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- END CONTAINER-->
+</div>
+<!-- END SECTION BREADCRUMB -->
+
+<!-- START LOGIN SECTION -->
+<div class="login_register_wrap section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-md-10">
+                <div class="login_wrap">
+            		<div class="padding_eight_all bg-white">
+                        <p style="text-align: justify;" class="mb-2">Para reestablecer la contraseña de tu cuenta de Ecommerce, ingrese el c&oacute;digo 
+                            de verificaci&oacute;n que fue enviado al correo <strong><?php echo $email ?></strong>. Por favor revisa la bandeja de 
+                            correos no deseados.
+                        </p>
+                        <h6 style="font-size: small;">Tienes un c&oacute;digo de verificaci&oacute;n vigente, puedes solicitar uno en:</h6>
+                        <div style="padding-bottom: 30px; width: 100%;" id="temporizador" class="countdown_time_p countdown_style4 mb-5" data-time="<?php echo $fecha; ?>"></div>
+                 
+                        <form id="formValidarCodigo">
+							<input type="hidden" id="txtEmail" value="<?php echo $email ?>" name="reg[email]" />
+							<input id="tokenRecaptcha" type="hidden" value="" name="token" />
+
+                            <div class="mb-3">
+                                <h6 class="fw-bold">C&oacute;digo de verificaci&oacute;n:&nbsp;<span class="required">*</span></h6>
+                                <input id="txtToken" type="text" class="form-control" name="reg[token]" placeholder="Ingresa c&oacute;digo de verificaci&oacute;n" />
+                            </div>
+                            <div class="text-end mb-3">
+                                <label class="pb-2"><span class="required">*</span><i class="text-secondary">Campos obligatorios</i></label>
+                            </div>
+                            <div class="mb-3">
+                                <button id="btnValidarCodigo" type="button" class="btn btn-danger btn-block">VALIDAR C&Oacute;DIGO DE VERIFICACI&Oacute;N</button>
+                            </div>
+                            <div class="mb-3">
+                                <button id="btnRegresarEnvio" type="button" class="btn btn-secondary btn-block">REGRESAR</button>
+                            </div>
+                            <div class="mb-3">
+                                <button disabled id="btnReenviarCodigo" type="button" class="btn btn-primary btn-block">ENVIAR OTRO C&Oacute;DIGO DE VERIFICACI&Oacute;N</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END LOGIN SECTION -->
+<script>
+    const keySiteWeb = '<?php echo $keySiteWeb; ?>';
+</script>

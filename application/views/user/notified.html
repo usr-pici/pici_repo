@@ -1,0 +1,54 @@
+<div class="breadcrumb_section bg_gray page-title-mini">
+    <div class="container"><!-- STRART CONTAINER -->
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="page-title">
+                    <h1>Aviso Importante</h1>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <ol class="breadcrumb justify-content-md-end">
+                    <li class="breadcrumb-item"><a href="<?php echo site_url('login'); ?>">Login</a></li>
+                    <li class="breadcrumb-item active">Aviso importante</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="login_register_wrap">
+    <div class="container">
+        <div class="row mt-3 mb-3">
+			<div class="col-12">
+				<h5>Su cuenta <?php echo $bandera == 'activar' ? 'ya' : '' ?>  ha sido registrada, se ha enviado un link para <?php echo $bandera; ?> su cuenta al correo <strong><?php echo $email; ?></strong>.</h5>
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-md-12">
+				<h5>Pasos a seguir:</h5>
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-md-12 ml-3">
+				<li>Tener una conexi&oacute;n a internet estable.</li>
+				<li>Abrir cualquier navegador de su preferencia.</li>
+				<li>Ingresar a su cuenta de correo registrado en el portal.</li>
+				<li>Revisar tu bandeja de correos no deseados.</li>
+				<li>Abrir el mensaje recibido por parte de Ecommerce.</li>
+				<li>Hacer clic en el link proporcionado en el correo.</li>
+			</div>
+		</div>
+
+		<div class="row mb-5 <?php echo $envio == '0' ? 'text-secondary' : 'd-none' ?>">
+			<div class="col-12">
+				<h5>Si no has recibido el correo electr&oacute;nico, hacer clic en el siguiente enlace para 
+					<a onclick="resendEmailUser('<?php echo $email; ?>','<?php echo $bandera; ?>')" class="<?php echo $envio == '0' ? 'text-primary' : 'd-none' ?>" href="javascript:void(0);">reenviar un correo nuevo.</a>
+					Si el problema persiste, p&oacute;ngase en contacto con el administrador para obtener más informaci&oacute;n.
+				</h5>
+			</div>
+		</div>
+
+    </div>
+</div>

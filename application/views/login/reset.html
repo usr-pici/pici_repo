@@ -1,0 +1,64 @@
+<!-- START SECTION BREADCRUMB -->
+<div class="breadcrumb_section bg_gray page-title-mini">
+    <div class="container"><!-- STRART CONTAINER -->
+        <div class="row align-items-center">
+        	<div class="col-md-6">
+                <div class="page-title">
+            		<h1>Restablecer contraseña</h1>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <ol class="breadcrumb justify-content-md-end">
+                    <li class="breadcrumb-item"><a href="<?php echo site_url('login'); ?>">Login</a></li>
+                    <li class="breadcrumb-item active">Restablecer contraseña</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- END CONTAINER-->
+</div>
+<!-- END SECTION BREADCRUMB -->
+
+<!-- START LOGIN SECTION -->
+<div class="login_register_wrap section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-md-10">
+                <div class="login_wrap">
+            		<div class="padding_eight_all bg-white">
+                        <label class="pb-1 pb-4">Por favor introduce tu nueva contraseña</label>
+                        <div class="contact-form">
+                            <form id="formUpdatePassword">
+                                <input type="hidden" id="txtIdUsuario" name="usuario[idUsuario]" value="<?php echo $idUsuario; ?>" />
+							    <input id="tokenRecaptcha" type="hidden" value="" name="token" />
+	                            <div class="mb-3">
+                                    <h6 class="fw-bold">Nueva contraseña:<span class="required">*</span></h6>
+                                    <input id="password" type="password" name="usuario[password]" class="form-control" placeholder="Ingresa nueva contraseña" />
+                                </div>
+                                <div class="mb-3">
+                                    <h6 class="fw-bold">Confirmar tu contraseña:<span class="required">*</span></h6>
+                                    <input id="inputPassword2" type="password" name="inputPassword2" class="form-control" placeholder="Ingresa la confirmaci&oacute;n de contraseña" />
+                                </div>
+                                <div class="text-end mb-3">
+                                    <label class="text-right pb-2 text-tertiary"><span class="required">*</span><i>Campos obligatorios</i></label>
+                                    <div id="Numbers" class="glyphicon glyphicon-remove"><i id="imgNumbers" class="fas fa-times"></i> Compuesta &uacute;nicamente de letras y n&uacute;meros</div>
+                                    <div id="UpperCase" class="glyphicon glyphicon-remove"><i id="imgUpperCase" class="fas fa-times"></i> Al menos una letra mayuscula</div>
+                                    <div id="Length" class="glyphicon glyphicon-remove"><i id="imgLength" class="fas fa-times"></i> Entre 8 y 20 caracteres</div>
+                                </div>
+                                <div class="mb-3">
+                                    <button type="button" id="btnActualizarPassword" class="btn btn-danger btn-block">Reestablecer contraseña</button>
+                                </div>
+                                <div class="mb-1">
+                                    <button type="button" id="btnRegresarValidar" class="btn btn-secondary btn-block">Regresar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END LOGIN SECTION -->
+<script>
+    const keySiteWeb = '<?php echo $keySiteWeb; ?>';
+</script>

@@ -1,0 +1,115 @@
+<div class="login_register_wrap">
+    <div class="container">
+
+        <form id="form-register" method="post">
+            <input type="hidden" name="reg[idFormulario]" id="txtIdFormulario">
+
+            <div class="row mt-3">
+                <h5 class="required text-end">* Campos obligatorios</h5>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <div class="col-md-12 col-12 mb-2">
+                        <h6 class="fw-bold">Clave:&nbsp;<span class="required">*</span></h6>
+                        <input type="text" class="form-control" id="txtClave" placeholder="Clave" name="reg[clave]">
+                    </div>
+                    <div class="col-md-12 col-12 mb-2">
+                        <h6 class="fw-bold">Nombre:&nbsp;<span class="required">*</span></h6>
+                        <input type="text" class="form-control" id="txtNombre" placeholder="Nombre" name="reg[nombre]">
+                    </div>                                    
+                </div> 
+
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <div class="col-md-12 col-12 mt-1 mb-2">
+                        <h6 for="exampleFormControlTextarea1" class="form-label fw-bold">Activo:&nbsp;<span class="required">*</span></h6>
+                        <div class="col-sm-6 mb-2">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="reg[activo]" id="radSi" value="1">
+                                <label class="form-check-label" for="radSi">Si</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="reg[activo]" id="radNo" value="0">
+                                <label class="form-check-label" for="radNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-12 mt-3 mb-2">
+                        <div class="form-group">
+                            <h6 class="fw-bold">Vigencia:</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Del</span>
+                                        </div>
+                                        <input id="txtVigenciaIni" type="text" name="reg[vigenciaIni]" class="form-control fecha" placeholder="dd/mm/aaaa" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Al</span>
+                                        </div>
+                                        <input id="txtVigenciaFin" type="text" name="reg[vigenciaFin]" class="form-control fecha" placeholder="dd/mm/aaaa" />
+                                    </div>
+                                </div>
+                            </div>    
+                        </div>                  
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="row justify-content-center mb-2">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">          
+                    <div class="col-md-12 col-12 mb-2">
+                        <h6 class="fw-bold">Descripci&oacute;n:&nbsp;<span class="required">*</span></h6>
+                        <textarea type="text" id="txtFechaNacimiento" class="form-control" name="reg[descripcion]" placeholder="Descripci&oacute;n"></textarea>
+                    </div>
+                </div> 
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
+                <button id="btnSave" type="button" class="btn btn-success">Guardar</button>
+                <a style="margin-left: 0px;" href="<?php echo site_url('formulario'); ?>" id="btnRegresar" class="btn btn-secondary">Regresar</a>
+            </div>
+
+            <div id="divBtnAddQuestion" class="justify-content-md-end mb-2 d-none">
+                <a target="_blank" id="btnPreview" href="<?php echo site_url('formulario/preview'); ?>" class="btn btn-warning mb-2" style="color: white;">Vista previa</a>
+                <a style="margin-left: 0px;" id="btnAddQuestion" href="javascript:void(0);" class="btn btn-primary mb-2">Agregar pregunta</a>
+            </div>
+
+            <div id="divTblPreguntas" class="container" style="display: none;">
+                <div class="col-md-12 col-12">
+                    <table class="table table-bordered" id="tblQuestions">
+                        <thead>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Pregunta</th>
+                            <th class="text-center">Acci&oacute;n</th>
+                        </thead>
+                        <tbody>
+           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </form>
+    
+    </div>
+</div>
+ 
+
+<div id="dialog-state">
+    <div id="update_state_load"></div>
+</div>
+
+
+<div id="dialog-add">
+    <div id="update_add_load"></div>
+</div>
+
+<script>
+    //let idFormulario = "<?php echo !empty($formulario['idFormulario']) ? $formulario['idFormulario'] : ''; ?>"; 
+</script>

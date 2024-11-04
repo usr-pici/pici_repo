@@ -1,0 +1,109 @@
+<!-- START SECTION BREADCRUMB -->
+<div class="breadcrumb_section bg_gray page-title-mini">
+    <div class="container"><!-- STRART CONTAINER -->
+        <div class="row align-items-center">
+        	<div class="col-md-6">
+                <div class="page-title">
+            		<h1>Registro de usuario</h1>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <ol class="breadcrumb justify-content-md-end">
+                    <li class="breadcrumb-item"><a href="<?php echo site_url('login'); ?>">Iniciar sesi&oacute;n</a></li>
+                    <!--<li class="breadcrumb-item"><a href="#">Pages</a></li>-->
+                    <li class="breadcrumb-item active">Registro de usuario</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- END CONTAINER-->
+</div>
+<!-- END SECTION BREADCRUMB -->
+
+<!-- START MAIN CONTENT -->
+<div class="main_content">
+
+<!-- START LOGIN SECTION -->
+<div class="login_register_wrap">
+    <div class="container">
+        <form id="form-register" method="post">
+            <input type="hidden" name="medioContactoMail[claveMedioContacto]" value="MAIL">
+            <input type="hidden" name="medioContactoMail[etiqueta]" value="email">
+            <input type="hidden" name="medioContactoMail[prioridad]" value="1">
+            <input type="hidden" name="medioContactoCel[claveMedioContacto]" value="CEL">
+            <input type="hidden" name="medioContactoCel[etiqueta]" value="celular">
+            <input type="hidden" name="medioContactoCel[prioridad]" value="2">
+            <input id="tokenRecaptcha" type="hidden" value="" name="token" />
+
+            <div class="row mt-3">
+                <h5 class="required text-end">* Campos obligatorios</h5>
+            </div>
+            
+            <div class="row justify-content-center mb-2">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <div class="col-md-12 col-12 mb-2">
+                        <h6 class="fw-bold">Nombre(s):&nbsp;<span class="required">*</span></h6>
+                        <input type="text" class="form-control" id="nombre" placeholder="Nombre" name="persona[nombre]">
+                    </div>
+                    <div class="col-md-12 col-12 mb-2">
+                        <h6 class="fw-bold">Apellido(s):&nbsp;<span class="required">*</span></h6>
+                        <input type="text" class="form-control" id="apellidos" placeholder="Apellidos" name="persona[apellidos]">
+                    </div>                
+                    <div class="col-md-12 col-12 mb-2">
+                        <h6 class="fw-bold">Fecha de nacimiento:&nbsp;<span class="required">*</span></h6>
+                        <input type="text" id="txtFechaNacimiento" class="form-control fecha" name="persona[fechaNacimiento]" placeholder="Ingresa fecha de nacimiento"/>
+                    </div>
+                    <div class="col-md-12 col-12 mb-2">
+                        <h6 class="fw-bold">Correo electr&oacute;nico:&nbsp;<span class="required">*</span></h6>
+                        <input type="text" class="form-control" name="medioContactoMail[email]" placeholder="Ejemplo: usuario@mail.com">
+                    </div>
+                    <div class="col-md-12 col-12 mb-3">
+                        <h6 class="fw-bold">C&eacute;lular:&nbsp;<span class="required">*</span></h6>
+                        <input type="text" class="form-control" name="medioContactoCel[celular]" placeholder="C&eacute;lular">
+                    </div>
+                </div> 
+
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <div class="col-md-12 col-12 mt-1 mb-2">
+                        <label for="last_name2">M&aacute;ximo grado de estudios:</label>
+                        <div class="custom_select">
+                            <select class="form-control" name="persona[idGradoEstudio]" id="idGradoEstudio">
+                                <?php echo $cat_gradoestudio; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-12 mb-2">
+                        <label for="last_name2">Ocupaci&oacute;n:</label>
+                        <div class="custom_select">
+                            <select class="form-control" name="persona[idOcupacion]" id="idOcupacion">
+                                <?php echo $cat_ocupacion; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-12 mb-2">
+                        <h6 class="fw-bold">Contraseña:&nbsp;<span class="required">*</span></h6>
+                        <input id="inputPassword" class="form-control" type="password" name="usuario[password]" placeholder="Contraseña">
+                    </div>
+                    <div class="col-md-12 col-12 mt-3 mb-2">
+                        <div id="Numbers" class="glyphicon glyphicon-remove"><i id="imgNumbers" class="fas fa-times"></i> Compuesta &uacute;nicamente de letras y n&uacute;meros</div>
+                        <div id="UpperCase" class="glyphicon glyphicon-remove"><i id="imgUpperCase" class="fas fa-times"></i> Al menos una letra mayuscula</div>
+                        <div id="Length" class="glyphicon glyphicon-remove"><i id="imgLength" class="fas fa-times"></i> Entre 8 y 20 caracteres</div>
+                    </div>
+                    <div class="col-md-12 col-12 mb-2">
+                        <h6 class="fw-bold">Confirmar contraseña:&nbsp;<span class="required">*</span></h6>
+                        <input id="inputPassword2" class="form-control" type="password" name="inputPassword2" placeholder="Confirmar Contraseña">
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
+                <button id="btnRegistrarUsuario" type="button" class="btn btn-success" name="register">Guardar</button>
+                <a href="<?php echo site_url('login'); ?>" id="btnRegresarLogin" class="btn btn-secondary">Regresar</a>
+              </div>
+
+        </form>
+    </div>
+</div>
+<!-- END LOGIN SECTION -->
+<script>
+    const keySiteWeb = '<?php echo $keySiteWeb; ?>';
+</script>
