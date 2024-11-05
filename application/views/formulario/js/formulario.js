@@ -33,6 +33,37 @@ function delete_reg(elem, idRegistro) {
 	});
 }
 
+function clone_reg(idFormulario) {
+
+	Confirm({
+		text: "&iquest;Clonar formulario?",
+		cancel: function () {
+			
+		},
+		ok: function () {
+			$.post(
+				URL_SITE + "formulario/clone/" + idFormulario,
+				{},
+				function (resp) {
+					msg(resp.error, resp.msg);
+
+					if (resp.error == 0) {
+						$("#tblFormularios").DataTable().ajax.reload();
+						$("#dialog-usr").modal("hide");
+					}
+				},
+				"json"
+			);
+		},
+		config: {
+			close: function () {
+				$("#dialog-delete").modal("hide");
+			},
+		},
+	});
+
+}
+
 function cleanFilter(){
     $('#txtNombre, #txtClave, #txtFechaIni, #txtFechaFin').val('');
     $('#idEstatus').val('');

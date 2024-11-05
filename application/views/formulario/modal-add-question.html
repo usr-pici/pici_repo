@@ -15,18 +15,28 @@
                 <div class="col-md-12 col-12 mb-2">
                     <h6 class="fw-bold">Posici&oacute;n:&nbsp;<span class="required">*</span></h6>
                     <select id="consecutivo" name="reg[consecutivo]" class="form-select form-control form-control-lg">
-                        <?php for($i=1; $i<=$posicion; $i++): ?>
-                            <?php if($i == $posicion){ ?>
+                        if( empty($question) ) {
+                            <?php for($i=1; $i<=$posicion; $i++): ?>
+                                <?php if($i == $posicion){ ?>
+                                    <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
+                                <?php } else { ?>
+                                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                <?php } ?>
+                            <?php endfor; ?>
+                        } else {
+                            <?php for($i=1; $i<=$posicion; $i++): ?>
+                            <?php if($i == $question['consecutivo']){ ?>
                                 <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
                             <?php } else { ?>
                                 <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
                             <?php } ?>
                         <?php endfor; ?>
+                        }
                     </select> 
                 </div>
                 <div class="col-md-12 col-12 mb-2">
                     <h6 class="fw-bold">Pregunta:&nbsp;<span class="required">*</span></h6>
-                    <input type="text" class="form-control" name="reg[etiqueta]" id="txtEtiqueta" placeholder="Etiqueta" >
+                    <input type="text" class="form-control" name="reg[etiqueta]" id="txtEtiqueta" placeholder="Etiqueta" value="<?php echo !empty($question['etiqueta']) ? $question['etiqueta'] : '' ?>" >
                 </div> 
                 <div class="col-md-12 col-12 mb-2">
                     <h6 class="fw-bold">Tipo de campo:&nbsp;<span class="required">*</span></h6>
@@ -37,21 +47,27 @@
                 <div class="col-md-12 col-12 mb-2">
                     <h6 class="fw-bold">Obligatorio:&nbsp;<span class="required">*</span></h6>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="reg[requerido]" id="radSiM" value="1">
+                        <input class="form-check-input" type="radio" name="reg[requerido]" id="radSiM" value="1" <?php echo !empty($question['activo']) ? ($question['activo'] == '1' ? 'checked' : '') : ''; ?>>
                         <label class="form-check-label" for="radSiM">Si</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="reg[requerido]" id="radNoM" value="0">
+                        <input class="form-check-input" type="radio" name="reg[requerido]" id="radNoM" value="0" <?php echo !empty($question['activo']) ? ($question['activo'] == '0' ? 'checked' : '') : ''; ?>>
                         <label class="form-check-label" for="radNoM">No</label>
                     </div>
                 </div>
                 <div class="col-md-12 col-12 mb-2">
                     <h6 class="fw-bold">Visible para rol(es):</h6>
-                    <div class="custom_select">
-                        <select id="idRol" name="reg[idRol][]" class="form-control selectpicker" title=" - Elegir - " multiple data-actions-box="true">
-                            <?php echo !empty($cat_rol) ? $cat_rol : ''; ?>
-                        </select>
-                    </div>
+                    <select id="idRol" name="reg[idRol][]" class="form-control selectpicker" title=" - Elegir - " multiple data-actions-box="true">
+                        <?php foreach($roles as $rol) { ?>
+
+                            <?php if(in_array($rol['idRol'], $idsRoles)) { ?>
+                                <option selected value="<?php echo $rol['idRol']; ?>"><?php echo $rol['nombre']; ?></option>    
+                            <?php } else { ?> 
+                                <option value="<?php echo $rol['idRol']; ?>"><?php echo $rol['nombre']; ?></option>    
+                            <?php }  ?> 
+                        
+                        <?php } ?>                                  
+                    </select>                   
                 </div>                                    
             </div> 
 
@@ -68,47 +84,64 @@
                         <h6 class="fw-bold">Longitud de campo:</h6>
                         <input type="text" class="form-control" name="reg[longitud]" id="txtLongitud" placeholder="Longitud" > 
                     </div>                  
-                </div>
-                <div id="divDependencia" class="col-md-12 col-12 mb-2" style="display: none;">
-                    <h6 class="fw-bold">Dependencia - Pregunta:</h6>
-                    <select id="idPreguntaDependencia" name="reg[idPreguntaDependencia]" class="form-select form-control form-control-lg">
-                        
-                    </select> 
-                </div> 
-                <div id="divDependenciaOpcion" class="col-md-12 col-12 mb-2" style="display: none;">
-                    <h6 class="fw-bold">Depedencia - Opci&oacute;n:</h6>
-                    <select id="idPreguntaOpcion" name="reg[idPreguntaOpcion]" class="form-select form-control form-control-lg">
-                        
-                    </select> 
-                </div> 
-                
+                </div>                
             </div>
         </div>
 
-        <div id="divOpciones" class="row mb-3" style="display: none;">
-            <div class="col-sm-2">
-                <select id="posicion" name="reg[posicion]" class="form-select form-control form-control-lg">
+        <div id="divOpciones" class="row" style="display: none;">            
+            <div class="input-group">
+                <select id="posicion" name="reg[posicion]" class="form-select form-select-sm" style="max-width: max-content;">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
-                    
                 </select> 
-            </div>
-            <div class="col-sm-6">
                 <input type="text" class="form-control" name="reg[opcion]" id="txtOpcion" placeholder="Opci&oacute;n" >
-            </div>
-            <div class="col-sm-4">
-                <button onclick="saveOptionQuestion()" type="button" class="btn btn-success">Agregar opci&oacute;n</button>
+                <button onclick="saveOptionQuestion()" type="button" class="btn btn-success h-100" style="font-size: x-small;">Agregar opci&oacute;n</button>
             </div>
         </div>
 
-        <div id="divTblOpciones" class="row text-center" style="display: none;">
-            <div class="col-md-12 col-12">
-                <table class="table table-bordered" id="tblOptions">
-                    <thead>
+        <div id="divTblOpciones" class="row text-center mb-4" style="display: none;">
+            <div class="col-md-12 col-12 table-responsive">
+                <table class="table table-bordered table-sm" id="tblOptions">
+                    <thead class="table-light">
                         <th class="text-center">#</th>
+                        <th class="text-center">Opci&oacute;n</th>
+                        <th class="text-center">Acci&oacute;n</th>
+                    </thead>
+                    <tbody>
+       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="divQuestionOption" class="row mb-1">
+            <div class="input-group">
+                <select id="posicionCondicion" name="reg[posicionCondicion]" class="form-select form-control"  style="max-width: max-content;">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select> 
+                <select id="idPreguntaCondicion" name="reg[idPreguntaCondicion]" class="form-select form-control" onchange="showOptionsQuestion()">
+                    <?php echo $listaPregunta ?>
+                </select> 
+                <select id="idPreguntaOpcion" name="reg[idPreguntaOpcion]" class="form-select form-control" >
+                    <?php echo $options; ?>
+                </select> 
+                <button onclick="saveCondition()" type="button" class="btn btn-success h-100" style="font-size: x-small;">Agregar condici&oacute;n</button>
+            </div>
+        </div>
+
+        <div id="divTblQuestionOption" class="row text-center mb-4">
+            <div class="col-md-12 col-12 table-responsive">
+                <table class="table table-bordered table-sm" id="tblOptionsConditions">
+                    <thead class="table-light">
+                        <th class="text-center">#</th>
+                        <th class="text-center">Pregunta</th>
                         <th class="text-center">Opci&oacute;n</th>
                         <th class="text-center">Acci&oacute;n</th>
                     </thead>
@@ -121,3 +154,6 @@
 
     </form>
 </div>
+<script>
+    typeField = "<?php echo !empty($question['cveField']) ? $question['cveField'] : '' ?>";
+</script>

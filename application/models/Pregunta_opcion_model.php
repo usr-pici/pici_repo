@@ -21,6 +21,9 @@ class Pregunta_opcion_model extends MY_Model {
         
         if ( isset($filtros['id_NOT_IN']) )
             $condicion[] = $this->key_field . " NOT IN (" . $filtros['id_NOT_IN'] . ")";
+
+        if ( isset($filtros['idPregunta']) )
+            $condicion[] = "idPregunta = '{$filtros['idPregunta']}'";
                         
         if ( isset($filtros['borrado']) )
             $condicion[] = "borrado = '{$filtros['borrado']}'";

@@ -45,6 +45,11 @@ class Form_Service extends Class_Service {
         
         return $this->CI->pregunta_opcion_model->indexed_search($indexes, $condicion, $extras, $multiply);
     }
+
+    function indexed_search_rol_question($indexes = NULL, $condicion = NULL, $extras = NULL, $multiply = FALSE) {
+        
+        return $this->CI->pregunta_rol_model->indexed_search($indexes, $condicion, $extras, $multiply);
+    }
                 
     function save($reg = [], $id = NULL, $varPostIndex = NULL, $method = NULL, $statusUpdate = '') {
             
@@ -97,6 +102,19 @@ class Form_Service extends Class_Service {
         $this->CI->session->set_userdata('idPregunta', $reg['idPregunta']);
 
         return $result;
+    }
+
+    function saveQuestionCondition(array $reg, int $id = NULL) : array {
+        
+        $result = $this->saveByModel('optionQuestion', $reg, $id, $cond = NULL);
+
+        return $result;
+    }
+
+    function clone($id = NULL){
+
+
+        return $this->action_on_reg($this->CI->formulario_model, $reg, $action, $cond ? $cond : "idFormulario = '{$id}'");
     }
 
 }

@@ -66,8 +66,6 @@ function tipoCampoOnChange(sel) {
         $('#divOpciones').hide();
         $('#divCondicion').hide();
         $('#divFormato').hide();
-        $('#divDependencia').hide();
-        $('#divDependenciaOpcion').hide();
         $("#formato").removeAttr("name");
         $("#posicion").removeAttr("name");
         $("#txtOpcion").removeAttr("name");
@@ -77,8 +75,6 @@ function tipoCampoOnChange(sel) {
         $('#divFormato').hide();
         $('#divOpciones').show();
         $('#divCondicion').show();
-        $('#divDependencia').show();
-        $('#divDependenciaOpcion').show();
         $("#formato").removeAttr("name");
         $("#posicion").attr("name", "reg[posicion]");
         $("#txtOpcion").attr("name", "reg[opcion]");
@@ -87,16 +83,11 @@ function tipoCampoOnChange(sel) {
         $('#divTblOpciones').hide();
         $('#divOpciones').hide();
         $('#divCondicion').hide();
-        $('#divDependencia').hide();
-        $('#divDependenciaOpcion').hide();
         $('#divFormato').show();
         $("#txtValor").removeAttr("name");
         $("#txtOpcion").removeAttr("name");
         $("#formato").attr("name", "reg[formato]");
     }
-
-	//$("#txtEtiqueta, #idTipoCampo, #txtLongitud, #txtValor, #txtEtiquetaOpcion").val(null);
-
 }
 
 function saveOptionQuestion() {
@@ -152,8 +143,8 @@ $(function () {
 
         if ($('#form-register').valid()) {
 
-		    //$('#btnSave').prop('disabled', true);
-            //$('#btnRegresar').addClass('disabled');
+		    $('#btnSave').prop('disabled', true);
+            $('#btnRegresar').addClass('disabled');
 
             $.post(
                 URL_SITE + "formulario/save",
@@ -161,11 +152,11 @@ $(function () {
                 function(resp) {
                     msg(resp.error, resp.msg);
                     if (resp.error == 0) {
-                        //$('#btnSave').prop('disabled', false);
-                        //$('#btnRegresar').removeClass('disabled');
+                        $('#btnSave').prop('disabled', false);
+                        $('#btnRegresar').removeClass('disabled');
                         idFormulario = resp.id;
                         $('#txtIdFormulario').val(resp.id);
-                        $('#divBtnAddQuestion').removeClass('d-none');
+                        $('#divBtnAddQuestion').show();
                     }
                 },
                 'json'
@@ -244,9 +235,7 @@ $(function () {
                         url: URL_SITE + "formulario/getOptionsRegs",
                         dataSrc: "",
                         method: "POST",
-                        data: function (d) {
-                            //d.filtros = $("#form_search").serialize();
-                        },
+                        data: function (d) {},
                     },
                     columns: [
                         {data: "posicion"},	
@@ -261,7 +250,6 @@ $(function () {
                             targets: [-1],
                         },
                     ],
-                    //dom: '<"row"<"col-xs-6 col-sm-6 col-md-6 text-left"l><"col-xs-6 col-sm-6 col-md-6 text-right mb-2"f>>t<"row"<"col-xs-6 col-sm-6 col-md-6 text-left"i><"col-xs-6 col-sm-6 col-md-6 text-right"p>>',
                     serverSide: false,
                     searching: false,
                     fixedHeader: false,
@@ -270,24 +258,11 @@ $(function () {
                     scrollCollapse: true,
                     responsive: true,
                     paging: false,
+                    bDestroy: true
                 });
         });
 
     })
-
-    popup('#dialog-state', {
-		title: 'Editar estado',
-		width: "96%",
-		minWidth: "40%",
-		buttons: {
-			Cerrar: function() {
-				$('#dialog-state').modal('hide');
-			},
-            Aceptar: function() {
-                editRegForm();
-            }
-		}
-	});	
 
     popup('#dialog-add', {
         title: 'Configuraci&oacute;n de la pregunta',

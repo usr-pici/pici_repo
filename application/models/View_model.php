@@ -406,6 +406,9 @@ class View_model extends MY_Model {
         if ( !empty($filtros['idPregunta']) )
             $condicion[] = "p.idPregunta = '{$filtros['idPregunta']}'";
 
+        if ( isset($filtros['option_IN']) )
+            $condicion[] = " ctc.clave IN ({$filtros['option_IN']}) ";
+
         $campos = !empty($extras['campos']) ? $extras['campos'] : '
                     p.*,
                     ctc.clave AS cveField,

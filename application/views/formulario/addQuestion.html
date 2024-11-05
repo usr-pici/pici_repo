@@ -75,9 +75,11 @@
                 <a style="margin-left: 0px;" href="<?php echo site_url('formulario'); ?>" id="btnRegresar" class="btn btn-secondary">Regresar</a>
             </div>
 
-            <div id="divBtnAddQuestion" class="justify-content-md-end mb-2 d-none">
-                <a target="_blank" id="btnPreview" href="<?php echo site_url('formulario/preview'); ?>" class="btn btn-warning mb-2" style="color: white;">Vista previa</a>
-                <a style="margin-left: 0px;" id="btnAddQuestion" href="javascript:void(0);" class="btn btn-primary mb-2">Agregar pregunta</a>
+            <div id="divBtnAddQuestion" class="row justify-content-md-end" style="display: none;">
+                <div class="col col-md-12 text-end">
+                    <a target="_blank" id="btnPreview" href="<?php echo site_url('formulario/preview'); ?>" class="btn btn-warning mb-2" style="color: white;">Vista previa</a>
+                    <a style="margin-left: 0px;" id="btnAddQuestion" href="javascript:void(0);" class="btn btn-primary mb-2">Agregar pregunta</a>
+                </div>
             </div>
 
             <div id="divTblPreguntas" class="container" style="display: none;">
@@ -100,12 +102,6 @@
     </div>
 </div>
  
-
-<div id="dialog-state">
-    <div id="update_state_load"></div>
-</div>
-
-
 <div id="dialog-add">
     <div id="update_add_load"></div>
 </div>
