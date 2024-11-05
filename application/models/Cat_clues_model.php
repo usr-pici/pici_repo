@@ -1,13 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Cat_hospital_model extends MY_Model {
+class Cat_clues_model extends MY_Model {
     
     function  __construct() {
 
         parent::__construct();
         
-        $this->title = "Cat\xE1logo de Hospitales";
-        $this->set_config('cat_hospital');
+        $this->title = "Cat\xE1logo de CLUES";
+        $this->set_config('cat_clues');
     }
     
     function buscar($filtros = array(), $extras = array()) {
