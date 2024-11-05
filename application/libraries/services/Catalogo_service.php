@@ -18,8 +18,8 @@ class Catalogo_service extends Class_Service {
         
         //Catálogos para la configuración de la casilla
         $this->modelos = array(            
-			'farmaceutica' => 'cat_farmaceuticas_model',
-            'hospital' => 'cat_hospital_model',
+            'farmaceutica' => 'cat_farmaceuticas_model',
+            'clues' => 'cat_clues_model',
             'estatus' => 'cat_estatus_model',
             'tipoCampo' => 'cat_tipo_campo_model',
             'rol' => 'cat_rol_model',
