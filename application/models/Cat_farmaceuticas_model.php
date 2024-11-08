@@ -40,37 +40,6 @@ class Cat_farmaceuticas_model extends MY_Model {
     function get_rules(&$reg = array(), $name_reg = 'reg') {
         
         $rules = array();
-
-        $rules['clave'] = array(
-            'field'   => $name_reg.'[clave]', 
-            'label'   => utf8_encode("Clave"), 
-            'rules'   => 'required'
-        );
-        
-        $rules['nombre'] = array(
-            'field'   => $name_reg.'[nombre]', 
-            'label'   => utf8_encode("Nombre"), 
-            'rules'   => 'required'
-        );
-        
-        $rules['descripcion'] = array(
-            'field'   => $name_reg.'[descripcion]', 
-            'label'   => utf8_encode("Descripci\xF3n"), 
-            'rules'   => 'required'
-        );
-        
-        $rules['activo'] = array (
-            'field' => $name_reg . '[activo]',
-            'label ' => utf8_encode("Activo"),
-            'rules ' => 'required',
-            'config' => array (
-                'type' => 'radio' ,
-                'options' => array (
-                     '0' => array('val' => '0' , 'desc' => utf8_encode("No")),
-                     '1' => array('val' => '1' , 'desc' => utf8_encode("S\xED"), 'default' => 1)
-				)
-			)
-		);
         
         return $rules;
     }

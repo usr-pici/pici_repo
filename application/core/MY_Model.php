@@ -66,6 +66,7 @@ class MY_Model extends CI_Model {
                 'style' => empty($field['style']) ? '' : $field['style'],
                 'required' => preg_match('/required/i', $field['rules']),
                 'class' => empty($field['class']) ? '' : $field['class'],
+                'notShowInTable' => !empty( $field['notShowInTable'] ) ? 1 : 0
             );
             
             if ( !empty($field['dependencia']) ) {

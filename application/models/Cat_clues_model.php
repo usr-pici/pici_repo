@@ -47,7 +47,7 @@ class Cat_clues_model extends MY_Model {
     function get_rules(&$reg = array(), $name_reg = 'reg') {
         
         $rules = array();
-
+/*
         $rules['idSucursal'] = array(
             'field'   => $name_reg.'[idFarmaceutica]', 
             'label'   => utf8_encode("Farmacéutica"), 
@@ -61,6 +61,8 @@ class Cat_clues_model extends MY_Model {
                 'desc' => 'nombre',
             )
         );
+ *
+ */
 
         $rules['clave'] = array(
             'field'   => $name_reg.'[clave]', 
@@ -76,7 +78,15 @@ class Cat_clues_model extends MY_Model {
               
         $rules['descripcion'] = array(
             'field'   => $name_reg.'[descripcion]', 
-            'label'   => utf8_encode("Descripcion")
+            'label'   => utf8_encode("Descripci\xF3n"),
+            'type' => 'textarea',
+            'notShowInTable' => 1
+        );
+        
+        $rules['direccion'] = array(
+            'field'   => $name_reg.'[direccion]', 
+            'label'   => utf8_encode("Direcci\xF3n"),
+            'type' => 'textarea'
         );
         
         $rules['activo'] = array (

@@ -264,7 +264,7 @@ class Catalogo_service extends Class_Service {
         foreach ($regs as &$reg) {
             
             $reg['opciones'] = '<a href="javascript:void(0);" title="Editar" onclick="reg('.($reg[$modelo->get_var('key_field')]).')"><i class="fa fa-edit"></i></a> | ';            
-            $reg['opciones'] .= '<a href="javascript:void(0);" title="Eliminar" onclick="delete_reg('.($reg[$modelo->get_var('key_field')]).')"><i class="fa fa-trash-alt" style="color:red;"></i></a>';
+            $reg['opciones'] .= '<a href="javascript:void(0);" title="Eliminar" onclick="delete_reg('.($reg[$modelo->get_var('key_field')]).')"><i class="fa fa-trash-alt deleteAction" style="color:red;"></i></a>';
         }
         
         return !empty($config['dependencia']) || !empty($config['config_field']) ? $this->get_regs_with_dep($catalogo, $regs) : $regs;
@@ -303,10 +303,10 @@ class Catalogo_service extends Class_Service {
 **/
     function validarClave($reg = array(), $accion = '', $modelo = '', $cond = NULL, $id = NULL){
 
-        $filtros =  [ 'clave' => strtoupper($reg['Clave']), 'borrado' => 0];
+        $filtros =  [ 'clave' => strtoupper($reg['clave']), 'borrado' => 0];
 
         if ($accion == 'update'){
-            $filtros['id_NOT'] = $id;             
+            $filtros['id_NOT_IN'] = $id;             
         }
         //$this->CI->imprimir($filtros, 1);
         $resp = $modelo->buscar($filtros);
@@ -359,9 +359,9 @@ class Catalogo_service extends Class_Service {
         }
         
         //Agregar validación de clave en caso de que exista campo clave
-        if ( array_key_exists('Clave', $reg) ) {
+        if ( array_key_exists('clave', $reg) ) {
             
-            $reg['Clave'] = strtoupper($reg['Clave']);
+            $reg['clave'] = strtoupper($reg['clave']);
             $method = array_merge( ['validarClave'], $method );
         }
 
