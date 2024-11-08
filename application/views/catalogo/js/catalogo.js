@@ -37,11 +37,17 @@ function clone_reg(elem, id) {
 function config_datatable() {
 	var $columns = [];
 
-	for (var x in $config['columns']) {
-		// if
-		$columns.push($config['columns'][x]);
+	for ( var x in $config['columns'] ) {
+            
+            
+            if ( ( 'notShowInTable' in $config['columns'][x] ) && $config['columns'][x]['notShowInTable'] == 1 ) {
+                
+		continue;
+            }
+//            console.log($config['columns'][x]);
+            $columns.push($config['columns'][x]);
 	}
-	   console.log($columns);
+//	   console.log($columns);
 
 	//    console.log($config);
 	$('#tabla_regs').addClass('table table-striped table-condensed table-bordered table-hover').DataTable({
@@ -73,7 +79,7 @@ function config_datatable() {
 		paging: true
 	});
 
-	$('#tabla_regs tbody').on('click', '.fa-exclamation-circle', function() {
+	$('#tabla_regs tbody').on('click', '.deleteAction', function() {
 		$(this).parents('tr').addClass('bg-danger');
 	});
 
@@ -197,7 +203,7 @@ $(function() {
 		buttons: {
 			No: function() {
 				$('#dialog-delete').modal('hide');
-				$('#tabla_regs tr.danger').removeClass('danger');
+				$('#tabla_regs tr.bg-danger').removeClass('bg-danger');
 			},
 			Si: function() {
 				$('#dialog-delete').modal('hide');

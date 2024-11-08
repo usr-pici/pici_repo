@@ -80,7 +80,25 @@ abstract class Class_Service {
     function get_reg($filtros = array(), $extras = array(), $metodo_buscar = 'search') {
         
         return current( $this->$metodo_buscar($filtros, array_merge($extras, array('limit' => 1))) );
-    }    
+    }
+    
+    function keyExistsValidation($reg = array(), $accion = '', $modelo = NULL, $cond = NULL, $id = NULL){
+
+        $filtros =  ['clave' => strtoupper($reg['clave']), 'borrado' => 0];
+
+        if ( $id ) {
+            
+            $filtros['id_NOT_IN'] = $id;             
+        }
+//        $this->CI->imprimir($filtros, 1);
+        $resp = $modelo->buscar($filtros, ['imprimirSQL' => 0]);
+        
+        if ( !empty($resp) ) {
+            
+            echo json_encode(array('error' => 1, 'msg' => $this->CI->format_ul("Clave existente, verifique.") ) );
+            die();
+        }
+    }
     
     function validar_form($reg = NULL, $rules = NULL, &$oModel = NULL, $action = NULL, $cond = NULL, $method = array(), $id = NULL) {
         

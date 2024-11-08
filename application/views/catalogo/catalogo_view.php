@@ -23,8 +23,12 @@
 				<table id="tabla_regs" style="width:100% !important;">
 					<thead>
 						<tr> <?php
-							foreach ( $config['headers'] as $header ) {
+							foreach ( $config['headers'] as $index => $header ) {
 									
+                                                            if ( !empty( $config['columns'][$index]['notShowInTable'] ) ) {
+                                                                
+                                                                continue;
+                                                            }
 							?>
 									<th><?php echo $header ? $header : 'Activo'; ?></th> <?php
 								
@@ -47,7 +51,7 @@
         <div class="col-md-11">			
 			<div class="text-right" style="margin-bottom:10px;">
 				<strong>
-					<label>Los campos marcados con asterisco (*) son obligatorios.</label>
+                                    <label class="small text-danger">Los campos marcados con asterisco (*) son obligatorios.</label>
 				</strong>
 			</div>
 		</div>
@@ -57,7 +61,7 @@
 			echo '
 			<div class="row form-group" id="div_identificador_input">
 				<div class="col-md-4">
-					<label class="font-weight-bold"><div class="text-right">ID:*</div></label>
+					<label class="font-weight-bold"><div class="text-right">ID:</div></label>
 				</div>
 				<div class="col-md-7">
 					<input type="text" name="reg[ID_Sucursal]" id="c_r_ID_Sucursal" style="" placeholder=""  class="form-control f_alfanum ceros">
@@ -86,7 +90,7 @@
 			
 			$type = $config['columns'][$index]['type'];
 			$style = $config['columns'][$index]['style'];
-			$marca_req = $config['columns'][$index]['required'] ? ' *' : '';
+			$marca_req = $config['columns'][$index]['required'] ? ' <span class="text-danger">*</span>' : '';
 			$format_class = $config['columns'][$index]['class'] ? $config['columns'][$index]['class'] : 'f_alfanum';
 
 			if($campo == 'largo' || $campo == 'ancho' || $campo == 'alto')
@@ -156,15 +160,20 @@
 		</div>
     </div>
 </div>
-<script src="<?php echo URL_VIEWS; ?>assets/js/jquery-3.6.0.min.js"></script> 
-<!-- Page-Level Scripts -->
-<script>
-    $(document).ready(function() {
 
-        //$('.footable').footable(); 
-		//alert($config);
-		$config = <?php echo json_encode($config); ?>;
+
+<script>
+    
+    document.onreadystatechange = function () {
+  var state = document.readyState;
+//  console.log(state);
+  /*if (state == 'interactive') {
+      init();
+  } else*/ if (state == 'complete') {
+      $config = <?php echo json_encode($config); ?>;
 		//alert($config);
 		config_datatable();
-    });
+  }
+};
+
 </script>
