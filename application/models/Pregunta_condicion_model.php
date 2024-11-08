@@ -1,12 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Pregunta_model extends MY_Model {
+class Pregunta_condicion_model extends MY_Model {
     
     function  __construct() {
 
         parent::__construct();
         
-        $this->set_config('pregunta', "Preguntas del formulario",['cveStatusAdd' => 'REGISTERED_QUESTION', 'cveStatusUpdate' => 'UPDATE_QUESTION']);
+        $this->set_config('pregunta_condicion', "Condiciones por pregunta");
     }
     
     function buscar($filtros = array(), $extras = array()) {
@@ -21,15 +21,15 @@ class Pregunta_model extends MY_Model {
         
         if ( isset($filtros['id_NOT_IN']) )
             $condicion[] = $this->key_field . " NOT IN (" . $filtros['id_NOT_IN'] . ")";
+
+        if ( isset($filtros['idPreguntaCondicion']) )
+            $condicion[] = "idPreguntaCondicion = '{$filtros['idPreguntaCondicion']}'";
+
+        if ( isset($filtros['idPregunta']) )
+            $condicion[] = "idPregunta = '{$filtros['idPregunta']}'";
                         
         if ( isset($filtros['borrado']) )
             $condicion[] = "borrado = '{$filtros['borrado']}'";
-
-        if ( isset($filtros['idFormulario']) )
-            $condicion[] = "idFormulario = '{$filtros['idFormulario']}'";
-
-        if ( isset($filtros['consecutivo']) )
-            $condicion[] = "consecutivo = '{$filtros['consecutivo']}'";
             
         if ( !empty($filtros['vigente']) )
             $condicion[] = "borrado = '0' AND activo = '1'";

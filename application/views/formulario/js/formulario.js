@@ -112,7 +112,7 @@ $(function () {
 		fixedHeader: true,
 		scrollY: '300px',
 		scrollX: false,
-		//responsive: true,
+		responsive: true,
 		scrollCollapse: true,
 		paging: false
 	});

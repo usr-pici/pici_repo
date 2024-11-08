@@ -14,6 +14,7 @@ class Form_Service extends Class_Service {
             'question' => 'pregunta_model',
             'optionQuestion' => 'pregunta_opcion_model',
             'questionRol' => 'pregunta_rol_model',
+            'questionCondition' => 'pregunta_condicion_model'
          );
 
         $this->loadModel(); 
@@ -26,6 +27,11 @@ class Form_Service extends Class_Service {
         return $this->CI->formulario_model->buscar($condicion, $extras);
     }
 
+    function search_questions($condicion = array(), $extras = array()) {
+        
+        return $this->CI->pregunta_model->buscar($condicion, $extras);
+    }
+
     function search_OptionForm($condicion = array(), $extras = array()) {
         
         return $this->CI->pregunta_opcion_model->buscar($condicion, $extras);
@@ -35,15 +41,30 @@ class Form_Service extends Class_Service {
         
         return $this->CI->pregunta_rol_model->buscar($condicion, $extras);
     }
+
+    function search_conditionQuestion($condicion = array(), $extras = array()) {
+        
+        return $this->CI->pregunta_condicion_model->buscar($condicion, $extras);
+    }
     
     function indexed_search($indexes = NULL, $condicion = NULL, $extras = NULL, $multiply = FALSE) {
         
         return $this->CI->formulario_model->indexed_search($indexes, $condicion, $extras, $multiply);
     }
 
+    function indexed_search_question($indexes = NULL, $condicion = NULL, $extras = NULL, $multiply = FALSE) {
+        
+        return $this->CI->pregunta_model->indexed_search($indexes, $condicion, $extras, $multiply);
+    }
+
     function indexed_search_OptionForm($indexes = NULL, $condicion = NULL, $extras = NULL, $multiply = FALSE) {
         
         return $this->CI->pregunta_opcion_model->indexed_search($indexes, $condicion, $extras, $multiply);
+    }
+
+    function indexed_search_conditionQuestion($indexes = NULL, $condicion = NULL, $extras = NULL, $multiply = FALSE) {
+        
+        return $this->CI->pregunta_condicion_model->indexed_search($indexes, $condicion, $extras, $multiply);
     }
 
     function indexed_search_rol_question($indexes = NULL, $condicion = NULL, $extras = NULL, $multiply = FALSE) {
@@ -61,17 +82,63 @@ class Form_Service extends Class_Service {
             $reg['vigenciaIni'] = $this->CI->formato_fecha_bd($reg['vigenciaIni']);
             $reg['vigenciaFin'] = $this->CI->formato_fecha_bd($reg['vigenciaFin']);
         }
-        			
+
+        if( empty($reg['vigenciaIni']) && empty($reg['vigenciaFin']) ) {
+            $reg['vigenciaIni'] = null;
+            $reg['vigenciaFin'] = null;
+        }            
+              			
         $result = $this->validar_form($reg, $rules, $this->CI->formulario_model, $action, $action === 'add' ? NULL : "idFormulario = '{$id}'");
                 
         return $result;
     }
     
-    function delete($id = NULL, $cond = NULL, $reg = []){
+    function delete($id = NULL, $cond = NULL, $reg = [], $statusDelete = ''){
 
         $action = 'update';
 
+        if ( $statusDelete ) {
+            
+            $this->CI->formulario_model->setVar('cveStatusUpdate', $statusDelete);
+        }
+
         return $this->action_on_reg($this->CI->formulario_model, $reg, $action, $cond ? $cond : "idFormulario = '{$id}'");
+    }
+
+    function deleteQuestion($id = NULL, $cond = NULL, $reg = [], $statusDelete = ''){
+
+        $action = 'update';
+
+        if ( $statusDelete ) {
+            
+            $this->CI->pregunta_model->setVar('cveStatusUpdate', $statusDelete);
+        }
+
+        return $this->action_on_reg($this->CI->pregunta_model, $reg, $action, $cond ? $cond : "idPregunta = '{$id}'");
+    }
+
+    function deleteOptionQuestion($id = NULL, $cond = NULL, $reg = [], $statusDelete = ''){
+
+        $action = 'update';
+
+        if ( $statusDelete ) {
+            
+            $this->CI->pregunta_opcion_model->setVar('cveStatusUpdate', $statusDelete);
+        }
+
+        return $this->action_on_reg($this->CI->pregunta_opcion_model, $reg, $action, $cond ? $cond : "idPreguntaOpcion = '{$id}'");
+    }
+
+    function deleteConditionQuestion($id = NULL, $cond = NULL, $reg = [], $statusDelete = ''){
+
+        $action = 'update';
+
+        if ( $statusDelete ) {
+            
+            $this->CI->pregunta_condicion_model->setVar('cveStatusUpdate', $statusDelete);
+        }
+
+        return $this->action_on_reg($this->CI->pregunta_condicion_model, $reg, $action, $cond ? $cond : "idPreguntaCondicion = '{$id}'");
     }
 
     function saveQuestion(array $reg, int $id = NULL) : array {
@@ -99,14 +166,16 @@ class Form_Service extends Class_Service {
         
         $result = $this->saveByModel('optionQuestion', $reg, $id, $cond = NULL);
 
-        $this->CI->session->set_userdata('idPregunta', $reg['idPregunta']);
+        //$this->CI->session->set_userdata('idPregunta', $reg['idPregunta']);
 
         return $result;
     }
 
     function saveQuestionCondition(array $reg, int $id = NULL) : array {
+
+        $reg['igual'] = '1';
         
-        $result = $this->saveByModel('optionQuestion', $reg, $id, $cond = NULL);
+        $result = $this->saveByModel('questionCondition', $reg, $id, $cond = NULL);
 
         return $result;
     }

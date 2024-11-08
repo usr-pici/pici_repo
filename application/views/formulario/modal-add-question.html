@@ -2,7 +2,7 @@
 
     <form id="formModalAddQuestion" method="POST">
 		
-        <input type="hidden" name="reg[idPregunta]" id="idPregunta">
+        <input type="hidden" name="reg[idPregunta]" id="idPregunta" value="<?php echo !empty($question['idPregunta']) ? $question['idPregunta'] : '' ?>">
         <input type="hidden" name="reg[idFormulario]" value="<?php echo $idFormulario ?>">
 
         <div class="row mt-3">
@@ -15,7 +15,7 @@
                 <div class="col-md-12 col-12 mb-2">
                     <h6 class="fw-bold">Posici&oacute;n:&nbsp;<span class="required">*</span></h6>
                     <select id="consecutivo" name="reg[consecutivo]" class="form-select form-control form-control-lg">
-                        if( empty($question) ) {
+                        <?php if( empty($question) ) { ?>
                             <?php for($i=1; $i<=$posicion; $i++): ?>
                                 <?php if($i == $posicion){ ?>
                                     <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
@@ -23,7 +23,7 @@
                                     <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
                                 <?php } ?>
                             <?php endfor; ?>
-                        } else {
+                        <?php } else { ?>
                             <?php for($i=1; $i<=$posicion; $i++): ?>
                             <?php if($i == $question['consecutivo']){ ?>
                                 <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
@@ -31,7 +31,7 @@
                                 <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
                             <?php } ?>
                         <?php endfor; ?>
-                        }
+                        <?php } ?>
                     </select> 
                 </div>
                 <div class="col-md-12 col-12 mb-2">
@@ -88,17 +88,20 @@
             </div>
         </div>
 
-        <div id="divOpciones" class="row" style="display: none;">            
+        <div id="divOpciones" class="row mb-2" style="display: none;">            
             <div class="input-group">
                 <select id="posicion" name="reg[posicion]" class="form-select form-select-sm" style="max-width: max-content;">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                    <?php for($i=1; $i<=$posicionOption; $i++): ?>
+                        <?php if($i == $posicionOption){ ?>
+                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
+                        <?php } else { ?>
+                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                        <?php } ?>
+                    <?php endfor; ?>
                 </select> 
                 <input type="text" class="form-control" name="reg[opcion]" id="txtOpcion" placeholder="Opci&oacute;n" >
-                <button onclick="saveOptionQuestion()" type="button" class="btn btn-success h-100" style="font-size: x-small;">Agregar opci&oacute;n</button>
+                <button id="btnSaveOptionsQuestion" type="button" class="btn btn-success h-100" style="font-size: x-small;">Agregar opci&oacute;n</button>
+                <button id="btnUpdateOptionsQuestion" type="button" class="btn btn-success h-100" style="font-size: x-small; display: none;">Guardar</button>
             </div>
         </div>
 
@@ -110,29 +113,25 @@
                         <th class="text-center">Opci&oacute;n</th>
                         <th class="text-center">Acci&oacute;n</th>
                     </thead>
-                    <tbody>
-       
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
 
         <div id="divQuestionOption" class="row mb-1">
             <div class="input-group">
-                <select id="posicionCondicion" name="reg[posicionCondicion]" class="form-select form-control"  style="max-width: max-content;">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select> 
                 <select id="idPreguntaCondicion" name="reg[idPreguntaCondicion]" class="form-select form-control" onchange="showOptionsQuestion()">
                     <?php echo $listaPregunta ?>
                 </select> 
                 <select id="idPreguntaOpcion" name="reg[idPreguntaOpcion]" class="form-select form-control" >
-                    <?php echo $options; ?>
+                    <?php if( !empty($options) ){ ?>
+                        <?php echo $options; ?>
+                    <?php } else { ?>
+                        <option value=""> - Opci&oacute;n - </option>
+                    <?php } ?>
                 </select> 
-                <button onclick="saveCondition()" type="button" class="btn btn-success h-100" style="font-size: x-small;">Agregar condici&oacute;n</button>
+                <button id="btnSaveConditionQuestion" type="button" class="btn btn-success h-100" style="font-size: x-small;">Agregar condici&oacute;n</button>
+                <button id="btnUpdateConditionQuestion" type="button" class="btn btn-success h-100" style="font-size: x-small; display: none;">Guardar</button>
             </div>
         </div>
 

@@ -370,8 +370,8 @@ class View_model extends MY_Model {
         if ( !empty($filtros['nombre']) )
             $condicion[] = "nombre LIKE '%{$filtros['nombre']}%'";
 
-        if ( isset($filtros['idEstatus']) )
-            $condicion[] = "activo = '{$filtros['idEstatus']}'";
+        if ( isset($filtros['activo']) )
+            $condicion[] = "activo = '{$filtros['activo']}'";
 
         if ( isset($filtros['fechaOrdenPar']) )
 			$condicion[] = "DATE(vigenciaIni) between " . $filtros['fechaOrdenPar'];
@@ -409,6 +409,9 @@ class View_model extends MY_Model {
         if ( isset($filtros['option_IN']) )
             $condicion[] = " ctc.clave IN ({$filtros['option_IN']}) ";
 
+        if ( isset($filtros['idPreguntaNot']) )
+            $condicion[] = " p.idPregunta NOT IN ({$filtros['idPreguntaNot']}) ";
+
         $campos = !empty($extras['campos']) ? $extras['campos'] : '
                     p.*,
                     ctc.clave AS cveField,
@@ -419,6 +422,47 @@ class View_model extends MY_Model {
                 SELECT {$campos}
                 FROM pregunta p INNER JOIN cat_tipo_campo ctc
                 ON (p.idTipoCampo = ctc.idTipoCampo)
+
+            ";
+
+            if ($condicion)
+            $sql .= " WHERE " . implode(' AND ', $condicion);
+
+        if ( !empty($extras['groupBy']) )
+            $sql .= " GROUP BY " . ( is_array($extras['groupBy']) ? implode(", ", $extras['groupBy']) : $extras['groupBy'] );
+
+        if (!empty($extras['orderBy']))
+            $sql .= " ORDER BY " . ( is_array($extras['orderBy']) ? implode(", ", $extras['orderBy']) : $extras['orderBy'] );
+
+        if (!empty($extras['getBy']))
+            $sql .= " LIMIT " . (!empty($filtros['offset']) ? $filtros['offset'] : 0) . " , " . (!empty($filtros['fetch']) ? $filtros['fetch'] : 100) . " ";
+
+        return parent::execute_query($sql, $extras);
+    }
+
+    function showFieldsQuestion($filtros = array(), $extras = array()) {
+
+        $condicion = [];
+
+        //$condicion = ["p.borrado = 0"];
+
+        $campos = !empty($extras['campos']) ? $extras['campos'] : '
+                    p.idPregunta,
+                    p.etiqueta as pregunta,
+                    po.idPreguntaOpcion,
+                    po.opcion,
+                    pc.idPreguntaCondicion,
+                    pc.idPregunta AS idPreguntaMostrar,
+                    pc.igual,
+                    pM.etiqueta AS preguntaMostrar
+                ';        
+
+        $sql = "
+                SELECT {$campos}
+                FROM pregunta p INNER JOIN pregunta_opcion po
+                ON (p.idPregunta = po.idPregunta) INNER JOIN pregunta_condicion pc
+                ON (pc.idPreguntaOpcion = po.idPreguntaOpcion) INNER JOIN pregunta pM
+                ON (pc.idPregunta = pM.idPregunta)
 
             ";
 
@@ -453,6 +497,47 @@ class View_model extends MY_Model {
         $sql = "
                 SELECT {$campos}
                 FROM pregunta_opcion
+            ";
+
+            if ($condicion)
+            $sql .= " WHERE " . implode(' AND ', $condicion);
+
+        if ( !empty($extras['groupBy']) )
+            $sql .= " GROUP BY " . ( is_array($extras['groupBy']) ? implode(", ", $extras['groupBy']) : $extras['groupBy'] );
+
+        if (!empty($extras['orderBy']))
+            $sql .= " ORDER BY " . ( is_array($extras['orderBy']) ? implode(", ", $extras['orderBy']) : $extras['orderBy'] );
+
+        if (!empty($extras['getBy']))
+            $sql .= " LIMIT " . (!empty($filtros['offset']) ? $filtros['offset'] : 0) . " , " . (!empty($filtros['fetch']) ? $filtros['fetch'] : 100) . " ";
+
+        return parent::execute_query($sql, $extras);
+    }
+
+    function getConditionsQuestion($filtros = array(), $extras = array()) {
+
+        $condicion = [];
+
+        $condicion = ["pc.borrado = 0"];
+
+        if ( !empty($filtros['idPregunta']) )
+            $condicion[] = "pc.idPregunta = '{$filtros['idPregunta']}'";
+
+        $campos = !empty($extras['campos']) ? $extras['campos'] : '
+                    pc.*,
+                    pCat.idPregunta AS idPreguntaCat,
+                    pCat.etiqueta AS pregunta,
+                    po.idPreguntaOpcion AS idPreguntaOpcionCat,
+                    po.opcion AS opcion,
+                    p.idFormulario AS idFormularioPadre
+                ';        
+
+        $sql = "
+                SELECT {$campos}
+                FROM pregunta_condicion pc INNER JOIN pregunta p
+                ON (pc.idPregunta = p.idPregunta) INNER JOIN pregunta_opcion po
+                ON (pc.idPreguntaOpcion = po.idPreguntaOpcion) INNER JOIN pregunta pCat
+                ON (pCat.idPregunta = po.idPregunta)
             ";
 
             if ($condicion)

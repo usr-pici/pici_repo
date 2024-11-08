@@ -1,28 +1,109 @@
-<!-- START SECTION BREADCRUMB -->
-<div class="breadcrumb_section bg_gray page-title-mini">
-    <div class="container"><!-- STRART CONTAINER -->
-        <div class="row align-items-center">
-        	<div class="col-md-6">
-                <div class="page-title">
-            		<h1>Vista previa</h1>
+
+<div class="login_register_wrap mt-5">
+    <div class="container justify-content-center">
+
+        <form id="form_formulario" enctype="multipart/form-data">
+
+            <input type="hidden" name="idFormulario" value="<?php echo $idFormulario; ?>">
+
+
+            <!--<?php echo !empty($questions) ? $questions : '' ?>-->
+
+            <?php foreach($lista_preguntas as $p => $pregunta){ 
+
+                if( !empty($pregunta) ){
+
+                    $visible = '';
+                    $onchange = '';
+                    $estilo_div_pregunta = '';
+                    $datos_clase = array();
+                        
+                    if( !empty($pregunta['display']) )
+                        $visible = ' display:' . $pregunta['display']. ';';
+                    
+                    if( !empty($pregunta['change']) )
+                        $onchange = 'onchange="' . implode(" ", $pregunta['change']) . '"';
+                    
+                    $datos_clase[] = 'preg_'.$p;
+                    
+                    if( in_array($pregunta['cveField'], array('TEXT','TEXT_AREA','FILE','LIST')) )
+                        $datos_clase[] = 'form-control';
+                                                
+                    if( isset($pregunta['class']) )
+                        $datos_clase[] = $pregunta['class'];
+                
+                    $clase_campo = implode(' ', $datos_clase);               
+                    
+                    if( !empty($pregunta['dependencias']) )
+                        $estilo_div_pregunta = implode(" ", $pregunta['dependencias']);              
+                
+                    ?>
+
+
+            <div class="row mb-2">
+
+                <div class="col-md-8 offset-md-2 mb-2">
+
+                    <div id="<?php echo $p; ?>" class="div_pregunta div_preg_<?php echo $p; ?> <?php echo $estilo_div_pregunta; ?>" style="<?php echo $visible; ?>">
+                
+                        <label class="fw-bold" ><?php echo nl2br($pregunta['etiqueta']); ?>:</label>
+                    
+                        <?php if($pregunta['cveField'] == 'TEXT'){ ?>
+                            <input type="text" name="reg[<?php echo $p; ?>]" class="<?php echo $clase_campo; ?>" maxlength="<?php echo $pregunta['longitud']; ?>" />
+                        <?php } elseif($pregunta['cveField'] == 'TEXT_AREA') { ?>
+                            <textarea name="reg[<?php echo $p; ?>]" class="form-control" maxlength="<?php echo $pregunta['longitud']; ?>"></textarea>
+                        <?php }elseif($pregunta['cveField'] == 'RADIO'){ ?>
+                            <div class="form-check">
+                                <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
+                                    <input type="radio" name="reg[<?php echo $p; ?>]" class="form-check-label" value="<?php echo $clave; ?>" <?php echo $onchange; ?> /> 
+                                    <label class="form-check-label"><?php echo $valor; ?></label>
+        
+                                <?php } ?>
+        
+                            </div>
+                        <?php } elseif($pregunta['cveField'] == 'CHECKBOX') { ?>
+                            <div class="checkbox">
+                                <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
+                                <label>
+                                    <input type="checkbox" name="reg[<?php echo $p; ?>][]" class="<?php echo $clase_campo; ?>" value="<?php echo $clave; ?>" <?php echo $onchange; ?> /> 
+                                    <?php echo $valor; ?>
+                                </label>
+                                <?php  } ?>
+                            </div>
+                        <?php }elseif($pregunta['cveField'] == 'FILE'){ 
+                            $extension = !empty($pregunta['extension']) ? $pregunta['extension'] : 'Todos'; ?>
+                            &nbsp; (Permitidos: <?php echo $extension; ?>)<br>
+                            <input type="file" name="reg[<?php echo $p; ?>]" multiple="multiple" class="multi <?php echo $clase_campo; ?>" accept="<?php echo $pregunta['extension']; ?>" maxlength="<?php echo $pregunta['longitud']; ?>" />
+                        <?php } elseif($pregunta['cveField'] == 'LIST'){
+                            $multiple = (isset($pregunta['multiple']) && $pregunta['multiple'] == 1) ? 'multiple' : '';
+                            $name = !empty($multiple) ? 'reg['.$p.'][]' : 'reg['.$p.']';
+                        ?>
+                            <select <?php echo $multiple; ?> name="<?php echo $name; ?>" class="form-select form-control" <?php echo $onchange; ?> >
+                                <?php if(empty($multiple)){ ?>
+                                    <option value="">-Elige-</option>
+                                <?php } ?>
+                                
+                                <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
+                                    <option value="<?php echo $clave; ?>"><?php echo $valor; ?></option>
+                                <?php } ?>
+                            </select>
+                        <?php } ?>
+                        
+                    </div>
+                
                 </div>
+            
             </div>
-            <div class="col-md-6">
-                <ol class="breadcrumb justify-content-md-end">
-                    <li class="breadcrumb-item"><a href="<?php echo site_url('formulario'); ?>">Formularios</a></li>
-                    <li class="breadcrumb-item active">Vista previa</li>
-                </ol>
-            </div>
-        </div>
-    </div><!-- END CONTAINER-->
-</div>
-<!-- END SECTION BREADCRUMB -->
-
-<div class="login_register_wrap">
-    <div class="container mt-3 justify-content-center">
-
-        <?php echo !empty($questions) ? $questions : '' ?>
+            
+            <?php } ?>
+        <?php } ?>
+            
+        </form>
     
     </div>
 </div>
+
+<script language="javascript" type="text/javascript">
+  <?php if(!empty($restricciones)) echo $restricciones; ?>
+</script>
  

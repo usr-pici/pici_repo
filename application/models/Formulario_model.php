@@ -6,7 +6,7 @@ class Formulario_model extends MY_Model {
 
         parent::__construct();
         
-        $this->set_config('formulario', "Formularios",['cveStatusAdd' => 'REGISTERED']);
+        $this->set_config('formulario', "Formularios",['cveStatusAdd' => 'REGISTERED', 'cveStatusUpdate' => 'UPDATE']);
     }
     
     function buscar($filtros = array(), $extras = array()) {
