@@ -141,16 +141,36 @@ class Form_Service extends Class_Service {
         return $this->action_on_reg($this->CI->pregunta_condicion_model, $reg, $action, $cond ? $cond : "idPreguntaCondicion = '{$id}'");
     }
 
-    function saveQuestion(array $reg, int $id = NULL) : array {
+    function saveQuestion(array $reg, int $id = NULL, int $bandera = 0) : array {
 
-        if( isset($reg['idTipoCampo']) && !empty($reg['idTipoCampo']) ) {
+        $roles = [];
 
+        if( isset($reg['idRol']) ) {
+            $roles = $reg['idRol'];
+            unset($reg['idRol']);
+        }
+
+        if( isset($reg['idTipoCampo']) && !empty($reg['idTipoCampo']) && $bandera == 0 ) {
             $idTipoCampo = current( $this->CI->catalogo_service->search('tipoCampo', ['clave' => $reg['idTipoCampo']]) )['idTipoCampo'];
             $reg['idTipoCampo'] = $idTipoCampo;
-
         }
         
         $result = $this->saveByModel('question', $reg, $id, $cond = NULL);
+
+        if( $result['error'] == 0 ) {
+
+            if( !empty($roles) ) {
+
+				$question_x_rol = $this->search_questionRol(['idPregunta' => !empty($id) ? $id : $result['id']]);
+				
+                if( !empty($question_x_rol) )
+					$this->action_on_reg($this->CI->pregunta_rol_model, ['borrado' => 1] , 'update', ['idPregunta' => !empty($id) ? $id : $result['id']]);
+
+				foreach ($roles as $key => $r) {
+					$this->saveQuestionRol(['idPregunta' => !empty($id) ? $id : $result['id'], 'idRol' => $r], NULL);
+				}
+			}
+        }
 
         return $result;
     }
@@ -185,5 +205,4 @@ class Form_Service extends Class_Service {
 
         return $this->action_on_reg($this->CI->formulario_model, $reg, $action, $cond ? $cond : "idFormulario = '{$id}'");
     }
-
 }

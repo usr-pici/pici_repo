@@ -4,10 +4,7 @@
 
         <form id="form_formulario" enctype="multipart/form-data">
 
-            <input type="hidden" name="idFormulario" value="<?php echo $idFormulario; ?>">
-
-
-            <!--<?php echo !empty($questions) ? $questions : '' ?>-->
+            <input type="hidden" name="reg[idFormulario]" value="<?php echo $idFormulario; ?>">
 
             <?php foreach($lista_preguntas as $p => $pregunta){ 
 
@@ -26,12 +23,12 @@
                     
                     $datos_clase[] = 'preg_'.$p;
                     
-                    if( in_array($pregunta['cveField'], array('TEXT','TEXT_AREA','FILE','LIST')) )
+                    if(isset($pregunta['cveField']) && in_array($pregunta['cveField'], array('TEXT','TEXT_AREA','FILE','LIST')) )
                         $datos_clase[] = 'form-control';
-                                                
-                    if( isset($pregunta['class']) )
-                        $datos_clase[] = $pregunta['class'];
-                
+
+                    if( isset($pregunta['cveField']) && in_array($pregunta['cveField'], array('DATE','TEXT_NUMERIC')) )
+                        $datos_clase[] = 'form-control ' . $pregunta['formato'];
+                                                                
                     $clase_campo = implode(' ', $datos_clase);               
                     
                     if( !empty($pregunta['dependencias']) )
@@ -46,43 +43,46 @@
 
                     <div id="<?php echo $p; ?>" class="div_pregunta div_preg_<?php echo $p; ?> <?php echo $estilo_div_pregunta; ?>" style="<?php echo $visible; ?>">
                 
-                        <label class="fw-bold" ><?php echo nl2br($pregunta['etiqueta']); ?>:</label>
-                    
-                        <?php if($pregunta['cveField'] == 'TEXT'){ ?>
+                        <label class="fw-bold" ><?php echo !empty($pregunta['etiqueta']) ? nl2br($pregunta['etiqueta']).':' : ''; ?> <?php echo (isset($pregunta['requerido']) && $pregunta['requerido'] == 1 ? '<span class="required">*</span>' : '') ?></label>
+                        
+                        <?php if( (isset($pregunta['cveField']) && $pregunta['cveField'] == 'TEXT') || isset($pregunta['cveField']) && $pregunta['cveField'] == 'DATE' || isset($pregunta['cveField']) && $pregunta['cveField'] == 'TEXT_NUMERIC' ){ ?>
                             <input type="text" name="reg[<?php echo $p; ?>]" class="<?php echo $clase_campo; ?>" maxlength="<?php echo $pregunta['longitud']; ?>" />
-                        <?php } elseif($pregunta['cveField'] == 'TEXT_AREA') { ?>
-                            <textarea name="reg[<?php echo $p; ?>]" class="form-control" maxlength="<?php echo $pregunta['longitud']; ?>"></textarea>
-                        <?php }elseif($pregunta['cveField'] == 'RADIO'){ ?>
-                            <div class="form-check">
-                                <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
-                                    <input type="radio" name="reg[<?php echo $p; ?>]" class="form-check-label" value="<?php echo $clave; ?>" <?php echo $onchange; ?> /> 
-                                    <label class="form-check-label"><?php echo $valor; ?></label>
-        
+                        <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'TEXT_AREA' ) { ?>
+                            <textarea name="reg[<?php echo $p; ?>]" class="form-control" maxlength="<?php echo $pregunta['longitud']; ?>" rows="4"></textarea>
+                        <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'RADIO' ){ ?>
+                            <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
+                                <div class="form-check">
+                                    <input id="<?php echo $valor; ?>" type="radio" name="reg[<?php echo $p; ?>]" class="form-check-input" value="<?php echo $clave; ?>" <?php echo $onchange; ?> /> 
+                                    <label for="<?php echo $valor; ?>" class="form-check-label"><?php echo $valor; ?></label>
+                                </div>
                                 <?php } ?>
-        
-                            </div>
-                        <?php } elseif($pregunta['cveField'] == 'CHECKBOX') { ?>
-                            <div class="checkbox">
-                                <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
-                                <label>
-                                    <input type="checkbox" name="reg[<?php echo $p; ?>][]" class="<?php echo $clase_campo; ?>" value="<?php echo $clave; ?>" <?php echo $onchange; ?> /> 
-                                    <?php echo $valor; ?>
-                                </label>
+                        <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'CHECKBOX' ) { ?>                 
+                            <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
+                                <div class="form-check">
+                                    <input id="<?php echo $valor; ?>" type="checkbox" name="reg[<?php echo $p; ?>][]" class="<?php echo $clase_campo; ?> form-check-input" value="<?php echo $clave; ?>" <?php echo $onchange; ?> /> 
+                                    <label for="<?php echo $valor; ?>" class="form-check-label"><?php echo $valor; ?></label>
+                                </div>
                                 <?php  } ?>
-                            </div>
-                        <?php }elseif($pregunta['cveField'] == 'FILE'){ 
+                        <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'FILE'){ 
                             $extension = !empty($pregunta['extension']) ? $pregunta['extension'] : 'Todos'; ?>
                             &nbsp; (Permitidos: <?php echo $extension; ?>)<br>
-                            <input type="file" name="reg[<?php echo $p; ?>]" multiple="multiple" class="multi <?php echo $clase_campo; ?>" accept="<?php echo $pregunta['extension']; ?>" maxlength="<?php echo $pregunta['longitud']; ?>" />
-                        <?php } elseif($pregunta['cveField'] == 'LIST'){
-                            $multiple = (isset($pregunta['multiple']) && $pregunta['multiple'] == 1) ? 'multiple' : '';
+                            <input type="file" name="reg[<?php echo $p; ?>]" multiple="multiple" class="multi <?php echo $clase_campo; ?>" maxlength="<?php echo $pregunta['longitud']; ?>" />
+                        <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'LIST' ){
                             $name = !empty($multiple) ? 'reg['.$p.'][]' : 'reg['.$p.']';
                         ?>
-                            <select <?php echo $multiple; ?> name="<?php echo $name; ?>" class="form-select form-control" <?php echo $onchange; ?> >
+                            <select name="<?php echo $name; ?>" class="form-select form-control" <?php echo $onchange; ?> >
                                 <?php if(empty($multiple)){ ?>
-                                    <option value="">-Elige-</option>
+                                    <option value=""> - Elige - </option>
                                 <?php } ?>
                                 
+                                <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
+                                    <option value="<?php echo $clave; ?>"><?php echo $valor; ?></option>
+                                <?php } ?>
+                            </select>
+                        <?php }elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'LIST_MULTIPLE' ){
+                            $name = !empty($multiple) ? 'reg['.$p.'][]' : 'reg['.$p.']';
+                        ?>
+                            <select multiple name="<?php echo $name; ?>" class="form-select form-control" <?php echo $onchange; ?> >                                      
                                 <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
                                     <option value="<?php echo $clave; ?>"><?php echo $valor; ?></option>
                                 <?php } ?>
@@ -101,6 +101,12 @@
         </form>
     
     </div>
+
+    <div style="text-align:center; font-size:12px;margin-top:20px; display: none;">
+      <div id="msg_result" style="width:100%; text-align:left; margin-bottom:10px;"></div>
+      <button type="button" id="btn_enviar" class="btn btn-success" style="margin-top:20px;margin-bottom:20px;">Guardar</button>    
+    </div>
+
 </div>
 
 <script language="javascript" type="text/javascript">

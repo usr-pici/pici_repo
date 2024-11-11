@@ -300,6 +300,18 @@ function aplicarClases($context) {
         });
     });
 
+    $(".americandate", $context || null).each(function () {
+        $(this).inputmask({
+            alias: "9999/99/99",
+            placeholder: "aaaa/mm/dd"
+        });
+        $(this).datepicker({
+            language: "es",
+            autoclose: true,
+            format: 'yyyy/mm/dd',
+        });
+    });
+
     $(".maskInteger", $context || null).inputmask("integer", {
         min:1,
         autoGroup: true,
@@ -323,6 +335,13 @@ function aplicarClases($context) {
     
     $(".maskCantidad", $context || null).inputmask("numeric", {
         digits: 2,
+        autoGroup: true,
+        groupSeparator: ",",
+        allowMinus: false
+    });
+
+    $(".maskCantidad3Dig", $context || null).inputmask("numeric", {
+        digits: 3,
         autoGroup: true,
         groupSeparator: ",",
         allowMinus: false

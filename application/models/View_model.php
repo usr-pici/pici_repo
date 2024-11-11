@@ -446,9 +446,19 @@ class View_model extends MY_Model {
 
         //$condicion = ["p.borrado = 0"];
 
+        if ( !empty($filtros['idPreguntaCondicion']) )
+            $condicion[] = "pc.idPreguntaCondicion = '{$filtros['idPreguntaCondicion']}'";
+
+        if ( isset($filtros['idPreguntaOpcion']) )
+            $condicion[] = "po.idPreguntaOpcion = '{$filtros['idPreguntaOpcion']}'";
+
+        if ( isset($filtros['idPregunta_IN']) )
+			$condicion[] = "pc.idPregunta IN ({$filtros['idPregunta_IN']}) ";
+
         $campos = !empty($extras['campos']) ? $extras['campos'] : '
                     p.idPregunta,
-                    p.etiqueta as pregunta,
+                    p.etiqueta AS pregunta,
+                    po.idPregunta AS idTest,
                     po.idPreguntaOpcion,
                     po.opcion,
                     pc.idPreguntaCondicion,

@@ -96,12 +96,21 @@ class Formulario extends MY_Controller {
         if( !empty($idFormulario) ) {
 
             $regs = $this->view_service->searchByModel('viewModel', ['idFormulario' => $idFormulario], ['orderBy' => 'p.consecutivo ASC', 'imprimirSQL' => 0], 'getQuestions');
-    
+
             if ( $regs ) {
+
+                $regsPos = array();
+                foreach ($regs as $reg) {
+                    $regsPos[$reg['idPregunta']] = $reg['consecutivo'];
+                }
+                
+                $maximo = max($regsPos);
+                $minimo = min($regsPos);
+
                 foreach ( $regs as &$reg ) {
-                    $reg['opciones'] = '<a onclick="configLevelQuestion('. $reg['idPregunta'] . ','. $reg['consecutivo'] .',`UP`, '. $reg['idFormulario'] .')" href="javascript:void(0);" title="Subir" ><i class="fas fa-arrow-up text-success"></i></a>';
-                    $reg['opciones'] .= ' <span>|</span> <a onclick="configLevelQuestion('. $reg['idPregunta'] . ','. $reg['consecutivo'] .',`DOWN`, '. $reg['idFormulario'] .')" href="javascript:void(0);" title="Bajar" ><i class="fas fa-arrow-down text-primary"></i></a>';
-                    $reg['opciones'] .= ' <span>|</span> <a href="javascript:void(0);" title="Configurar" onclick="configQuestion(`'. $reg['idPregunta'] .'`)"><i class="fas fa-wrench" style="color:black"></i></a>';
+                    $reg['opciones'] = '<a class="'. ($reg['consecutivo'] == $minimo ? 'd-none' : '') .'" onclick="configLevelQuestion('. $reg['idPregunta'] . ','. $reg['consecutivo'] .',`UP`, '. $reg['idFormulario'] .')" href="javascript:void(0);" title="Subir" ><i class="fas fa-arrow-up text-success"></i></a>';
+                    $reg['opciones'] .= ' <span class="'. ($reg['consecutivo'] == $minimo ? 'd-none' : '') .'">|</span> <a class="'. ($reg['consecutivo'] == $maximo ? 'd-none' : '') .'" onclick="configLevelQuestion('. $reg['idPregunta'] . ','. $reg['consecutivo'] .',`DOWN`, '. $reg['idFormulario'] .')" href="javascript:void(0);" title="Bajar" ><i class="fas fa-arrow-down text-primary"></i></a>';
+                    $reg['opciones'] .= ' <span class="'. ($reg['consecutivo'] == $maximo ? 'd-none' : '') .'">|</span> <a href="javascript:void(0);" title="Configurar" onclick="configQuestion(`'. $reg['idPregunta'] .'`)"><i class="fas fa-wrench" style="color:black"></i></a>';
                     $reg['opciones'] .= ' <span>|</span> <a href="javascript:void(0);" onclick="delete_question_reg(this,'. $reg['idPregunta'] . ')"><i title="Eliminar" class="fa fa-trash-alt text-danger"></i></a>';
                 }
             }   
@@ -119,10 +128,19 @@ class Formulario extends MY_Controller {
             $regs = $this->view_service->searchByModel('viewModel', ['idPregunta' => $idPregunta], ['imprimirSQL' => 0, 'orderBy' => 'posicion ASC'], 'getOptionsQuestion');
             
             if ( $regs ) {
+
+                $regsPos = array();
+                foreach ($regs as $reg) {
+                    $regsPos[$reg['idPreguntaOpcion']] = $reg['posicion'];
+                }
+                
+                $maximo = max($regsPos);
+                $minimo = min($regsPos);
+
                 foreach ( $regs as &$reg ) {
-                    $reg['opciones'] = '<a onclick="configLevelOption('. $reg['idPreguntaOpcion'] . ','. $reg['posicion'] .',`UP`, '. $reg['idPregunta'] .')" href="javascript:void(0);" title="Subir" ><i class="fas fa-arrow-up text-success"></i></a>';
-                    $reg['opciones'] .= ' <span>|</span> <a onclick="configLevelOption('. $reg['idPreguntaOpcion'] . ','. $reg['posicion'] .',`DOWN`, '. $reg['idPregunta'] .')" href="javascript:void(0);" title="Bajar" ><i class="fas fa-arrow-down text-warning"></i></a>';
-                    $reg['opciones'] .= ' <span>|</span> <a onclick="edit_opcion_question('. $reg['idPreguntaOpcion'] . ', '. $reg['posicion'] .', `'. $reg['opcion'] .'`, '. $reg['idPregunta'] .')" href="javascript:void(0);" title="Editar"><i class="fa fa-edit text-primary"></i></a>';
+                    $reg['opciones'] = '<a class="'. ($reg['posicion'] == $minimo ? 'd-none' : '') .'" onclick="configLevelOption('. $reg['idPreguntaOpcion'] . ','. $reg['posicion'] .',`UP`, '. $reg['idPregunta'] .')" href="javascript:void(0);" title="Subir" ><i class="fas fa-arrow-up text-success"></i></a>';
+                    $reg['opciones'] .= ' <span class="'. ($reg['posicion'] == $minimo ? 'd-none' : '') .'">|</span> <a class="'. ($reg['posicion'] == $maximo ? 'd-none' : '') .'" onclick="configLevelOption('. $reg['idPreguntaOpcion'] . ','. $reg['posicion'] .',`DOWN`, '. $reg['idPregunta'] .')" href="javascript:void(0);" title="Bajar" ><i class="fas fa-arrow-down text-warning"></i></a>';
+                    $reg['opciones'] .= ' <span class="'. ($reg['posicion'] == $maximo ? 'd-none' : '') .'">|</span> <a onclick="edit_opcion_question('. $reg['idPreguntaOpcion'] . ', '. $reg['posicion'] .', `'. $reg['opcion'] .'`, '. $reg['idPregunta'] .')" href="javascript:void(0);" title="Editar"><i class="fa fa-edit text-primary"></i></a>';
                     $reg['opciones'] .= ' <span>|</span> <a href="javascript:void(0);" onclick="delete_option_reg(this,'. $reg['idPreguntaOpcion'] . ')"><i title="Eliminar" class="fa fa-trash-alt text-danger"></i></a>';
                     //$reg['posicion'] = '<input title="'. $reg['posicion'] .'" id="txtPos'. $reg['idPreguntaOpcion'] .'" disabled type="text" class="form-control maskInteger text-center pos'. $reg['idPreguntaOpcion'] .'" min="1" value="'. $reg['posicion'] .'" >' ;
                     //$reg['opcion'] = '<input title="'. $reg['opcion'] .'" id="txtOpc'. $reg['idPreguntaOpcion'] .'" disabled type="text" class="form-control text-center opc'. $reg['idPreguntaOpcion'] .'" value="'. $reg['opcion'] .'" >' ;
@@ -150,8 +168,8 @@ class Formulario extends MY_Controller {
             if ( $regs ) {
             
                 foreach ( $regs as &$reg ) {
-                    $reg['pregunta'] = '<input title="'. $reg['pregunta'] .'" disabled type="text" class="form-control text-center" min="1" value="'. $reg['pregunta'] .'" >' ;
-                    $reg['opcion'] = '<input title="'. $reg['opcion'] .'" disabled type="text" class="form-control text-center" value="'. $reg['opcion'] .'" >' ;
+                    //$reg['pregunta'] = '<input title="'. $reg['pregunta'] .'" disabled type="text" class="form-control text-center" min="1" value="'. $reg['pregunta'] .'" >' ;
+                    //$reg['opcion'] = '<input title="'. $reg['opcion'] .'" disabled type="text" class="form-control text-center" value="'. $reg['opcion'] .'" >' ;
                     $reg['opciones'] = '<a onclick="edit_condition_question('. $reg['idPreguntaCat'] . ', '. $reg['idPreguntaOpcionCat'] .', '. $reg['idPregunta'] .', '. $reg['idFormularioPadre'] .', '. $reg['idPreguntaCondicion'] .')" href="javascript:void(0);" title="Editar"><i class="fa fa-edit text-primary"></i></a>';
                     $reg['opciones'] .= ' <span>|</span> <a href="javascript:void(0);" onclick="delete_condition_question(this,'. $reg['idPreguntaCondicion'] . ')"><i title="Eliminar" class="fa fa-trash-alt text-danger"></i></a>';
                     $reg['idPreguntaCondicion'] = $contador;
@@ -257,35 +275,19 @@ class Formulario extends MY_Controller {
 
         if( isset($reg['idPreguntaOpcion']) ) unset($reg['idPreguntaOpcion']);
 
-        if( $reg['idTipoCampo'] != 'DATE' && isset($reg['formato']) ) unset($reg['formato']);
+        if( ($reg['idTipoCampo'] != 'DATE' && isset($reg['formato'])) && ($reg['idTipoCampo'] != 'TEXT_NUMERIC' && isset($reg['formato'])) ) 
+            unset($reg['formato']);
 
         if( isset($reg['idPregunta']) ) {
             $idPregunta = $reg['idPregunta'];
             unset($reg['idPregunta']);
         }
 
-        if( isset($reg['idRol']) ) {
-            $roles = $reg['idRol'];
-            unset($reg['idRol']);
-        }
-        //$this->imprimir($idPregunta);
-        //$this->imprimir($reg,1);
         $result = $this->form_service->saveQuestion($reg, !empty($idPregunta) ? $idPregunta : NULL);
 
         if( $result['error'] == 0 ) {
             $result['idPregunta'] = !empty($idPregunta) ? $idPregunta : $result['id'];
             $result['idFormulario'] = $reg['idFormulario'];
-
-            if( !empty($roles) ){
-                foreach ($roles as $key => $rol) {
-                    $valid = current( $this->form_service->search_questionRol(['idPregunta' => !empty($idPregunta) ? $idPregunta : $result['id'], 'idRol' => $rol, 'borrado' => 0]) );
-
-                    if( empty($valid) )
-                        $result = $this->form_service->saveQuestionRol(['idPregunta' => !empty($idPregunta) ? $idPregunta : $result['id'], 'idRol' => $rol], NULL);	
-                    else 
-                        return $this->msg_error("Combinaci\xf3n Pregunta/rol ya registrado, verifique.");
-                }  
-            }
         }
 
         echo json_encode($result);
@@ -473,6 +475,8 @@ class Formulario extends MY_Controller {
                 'getQuestions'
             );
 
+            //$this->imprimir($preguntas,1);
+
             $options = $this->form_service->indexed_search_OptionForm(['idPreguntaOpcion','idPregunta'],['activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0]);
 
             $conditions = $this->form_service->indexed_search_conditionQuestion(['idPregunta'],['activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0]);
@@ -496,6 +500,10 @@ class Formulario extends MY_Controller {
                 }
 
                 $atributos = !empty($showFieldsQuestion[$pregunta['idPregunta']]) ? $showFieldsQuestion[$pregunta['idPregunta']] : [];
+                //$this->imprimir($atributos);
+
+                //$this->imprimir($pregunta['idPregunta']);
+                //$this->imprimir($atributos);
                      
                 $listaPreguntas[$pregunta['idPregunta']] = $pregunta;
                 $listaPreguntas[$pregunta['idPregunta']]['condicion'] = !empty($atributos) ? [$atributos['idPreguntaOpcion'] => $atributos['idPreguntaCondicion']] : [];
@@ -506,11 +514,15 @@ class Formulario extends MY_Controller {
                     
                     foreach( $listaPreguntas[$pregunta['idPregunta']]['condicion'] as $cond ){
 
+                        //$this->imprimir($listaPreguntas[$pregunta['idPregunta']]['condicion'],1);
+                        //$this->imprimir($cond);
                         $datos = current(  $this->view_service->searchByModel('viewModel', ['idPreguntaCondicion' => $cond], ['imprimirSQL' => 0], 'showFieldsQuestion') );
-                        $comparacion = ($datos['igual'] == 1) ? '==' : '!=';
-                        $atributos_preg2 = $preguntas[$datos['idPregunta']];
+                        //$this->imprimir($datos,1);
 
-                        if( $atributos_preg2['cveField'] == 'LIST' || $atributos_preg2['cveField'] == 'LIST_MULTIPLE' )
+                        $comparacion = ($datos['igual'] == 1) ? '==' : '!=';
+                        $atributos_preg2 = !empty($preguntas[$datos['idPregunta']]) ? $preguntas[$datos['idPregunta']] : [];
+
+                        if( isset($atributos_preg2['cveField']) && $atributos_preg2['cveField'] == 'LIST' || isset($atributos_preg2['cveField']) && $atributos_preg2['cveField'] == 'LIST_MULTIPLE' )
                             $restriccion[] = "validar_grupo_pregunta( \"select[name^='reg\\[".$datos['idPregunta']."\\]']\" , '".$comparacion."', ".$datos['idPreguntaOpcion'].")";
                         else
                             $restriccion[] = "validar_grupo_pregunta( \"input[name^='reg\\[".$datos['idPregunta']."\\]']:checked\", '".$comparacion."', ".$datos['idPreguntaOpcion'].")";
@@ -534,8 +546,10 @@ class Formulario extends MY_Controller {
 
                 } else {
                     $listaPreguntas[$pregunta['idPregunta']]['display'] = 'block';
-                }                
+                }              
             }
+
+            //$this->imprimir('jajaja',1);
 
             $configuracion['lista_preguntas'] = $listaPreguntas;
                      
@@ -549,22 +563,14 @@ class Formulario extends MY_Controller {
     }
 
     function preview($idFormulario = 0) {
-
-        /*if( $idFormulario !== 0 ) 
-            $html = $this->getQuestionsHTML($idFormulario, 0); 
-        else
-            $html = '';*/
         
         $configuration = $this->configuration($idFormulario);
+        //$this->imprimir($configuration,1);
         $configuration['title'] = 'Previsualización de Formulario';
         $configuration['idFormulario'] = $idFormulario;
 
         $data['fileToLoad']  = ['formulario/js/preview.js'];
-        $data['main_content']  = $this->load->view('formulario/preview.html', /*[
-            'questions' => $html,
-            'idFormulario' => $idFormulario,
-            'title' => 'Previsualización de Formulario',
-        ]*/$configuration, TRUE);
+        $data['main_content']  = $this->load->view('formulario/preview.html', $configuration, TRUE);
         
         $this->loadTemplate($data);
     }
@@ -804,11 +810,74 @@ class Formulario extends MY_Controller {
 
         if( $idRegistro != '' ) {
             
-            $formulario = $this->form_service->search(['id' => $idRegistro, 'borrado' => 0]);
-
-            $this->imprimir($formulario,1);
+            $formulario = current( $this->form_service->search(['id' => $idRegistro, 'borrado' => 0], ['campos' => 'clave, nombre, vigenciaIni, vigenciaFin, descripcion']) );
 
             if( $formulario ) {
+
+                $relacion_ids = $condiciones_nuevas = $historial = array();
+                $formulario['clave'] = $formulario['clave'] . '_C' . time();
+                $saveFormulario = $this->form_service->save($formulario, NULL);
+                $formNewId = $saveFormulario['id'];
+                $preguntas = $this->form_service->indexed_search_question('idPregunta',['idFormulario' => $idRegistro, 'borrado' => 0], ['campos' => 'idPregunta, idTipoCampo, consecutivo, etiqueta, formato, longitud, requerido']);
+                $questions_ids = implode(',', array_column($preguntas, 'idPregunta'));
+                $preguntas_x_rol = $this->form_service->search_questionRol(['pregunta_IN' => $questions_ids, 'activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0, 'campos' => 'idRol, idPregunta']);
+                $conditions = $this->form_service->search_conditionQuestion(['pregunta_IN' => $questions_ids, 'borrado' => 0], ['imprimirSQL' => 0, 'campos' => 'idPregunta, igual, idPreguntaOpcion']);
+                
+                $showFieldsQuestion = $this->view_service->indexedSearchByModel(
+                    'viewModel',
+                    ['idPreguntaOpcion'],
+                    ['idPregunta_IN' => $questions_ids],
+                    ['imprimirSQL' => 0],
+                    FALSE,
+                    'showFieldsQuestion'
+                );
+
+                foreach( $preguntas as $pregunta ){
+                    
+                    $reg = $pregunta;
+                    unset($reg['idPregunta']);
+                    $reg['idFormulario'] = $formNewId;
+                    $nueva_pregunta = $this->form_service->saveQuestion($reg, NULL);
+                    $relacion_ids[ $pregunta['idPregunta'] ] = $nueva_pregunta['id'];
+                    $options = $this->form_service->search_OptionForm(['idPregunta' => $pregunta['idPregunta'], 'activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0, 'campos' => 'idPreguntaOpcion, idPregunta, posicion, opcion']);
+
+                    foreach($options as $config){
+                        
+                        $dato = !empty($showFieldsQuestion[$config['idPreguntaOpcion']]) ? $showFieldsQuestion[$config['idPreguntaOpcion']] : [];
+                        $id = $config['idPregunta'];
+                        unset($config['idPreguntaOpcion']);
+                        $config['idPregunta'] = $nueva_pregunta['id'];
+                        $nueva_config = $this->form_service->saveOptionQuestion($config, NULL);
+                        $historial[ $id ] = $nueva_config['id'];
+
+                        if( !empty($dato) ){
+
+                            $condicion = current( $this->form_service->search_conditionQuestion(['idPreguntaCondicion' => $dato['idPreguntaCondicion']]));
+                            $condicion['idPreguntaOpcion'] = $nueva_config['id'];
+                            unset($condicion['idPreguntaCondicion']);
+                            $id_condicion = $this->form_service->saveQuestionCondition($condicion, NULL);
+                            $condiciones_nuevas[] = $id_condicion['id'];
+                        }
+                    }
+                }
+
+                foreach($condiciones_nuevas as $condicion){
+                    $datos = current($this->form_service->search_conditionQuestion(['idPreguntaCondicion' => $condicion]) );
+                    if( !empty($datos) ) {
+                        $datos['idPregunta'] = $relacion_ids[$datos['idPregunta']];
+                        $idPreguntaCondicion = $datos['idPreguntaCondicion'];
+                        unset($datos['idPreguntaCondicion']);
+                        $this->form_service->saveQuestionCondition($datos, $idPreguntaCondicion);
+                    }
+                }
+                
+                foreach( $relacion_ids as $key => $idr ) {
+                    foreach($preguntas_x_rol as $pxr) {
+                        if( $pxr['idPregunta'] == $key ) {
+                            $saveQuestionRol = $this->form_service->saveQuestionRol(['idPregunta' => $idr, 'idRol' => $pxr['idRol']]);
+                        }
+                    }
+                }
 
                 echo json_encode( ['error' => 0, 'msg' => 'Se duplicó el formulario'] );
 
@@ -920,6 +989,22 @@ class Formulario extends MY_Controller {
         }
 
         $result = $this->form_service->saveOptionQuestion($reg, $idRegistro);
+
+        echo json_encode($result);
+    }
+
+    function response() {
+
+        if(!empty($this->input->post('reg'))){
+            $reg = $this->input->post('reg');
+        } else {
+            $reg = $this->input->post();
+            $_POST['reg'] = $reg;
+        }
+
+        $this->imprimir($reg,1);
+        
+        $result = $this->form_service->response($reg, $idRegistro);
 
         echo json_encode($result);
     }

@@ -1,21 +1,4 @@
 
-/*function showFieldPreview(sel, idPregunta) {
-
-	id = '#s_' + idPregunta;
-
-	idPreguntaMostrar = $(sel).find(':selected').attr('data-cond')
-	
-	console.log(idPreguntaMostrar)
-	
-	if( idPreguntaMostrar != '' )
-		$('#p_' + idPreguntaMostrar).show()
-	else
-		$('#p_' + resp).hide()
-
-
-
-}*/
-
 function validar_grupo_pregunta(grupo, comparacion, valor){ 
 
 	resultado = false;
@@ -73,6 +56,55 @@ function limpiar_campos(clase){
 }
 
 $(function () {
+
+    $('#btn_enviar').click(function(){
+
+        Confirm({
+            text: "&iquest;Datos correctos?",
+            ok: function(obj) {
+                
+                var formData = new FormData();
+                            
+                var params = $( $("#form_formulario") ).serializeArray();
+                $.each(params, function (i, val) {
+                    formData.append(val.name, val.value);
+                });
+        
+                $.each($("input[type=file]"), function(i, objFile) {
+                    $.each(objFile.files,function(j,file){
+                        //formData.append('photo['+i+']', file);
+                        formData.append('archivo_'+$(objFile).attr('name')+'['+i+']', file);
+                        console.log('++++', 'archivo_'+$(objFile).attr('name')+'['+i+']');
+                    });
+                });
+                    
+                $.ajax({
+                    url: URL_SITE + 'formulario/response',
+                    data: formData,
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST',
+                    success: function(data){
+                        
+                        if ( data.error == 0 ) {
+                            
+                            window.location = URL_SITE + 'confirmacion';
+        
+                        }else{
+                            $("#msg_result").html(data.msg).show();
+                        }
+
+                        obj.dialog("close");    
+                        
+                    }
+                });
+
+            }
+        });
+         
+    });
 
 	
 });

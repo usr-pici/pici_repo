@@ -74,17 +74,40 @@
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                 <div id="divFormato" class="col-md-12 col-12 mt-1 mb-2" style="display: none;">
                     <h6 class="form-label fw-bold">Formato:</h6>
-                    <select id="formato" name="reg[formato]" class="form-select">
-                        <option value="dd/mm/aaaa">dd/mm/aaaa</option>
-                        <option value="dd/mm/aaaa">dd-mm-aaaa</option>
+                    <select id="formato" name="reg[formato]" class="form-select form-control form-control-lg">
+                        <option value=""> - Elige - </option>
+                        <option id="v1" style="display: none;" value="fecha" <?php echo isset($question['formato']) && $question['formato'] == 'fecha' ? 'selected' : '' ?>>dd/mm/aaaa</option>
+                        <option id="v2" style="display: none;" value="americandate" <?php echo isset($question['formato']) && $question['formato'] == 'americandate' ? 'selected' : '' ?>>aaaa/mm/dd</option>
+                        <option id="v3" style="display: none;" value="maskIntegerWithOutDigits" <?php echo isset($question['formato']) && $question['formato'] == 'maskIntegerWithOutDigits' ? 'selected' : '' ?>>Enteros</option>
+                        <option id="v4" style="display: none;" value="maskCantidad" <?php echo isset($question['formato']) && $question['formato'] == 'maskCantidad' ? 'selected' : '' ?>>2 decimales</option>
+                        <option id="v5" style="display: none;" value="maskCantidad3Dig" <?php echo isset($question['formato']) && $question['formato'] == 'maskCantidad3Dig' ? 'selected' : '' ?>>3 decimales</option>
                     </select> 
                 </div>
                 <div id="divLong" class="col-md-12 col-12 mb-2" style="display: none;">
                     <div class="form-group">
                         <h6 class="fw-bold">Longitud de campo:</h6>
-                        <input type="text" class="form-control" name="reg[longitud]" id="txtLongitud" placeholder="Longitud" > 
+                        <input type="text" class="form-control" name="reg[longitud]" id="txtLongitud" placeholder="Longitud" value="<?php echo !empty($question['longitud']) ? $question['longitud'] : '' ?>"> 
                     </div>                  
-                </div>                
+                </div> 
+                <!--<div id="divDecimales" class="col-md-12 col-12 mb-2" style="display: none;">
+                    <div class="form-group">
+                        <h6 class="fw-bold">N&uacute;mero de decimales:</h6>
+                        <input type="text" class="form-control" name="reg[decimales]" id="txtDecimal" placeholder="N&uacute;mero de decimales" value="<?php echo !empty($question['decimales']) ? $question['decimales'] : '' ?>"> 
+                    </div>                  
+                </div>  
+                
+                <div id="divContextValue" class="col-md-12 col-12 mb-2" style="display: none;">
+                    <h6 class="fw-bold">Se permiten valores negativos:</h6>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="reg[valoresNegativos]" id="vSi" value="1" <?php echo !empty($question['valoresNegativos']) ? ($question['valoresNegativos'] == '1' ? 'checked' : '') : ''; ?>>
+                        <label class="form-check-label" for="vSi">Si</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="reg[valoresNegativos]" id="vNo" value="0" <?php echo !empty($question['valoresNegativos']) ? ($question['valoresNegativos'] == '0' ? 'checked' : '') : ''; ?>>
+                        <label class="form-check-label" for="vNo">No</label>
+                    </div>
+                </div>-->
+
             </div>
         </div>
 
@@ -118,7 +141,7 @@
             </div>
         </div>
 
-        <div id="divQuestionOption" class="row mb-1">
+        <div id="divConditionQuestion" class="row mb-1" style="display: none;">
             <div class="input-group">
                 <select id="idPreguntaCondicion" name="reg[idPreguntaCondicion]" class="form-select form-control" onchange="showOptionsQuestion()">
                     <?php echo $listaPregunta ?>
@@ -135,7 +158,7 @@
             </div>
         </div>
 
-        <div id="divTblQuestionOption" class="row text-center mb-4">
+        <div id="divTblConditionQuestion" class="row text-center mb-4" style="display: none;">
             <div class="col-md-12 col-12 table-responsive">
                 <table class="table table-bordered table-sm" id="tblOptionsConditions">
                     <thead class="table-light">
@@ -144,9 +167,7 @@
                         <th class="text-center">Opci&oacute;n</th>
                         <th class="text-center">Acci&oacute;n</th>
                     </thead>
-                    <tbody>
-       
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>

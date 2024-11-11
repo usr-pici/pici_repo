@@ -45,7 +45,7 @@ function clone_reg(idFormulario) {
 				URL_SITE + "formulario/clone/" + idFormulario,
 				{},
 				function (resp) {
-					msg(resp.error, resp.msg);
+					msg(resp.error, resp.msg);//Se duplicó el formulario con la clave: test_c1731200414
 
 					if (resp.error == 0) {
 						$("#tblFormularios").DataTable().ajax.reload();

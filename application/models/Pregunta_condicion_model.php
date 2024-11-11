@@ -25,8 +25,14 @@ class Pregunta_condicion_model extends MY_Model {
         if ( isset($filtros['idPreguntaCondicion']) )
             $condicion[] = "idPreguntaCondicion = '{$filtros['idPreguntaCondicion']}'";
 
+        if ( isset($filtros['idPreguntaOpcion']) )
+            $condicion[] = "idPreguntaOpcion = '{$filtros['idPreguntaOpcion']}'";
+
         if ( isset($filtros['idPregunta']) )
             $condicion[] = "idPregunta = '{$filtros['idPregunta']}'";
+
+        if ( isset($filtros['pregunta_IN']) )
+			$condicion[] = "idPregunta IN ({$filtros['pregunta_IN']}) ";
                         
         if ( isset($filtros['borrado']) )
             $condicion[] = "borrado = '{$filtros['borrado']}'";

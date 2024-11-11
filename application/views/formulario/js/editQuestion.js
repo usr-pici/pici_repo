@@ -112,29 +112,29 @@ function delete_condition_question(elem, idRegistro) {
 
 
 //Guardar pregunta
-function saveQuestion(bandera = 0) {
+function saveQuestion() {
 
     $.post(
         URL_SITE + "formulario/saveQuestion",
         $("#formModalAddQuestion").serializeArray(),
         function(resp) {
             msg(resp.error, resp.msg);
+            $("#tblQuestions").DataTable().ajax.reload();          
             
             if (resp.error == 0) {
                 
                 $('#idPregunta').val(resp.idPregunta);
                 idPregunta = resp.idPregunta;
 
-                if( bandera == 1 )
-                    saveOptionsQuestion(resp.idPregunta)
+                let cveCampo = $("#idTipoCampo option:selected").val()
+                if( cveCampo == 'RADIO' || cveCampo == 'CHECKBOX' || cveCampo == 'LIST' || cveCampo == 'LIST_MULTIPLE')
+                    $('#divOpciones, #divTblOpciones').show();
 
-                if( bandera == 2 )
-                    saveCondition(resp.idPregunta)
-                                
-                if( bandera == 0 ) {
-                    $('#dialog-add').modal('hide');
-                    $("#tblQuestions").DataTable().ajax.reload();
-                }
+                $('#divConditionQuestion, #divTblConditionQuestion').show();
+                $("#tblOptions").DataTable().draw();
+
+                initTable(resp.idPregunta);
+                initTableCondition(resp.idPregunta)   
             }
         },
         'json'
@@ -191,31 +191,36 @@ function saveCondition(idPregunta) {
 
 function tipoCampoOnChange(sel) {
 
-    if( sel.value == 'TEXT' || sel.value == 'TEXT_AREA') {
+    if( sel.value == 'TEXT' || sel.value == 'TEXT_AREA' || sel.value == 'TEXT_NUMERIC' ) {
         $('#divTblOpciones, #divOpciones, #divFormato').hide();
         $('#divLong').show();
         $("#formato, #posicion, #txtOpcion").removeAttr("name");
-    } else if( sel.value == 'LIST' || sel.value == 'LIST_MULTIPLE' || sel.value == 'RADIO' || sel.value == 'CHECKBOX'  ) {
-        $("#tblOptions").DataTable().draw();
-        
-        if( idPregunta == 0 )
-            initTable('');
 
+        if( sel.value == 'TEXT_NUMERIC' ) {
+            $('#v1, #v2').hide()
+            $('#divFormato, #v3, #v4, #v5').show();
+            $("#formato").attr("name", "reg[formato]");
+        }
+
+    } else if( sel.value == 'LIST' || sel.value == 'LIST_MULTIPLE' || sel.value == 'RADIO' || sel.value == 'CHECKBOX'  ) {
         $('#divLong, #divFormato').hide();
-        $('#divOpciones, #divTblOpciones').show();
         $("#formato").removeAttr("name");
         $("#posicion").attr("name", "reg[posicion]");
         $("#txtOpcion").attr("name", "reg[opcion]");
     } else if( sel.value == 'LABEL' || sel.value == 'DATE' || sel.value == '' ) {
-        $('#divLong, #divTblOpciones, #divOpciones').hide();
-        $('#divFormato').show();
+        $('#divLong, #divTblOpciones, #divOpciones, #v3, #v4, #v5').hide();
+        $('#divFormato, #v1, #v2').show();
         $("#txtValor, #txtOpcion").removeAttr("name");
         $("#formato").attr("name", "reg[formato]");
+    } else if( sel.value == 'FILE' ) {
+        $('#divLong, #divFormato').hide();
     }
 
 }
 
 function configQuestion(idPregunta) {
+
+    idPregunta = idPregunta;
 
     $('#update_add_load').load(URL_SITE + 'formulario/editModalQuestion/', 
         {
@@ -230,20 +235,28 @@ function configQuestion(idPregunta) {
 		    $("#posicion").load( URL_SITE + "formulario/getPositionOptionQuestion", {idPregunta: idPregunta}, function (resp) {});
             initTableCondition(idPregunta)
 
-            if( typeField == 'TEXT' || typeField == 'TEXT_AREA') {
+            $('#divConditionQuestion, #divTblConditionQuestion').show();
+
+            if( typeField == 'TEXT' || typeField == 'TEXT_AREA' || typeField == 'TEXT_NUMERIC' ) {
                 $('#divTblOpciones, #divOpciones, #divFormato').hide();
                 $('#divLong').show();
                 $("#formato, #posicion, #txtOpcion").removeAttr("name");
+
+                if( typeField == 'TEXT_NUMERIC' ) {
+                    $('#v1, #v2').hide()
+                    $('#divFormato, #v3, #v4, #v5').show();
+                    $("#formato").attr("name", "reg[formato]");
+                }
+
             } else if( typeField == 'LIST' || typeField == 'LIST_MULTIPLE' || typeField == 'RADIO' || typeField == 'CHECKBOX'  ) {
-                //$("#tblOptions").DataTable().draw();
                 $('#divLong, #divFormato').hide();                
                 $('#divOpciones, #divTblOpciones').show();
                 $("#formato").removeAttr("name");
                 $("#posicion").attr("name", "reg[posicion]");
                 $("#txtOpcion").attr("name", "reg[opcion]");
             } else if( typeField == 'LABEL' || typeField == 'DATE' || typeField == '' ) {
-                $('#divLong, #divTblOpciones, #divOpciones').hide();
-                $('#divFormato').show();
+                $('#divLong, #divTblOpciones, #divOpciones, #v3, #v4, #v5').hide();
+                $('#divFormato, #v1, #v2').show();
                 $("#txtValor, #txtOpcion").removeAttr("name");
                 $("#formato").attr("name", "reg[formato]");
             }
@@ -308,30 +321,23 @@ function configQuestion(idPregunta) {
 
             $('#btnSaveOptionsQuestion').click(function () {
         
-                if ($("#formModalAddQuestion").valid()) {
-        
-                    if( $('#txtOpcion').val() != '' ) {
-                        saveQuestion(1)
-                    } else {
-                        msg(1, 'Agregue una opci&oacute;n.')
-                    }
+                if( $('#txtOpcion').val() != '' ) {
+                    saveOptionsQuestion(idPregunta)
+                } else {
+                    msg(1, 'Agregue una opci&oacute;n.')
                 }
             })
         
             $('#btnSaveConditionQuestion').click(function () {
                 
-                if ($("#formModalAddQuestion").valid()) {
-                    
-                    let posicion = $("#posicionCondicion option:selected").val();
-                    let questionId = $("#idPreguntaCondicion option:selected").val();
-                    let optionId = $("#idPreguntaOpcion option:selected").val();
-        
-                    if( questionId != '' && optionId != '' && posicion != '' ) {
-                        saveQuestion(2)                 
-                    } else {
-                        msg(1, 'Seleccione la pregunta y la opci&oacute;n.')
-                    }            
-                }
+                let questionId = $("#idPreguntaCondicion option:selected").val();
+                let optionId = $("#idPreguntaOpcion option:selected").val();
+    
+                if( questionId != '' && optionId != '' && posicion != '' ) {
+                    saveCondition(idPregunta)                
+                } else {
+                    msg(1, 'Seleccione la pregunta y la opci&oacute;n.')
+                }            
             })
 
             $('#btnUpdateOptionsQuestion').click(function () {
@@ -724,31 +730,24 @@ $(function () {
                 });
 
                 $('#btnSaveOptionsQuestion').click(function () {
-        
-                    if ($("#formModalAddQuestion").valid()) {
-            
-                        if( $('#txtOpcion').val() != '' ) {
-                            saveQuestion(1)
-                        } else {
-                            msg(1, 'Agregue una opci&oacute;n.')
-                        }
-                    }
+                    
+                    if( $('#txtOpcion').val() != '' ) {
+                        saveOptionsQuestion(idPregunta)
+                    } else {
+                        msg(1, 'Agregue una opci&oacute;n.')
+                    }      
                 })
             
                 $('#btnSaveConditionQuestion').click(function () {
                     
-                    if ($("#formModalAddQuestion").valid()) {
-
-                        let posicion = $("#posicionCondicion option:selected").val();
-                        let questionId = $("#idPreguntaCondicion option:selected").val();
-                        let optionId = $("#idPreguntaOpcion option:selected").val();
-            
-                        if( questionId != '' && optionId != '' && posicion != '' ) {
-                            saveQuestion(2)                 
-                        } else {
-                            msg(1, 'Seleccione la pregunta y la opci&oacute;n.')
-                        }            
-                    }
+                    let questionId = $("#idPreguntaCondicion option:selected").val();
+                    let optionId = $("#idPreguntaOpcion option:selected").val();
+        
+                    if( questionId != '' && optionId != '' && posicion != '' ) {
+                        saveCondition(idPregunta)                
+                    } else {
+                        msg(1, 'Seleccione la pregunta y la opci&oacute;n.')
+                    }            
                 })
 
                 $('#btnUpdateOptionsQuestion').click(function () {
@@ -816,9 +815,8 @@ $(function () {
             },
             Aceptar: function() {
                 
-                if ($("#formModalAddQuestion").valid()) {
+                if ($("#formModalAddQuestion").valid())
 					saveQuestion()
-				}
             }
         },
         opened: function() {
