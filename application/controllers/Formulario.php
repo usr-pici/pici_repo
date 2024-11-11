@@ -481,10 +481,12 @@ class Formulario extends MY_Controller {
 
             $conditions = $this->form_service->indexed_search_conditionQuestion(['idPregunta'],['activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0]);
 
+            $questions_ids = implode(',', array_column($preguntas, 'idPregunta'));
+
             $showFieldsQuestion = $this->view_service->indexedSearchByModel(
                 'viewModel',
-                ['idPreguntaMostrar'],
-                [],
+                ['idPreguntaOpcion'],
+                ['idPregunta_IN' => $questions_ids],
                 ['imprimirSQL' => 0],
                 FALSE,
                 'showFieldsQuestion'
@@ -499,14 +501,13 @@ class Formulario extends MY_Controller {
                         $pregunta['opciones'][$optValue[$pregunta['idPregunta']]['idPreguntaOpcion']] =  $optValue[$pregunta['idPregunta']]['opcion'];
                 }
 
-                $atributos = !empty($showFieldsQuestion[$pregunta['idPregunta']]) ? $showFieldsQuestion[$pregunta['idPregunta']] : [];
-                //$this->imprimir($atributos);
-
-                //$this->imprimir($pregunta['idPregunta']);
-                //$this->imprimir($atributos);
+                $atributos = $this->view_service->searchByModel('viewModel', ['idPregunta' => $pregunta['idPregunta']], ['imprimirSQL' => 0], 'showFieldsQuestion');
                      
                 $listaPreguntas[$pregunta['idPregunta']] = $pregunta;
-                $listaPreguntas[$pregunta['idPregunta']]['condicion'] = !empty($atributos) ? [$atributos['idPreguntaOpcion'] => $atributos['idPreguntaCondicion']] : [];
+                
+                foreach( $atributos as $atr ) {
+                    $listaPreguntas[$pregunta['idPregunta']]['condicion'][] = !empty($atributos) ? [$atr['idPreguntaOpcion'] => $atr['idPreguntaCondicion']] : [];
+                }
                                            
                 if( !empty($atributos) ){
                     
@@ -514,11 +515,8 @@ class Formulario extends MY_Controller {
                     
                     foreach( $listaPreguntas[$pregunta['idPregunta']]['condicion'] as $cond ){
 
-                        //$this->imprimir($listaPreguntas[$pregunta['idPregunta']]['condicion'],1);
-                        //$this->imprimir($cond);
-                        $datos = current(  $this->view_service->searchByModel('viewModel', ['idPreguntaCondicion' => $cond], ['imprimirSQL' => 0], 'showFieldsQuestion') );
+                        $datos = current(  $this->view_service->searchByModel('viewModel', ['idPreguntaCondicion' => current($cond)], ['imprimirSQL' => 0], 'showFieldsQuestion') );
                         //$this->imprimir($datos,1);
-
                         $comparacion = ($datos['igual'] == 1) ? '==' : '!=';
                         $atributos_preg2 = !empty($preguntas[$datos['idPregunta']]) ? $preguntas[$datos['idPregunta']] : [];
 
@@ -529,17 +527,14 @@ class Formulario extends MY_Controller {
                         
                         $listaPreguntas[$datos['idPregunta']]['change'][] = "validar_".$pregunta['idPregunta']."();";
                         $listaPreguntas[$pregunta['idPregunta']]['dependencias'][] = "div_dep_".$datos['idPregunta'];
-
                     }
 
                     $restricciones .= "function validar_".$pregunta['idPregunta'] ."(){ ";
-
-                    $restricciones .= "if( ". implode(" && ", $restriccion) . "){";
+                    $restricciones .= "if( ". implode(" || ", $restriccion) . "){";
                     $restricciones .= "$( '.div_preg_".$pregunta['idPregunta']."' ).show('fast');";
                     $restricciones .= '}else{';
                     $restricciones .= "ocultar_campo('".$pregunta['idPregunta']."');";
                     $restricciones .= '}';
-
                     $restricciones .= " } ";
 
                     $listaPreguntas[$pregunta['idPregunta']]['display'] = 'none';
@@ -549,13 +544,10 @@ class Formulario extends MY_Controller {
                 }              
             }
 
-            //$this->imprimir('jajaja',1);
-
             $configuracion['lista_preguntas'] = $listaPreguntas;
                      
             $configuracion['restricciones'] = $restricciones;
         }
-
 
         //$this->imprimir($configuracion,1);            
 
@@ -837,7 +829,7 @@ class Formulario extends MY_Controller {
                     $reg = $pregunta;
                     unset($reg['idPregunta']);
                     $reg['idFormulario'] = $formNewId;
-                    $nueva_pregunta = $this->form_service->saveQuestion($reg, NULL);
+                    $nueva_pregunta = $this->form_service->saveQuestion($reg, NULL, 1);
                     $relacion_ids[ $pregunta['idPregunta'] ] = $nueva_pregunta['id'];
                     $options = $this->form_service->search_OptionForm(['idPregunta' => $pregunta['idPregunta'], 'activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0, 'campos' => 'idPreguntaOpcion, idPregunta, posicion, opcion']);
 

@@ -455,6 +455,9 @@ class View_model extends MY_Model {
         if ( isset($filtros['idPregunta_IN']) )
 			$condicion[] = "pc.idPregunta IN ({$filtros['idPregunta_IN']}) ";
 
+        if ( isset($filtros['idPregunta']) )
+            $condicion[] = "pc.idPregunta = '{$filtros['idPregunta']}'";
+
         $campos = !empty($extras['campos']) ? $extras['campos'] : '
                     p.idPregunta,
                     p.etiqueta AS pregunta,
