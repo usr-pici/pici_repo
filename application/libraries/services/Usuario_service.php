@@ -13,7 +13,9 @@ class Usuario_Service extends Class_Service {
             'usuario' => 'usuario_model'
          );
 
-        $this->loadModel(); 
+        $this->loadModel();
+        
+        $this->CI->load->library('services/person_service');
     }
     
     function search($condicion = array(), $extras = array()) {
@@ -74,9 +76,9 @@ class Usuario_Service extends Class_Service {
 		$this->CI->session->set_userdata($user);
 
 		$msg = $this->CI->load->view('email/correo.html', [
-				'clasif' => "Portal Ecommerce",
+				'clasif' => "Plataforma Integral de Cuestionarios para Investigación",
 				'title' => "Confirmaci&oacute;n de solicitud",
-				'body'  => '<p>Ecommerce recibió una solicitud para ingresar al portal con esta cuenta de correo, para confirmar dicha solicitud haga clic en el siguiente enlace:</p><center><em><a href="'.$url.$link.'">Favor de dar clic en este link.</a></em></center>'
+				'body'  => '<p>Plataforma Integral de Cuestionarios para Investigación recibió una solicitud para ingresar al portal con esta cuenta de correo, para confirmar dicha solicitud haga clic en el siguiente enlace:</p><center><em><a href="'.$url.$link.'">Favor de dar clic en este link.</a></em></center>'
 			], TRUE);
 
 		$mail = [

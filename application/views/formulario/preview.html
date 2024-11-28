@@ -2,17 +2,27 @@
 <div class="login_register_wrap mt-5">
     <div class="container justify-content-center">
 
-        <form id="form_formulario" enctype="multipart/form-data">
+        <?php if(!empty($dataForm['nombre']) ){ ?>
+            <div class="row justify-content-md-center mb-4">
+                <h4 style="font-size: x-large; font-weight: bold; color: blue" class="text-center"><?php echo $dataForm['nombre'] ?></h4>
+            </div>
+        <?php } ?>
+
+        <form id="data_form_patient<?php echo $idFormulario ?>" enctype="multipart/form-data" data-id-reg="<?php echo !empty($reg) ? $reg['idPaciente'] : ''; ?>">
 
             <input type="hidden" name="reg[idFormulario]" value="<?php echo $idFormulario; ?>">
+
+            <div class="row mt-3">
+                <div class="offset-md-7 col-md-3 col-12 text-end">
+                    <h5 class="required">* Campos obligatorios</h5>
+                </div>
+            </div>
 
             <?php foreach($lista_preguntas as $p => $pregunta){ 
 
                 if( !empty($pregunta) ){
 
-                    $visible = '';
-                    $onchange = '';
-                    $estilo_div_pregunta = '';
+                    $visible = $onchange = $estilo_div_pregunta = '';
                     $datos_clase = array();
                         
                     if( !empty($pregunta['display']) )
@@ -23,11 +33,16 @@
                     
                     $datos_clase[] = 'preg_'.$p;
                     
-                    if(isset($pregunta['cveField']) && in_array($pregunta['cveField'], array('TEXT','TEXT_AREA','FILE','LIST')) )
-                        $datos_clase[] = 'form-control';
+                    if( isset($pregunta['cveField']) && in_array($pregunta['cveField'], array('TEXT','TEXT_AREA','FILE','LIST')) )
+                        //$datos_clase[] = 'form-control';
+                        $datos_clase[] = 'form-control ' . ($pregunta['requerido'] == '1' ? 'required' : '');
 
                     if( isset($pregunta['cveField']) && in_array($pregunta['cveField'], array('DATE','TEXT_NUMERIC')) )
-                        $datos_clase[] = 'form-control ' . $pregunta['formato'];
+                        //$datos_clase[] = 'form-control ' . $pregunta['formato'];
+                        $datos_clase[] = 'form-control ' . $pregunta['formato'] . ' ' . ($pregunta['requerido'] == '1' ? 'required' : '');
+
+                    if( isset($pregunta['cveField']) && in_array($pregunta['cveField'], array('RADIO')) )
+                        $datos_clase[] = $pregunta['requerido'] == '1' ? 'required' : '';
                                                                 
                     $clase_campo = implode(' ', $datos_clase);               
                     
@@ -36,61 +51,78 @@
                 
                     ?>
 
-
-            <div class="row mb-2">
+            <div id="<?php echo $p; ?>" class="row mb-2 div_pregunta div_preg_<?php echo $p; ?> <?php echo $estilo_div_pregunta; ?>" style="<?php echo $visible; ?>">
 
                 <div class="col-md-8 offset-md-2 mb-2">
 
-                    <div id="<?php echo $p; ?>" class="div_pregunta div_preg_<?php echo $p; ?> <?php echo $estilo_div_pregunta; ?>" style="<?php echo $visible; ?>">
-                
-                        <label class="fw-bold" ><?php echo !empty($pregunta['etiqueta']) ? nl2br($pregunta['etiqueta']).':' : ''; ?> <?php echo (isset($pregunta['requerido']) && $pregunta['requerido'] == 1 ? '<span class="required">*</span>' : '') ?></label>
-                        
+                    <label class="fw-bold" ><?php echo !empty($pregunta['etiqueta']) ? nl2br($pregunta['etiqueta']).':' : ''; ?> <?php echo (isset($pregunta['requerido']) && $pregunta['requerido'] == 1 ? '<span class="required">*</span>' : '') ?></label>
+                    
                         <?php if( (isset($pregunta['cveField']) && $pregunta['cveField'] == 'TEXT') || isset($pregunta['cveField']) && $pregunta['cveField'] == 'DATE' || isset($pregunta['cveField']) && $pregunta['cveField'] == 'TEXT_NUMERIC' ){ ?>
-                            <input type="text" name="reg[<?php echo $p; ?>]" class="<?php echo $clase_campo; ?>" maxlength="<?php echo $pregunta['longitud']; ?>" />
+                        
+                            <?php if( !empty($pregunta['longitud'])){ ?>
+                                <input <?php echo $pregunta['soloLectura'] == '1' ? 'disabled' : '' ?> type="text" name="reg[<?php echo $p; ?>]" class="<?php echo $clase_campo; ?> <?php echo $pregunta['etiqueta'] ?>" maxlength="<?php echo $pregunta['longitud']; ?>" placeholder="<?php echo !empty($pregunta['etiqueta']) ? nl2br($pregunta['etiqueta']) : ''; ?>" />
+                            <?php } else { ?>
+                                <input <?php echo $pregunta['soloLectura'] == '1' ? 'disabled' : '' ?> type="text" name="reg[<?php echo $p; ?>]" class="<?php echo $clase_campo; ?> <?php echo $pregunta['etiqueta'] ?>" placeholder="<?php echo !empty($pregunta['etiqueta']) ? nl2br($pregunta['etiqueta']): ''; ?>" value="<?php echo !empty($pregunta['respuesta']) ? $pregunta['respuesta'] : ''; ?>"/>
+                            <?php } ?>
+
+                            <?php if( !empty($pregunta['metodo']) ){ ?>
+                                <button type="button" class="btn btn-primary btn-sm mt-1" onclick="<?php echo $pregunta['metodo'] . '()' ?>">Calcular</button>
+                            <?php } ?>
+                    
                         <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'TEXT_AREA' ) { ?>
-                            <textarea name="reg[<?php echo $p; ?>]" class="form-control" maxlength="<?php echo $pregunta['longitud']; ?>" rows="4"></textarea>
+                        
+                            <?php if( !empty($pregunta['longitud'])){ ?>
+                                <textarea name="reg[<?php echo $p; ?>]" class="form-control" maxlength="<?php echo $pregunta['longitud']; ?>" rows="4"><?php echo !empty($pregunta['respuesta']) ? $pregunta['respuesta'] : ''; ?></textarea>
+                            <?php } else { ?>
+                                <textarea name="reg[<?php echo $p; ?>]" class="form-control" rows="4"><?php echo !empty($pregunta['respuesta']) ? $pregunta['respuesta'] : ''; ?></textarea>
+                            <?php } ?>
+                        
                         <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'RADIO' ){ ?>
+                            
                             <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
                                 <div class="form-check">
-                                    <input id="<?php echo $valor; ?>" type="radio" name="reg[<?php echo $p; ?>]" class="form-check-input" value="<?php echo $clave; ?>" <?php echo $onchange; ?> /> 
-                                    <label for="<?php echo $valor; ?>" class="form-check-label"><?php echo $valor; ?></label>
+                                    <input <?php echo isset($pregunta['respuesta']) && $pregunta['respuesta'] == $clave ? 'checked' : '' ?> id="<?php echo $valor . $p; ?>" type="radio" name="reg[<?php echo $p; ?>]" class="form-check-input <?php echo $clase_campo; ?>" value="<?php echo $clave; ?>" <?php echo $onchange; ?> /> 
+                                    <label for="<?php echo $valor . $p; ?>" class="form-check-label"><?php echo $valor; ?></label>
                                 </div>
-                                <?php } ?>
+                            <?php } ?>
+
                         <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'CHECKBOX' ) { ?>                 
+                        
                             <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
                                 <div class="form-check">
-                                    <input id="<?php echo $valor; ?>" type="checkbox" name="reg[<?php echo $p; ?>][]" class="<?php echo $clase_campo; ?> form-check-input" value="<?php echo $clave; ?>" <?php echo $onchange; ?> /> 
+                                    <input <?php echo isset($pregunta['respuesta']) && $pregunta['respuesta'] == $clave ? 'checked' : '' ?>  id="<?php echo $valor; ?>" type="checkbox" name="reg[<?php echo $p; ?>][]" class="<?php echo $clase_campo; ?> form-check-input" value="<?php echo $clave; ?>" <?php echo $onchange; ?> /> 
                                     <label for="<?php echo $valor; ?>" class="form-check-label"><?php echo $valor; ?></label>
                                 </div>
-                                <?php  } ?>
-                        <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'FILE'){ 
+                            <?php  } ?>
+
+                        <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'FILE' ){ 
+                        
                             $extension = !empty($pregunta['extension']) ? $pregunta['extension'] : 'Todos'; ?>
                             &nbsp; (Permitidos: <?php echo $extension; ?>)<br>
-                            <input type="file" name="reg[<?php echo $p; ?>]" multiple="multiple" class="multi <?php echo $clase_campo; ?>" maxlength="<?php echo $pregunta['longitud']; ?>" />
+                            <input type="file" name="reg[<?php echo $p; ?>]" multiple="multiple" class="multi <?php echo $clase_campo; ?>" />
+                        
                         <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'LIST' ){
-                            $name = !empty($multiple) ? 'reg['.$p.'][]' : 'reg['.$p.']';
-                        ?>
-                            <select name="<?php echo $name; ?>" class="form-select form-control" <?php echo $onchange; ?> >
+                            $name = !empty($multiple) ? 'reg['.$p.'][]' : 'reg['.$p.']'; ?>
+                            <select name="<?php echo $name; ?>" class="form-select form-control <?php echo $clase_campo; ?>" <?php echo $onchange; ?> >
                                 <?php if(empty($multiple)){ ?>
                                     <option value=""> - Elige - </option>
                                 <?php } ?>
                                 
                                 <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
-                                    <option value="<?php echo $clave; ?>"><?php echo $valor; ?></option>
+                                    <option value="<?php echo $clave; ?>" <?php echo (isset($pregunta['respuesta']) && !empty($pregunta['respuesta']) && $pregunta['respuesta'] == $clave) ? 'selected' : ''; ?> ><?php echo $valor; ?></option>
                                 <?php } ?>
                             </select>
-                        <?php }elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'LIST_MULTIPLE' ){
-                            $name = !empty($multiple) ? 'reg['.$p.'][]' : 'reg['.$p.']';
-                        ?>
+
+                        <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'LIST_MULTIPLE' ){
+                            $name = !empty($multiple) ? 'reg['.$p.'][]' : 'reg['.$p.']'; ?>
                             <select multiple name="<?php echo $name; ?>" class="form-select form-control" <?php echo $onchange; ?> >                                      
                                 <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
-                                    <option value="<?php echo $clave; ?>"><?php echo $valor; ?></option>
+                                    <option <?php echo (isset($pregunta['respuesta']) && !empty($pregunta['respuesta']) && $pregunta['respuesta'] == $clave) ? 'selected' : ''; ?> value="<?php echo $clave; ?>"><?php echo $valor; ?></option>
                                 <?php } ?>
                             </select>
+
                         <?php } ?>
-                        
-                    </div>
-                
+                    
                 </div>
             
             </div>
@@ -99,12 +131,47 @@
         <?php } ?>
             
         </form>
-    
-    </div>
 
-    <div style="text-align:center; font-size:12px;margin-top:20px; display: none;">
-      <div id="msg_result" style="width:100%; text-align:left; margin-bottom:10px;"></div>
-      <button type="button" id="btn_enviar" class="btn btn-success" style="margin-top:20px;margin-bottom:20px;">Guardar</button>    
+        <?php if( $flag == '1' ){ ?>
+            <div class="mb-5" style="text-align: center;">
+                <div id="msg_result" style="width:100%; text-align:left; margin-bottom:10px;"></div>
+                <button id="btn_enviar" onclick="sendResponse(<?php echo $idFormulario; ?>)" type="button" class="btn btn-success">Guardar</button>
+                <a style="margin-left: 0px;" href="<?php echo isset($return) && $return == 1 ? site_url('patient/edit/'.$idPaciente) : site_url('patient'); ?>" id="btnRegresar" class="btn btn-secondary">Regresar</a>
+            </div>
+        <?php } ?>
+
+        <?php if( $context == 'DT-DEMOGRAFICOS' ){ ?>
+            <div class="container">
+                <div class="row mb-3">
+                    <div class="col-md-6 col-12 text-end table-responsive">
+                        <button onclick="sendPhone(<?php echo $idFormulario; ?>)" id="btnPhone" type="button" class="btn btn-success btn-sm">Añadir Tel&eacute;fono</button>
+                        <table class="table table-bordered table-sm" id="tblTelefono">
+                            <thead class="text-center">
+                                <th>Tel&eacute;fono</th>
+                                <th>Tipo</th>
+                                <th>Principal</th>
+                                <th>Acci&oacute;n</th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-6 col-12 text-end table-responsive">
+                        <button onclick="sendResponsible(<?php echo $idFormulario; ?>)" id="btnResponsible" type="button" class="btn btn-success btn-sm">Añadir Responsable</button>
+                        <table class="table table-bordered table-sm" id="tblResponsable">
+                            <thead class="text-center">
+                                <th>Nombre</th>
+                                <th>Parentesco</th>
+                                <th>Acci&oacute;n</th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+
+    
     </div>
 
 </div>

@@ -47,11 +47,11 @@
                 <div class="col-md-12 col-12 mb-2">
                     <h6 class="fw-bold">Obligatorio:&nbsp;<span class="required">*</span></h6>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="reg[requerido]" id="radSiM" value="1" <?php echo !empty($question['activo']) ? ($question['activo'] == '1' ? 'checked' : '') : ''; ?>>
+                        <input class="form-check-input" type="radio" name="reg[requerido]" id="radSiM" value="1" <?php echo isset($question['requerido']) && $question['requerido'] == '1' ? 'checked' : ''; ?>>
                         <label class="form-check-label" for="radSiM">Si</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="reg[requerido]" id="radNoM" value="0" <?php echo !empty($question['activo']) ? ($question['activo'] == '0' ? 'checked' : '') : ''; ?>>
+                        <input class="form-check-input" type="radio" name="reg[requerido]" id="radNoM" value="0" <?php echo isset($question['requerido']) && $question['requerido'] == '0' ? 'checked' : ''; ?>>
                         <label class="form-check-label" for="radNoM">No</label>
                     </div>
                 </div>
@@ -72,8 +72,19 @@
             </div> 
 
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="col-md-12 col-12 mb-2">
+                    <h6 class="fw-bold">Solo Lectura:&nbsp;<span class="required">*</span></h6>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="reg[soloLectura]" id="readSi" value="1" <?php echo isset($question['soloLectura']) && $question['soloLectura'] == '1' ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="readSi">Si</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="reg[soloLectura]" id="readNo" value="0" <?php echo isset($question['soloLectura']) && $question['soloLectura'] == '0' ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="readNo">No</label>
+                    </div>
+                </div>
                 <div id="divFormato" class="col-md-12 col-12 mt-1 mb-2" style="display: none;">
-                    <h6 class="form-label fw-bold">Formato:</h6>
+                    <h6 class="form-label fw-bold">Formato:&nbsp;<span class="required">*</span></h6>
                     <select id="formato" name="reg[formato]" class="form-select form-control form-control-lg">
                         <option value=""> - Elige - </option>
                         <option id="v1" style="display: none;" value="fecha" <?php echo isset($question['formato']) && $question['formato'] == 'fecha' ? 'selected' : '' ?>>dd/mm/aaaa</option>
@@ -88,6 +99,13 @@
                         <h6 class="fw-bold">Longitud de campo:</h6>
                         <input type="text" class="form-control" name="reg[longitud]" id="txtLongitud" placeholder="Longitud" value="<?php echo !empty($question['longitud']) ? $question['longitud'] : '' ?>"> 
                     </div>                  
+                </div>
+                <div class="col-md-12 col-12 mt-1 mb-2">
+                    <h6 class="form-label fw-bold">M&eacute;todo:</h6>
+                    <select name="reg[metodo]" class="form-select form-control form-control-lg">
+                        <option value=""> - Elige - </option>
+                        <option value="calculateIMC" <?php echo isset($question['metodo']) && $question['metodo'] == 'calculateIMC' ? 'selected' : '' ?>>calcular IMC</option>
+                    </select> 
                 </div> 
                 <!--<div id="divDecimales" class="col-md-12 col-12 mb-2" style="display: none;">
                     <div class="form-group">

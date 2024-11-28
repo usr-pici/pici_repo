@@ -1,0 +1,37 @@
+<!-- START LOGIN SECTION -->
+<div class="login_register_wrap section mt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-4 col-md-10">
+                <div class="login_wrap">
+            		<div class="padding_eight_all bg-white">
+                        <p style="text-align: justify;" class="mb-4">Ingresa tu direcci&oacute;n de correo electr&oacute;nico asociado a la cuenta de usuario.
+                            El c&oacute;digo de verificaci&oacute;n para recuperar tu contraseña ser&aacute; enviado a esta direcci&oacute;n de correo. 
+                            Por favor revisa la bandeja de correos no deseados.
+                        </p>
+                        <form id="formEnviarToken">
+							<input id="tokenRecaptcha" type="hidden" value="" name="token" />
+                            <div class="mb-3">
+                                <h6 class="fw-bold">Correo electr&oacute;nico:&nbsp;<span class="required">*</span></h6>
+                                <input id="txtEmail" type="text" class="form-control" name="reg[email]" placeholder="Ingresa correo electr&oacute;nico" />
+                            </div>
+                            <div class="text-end mb-3">
+                                <label class="pb-2 required">* Campos obligatorios</i></label>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="justify-content-md-center mb-5">
+                        <button id="btnRecuperar" type="button" class="btn btn-success mb-3 w-100">Recuperar contraseña</button>
+                        <a style="margin-left: 0px;" href="<?php echo site_url('login'); ?>" id="btnRegresar" class="btn btn-secondary w-100">Regresar</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END LOGIN SECTION -->
+<script>
+    const keySiteWeb = '<?php echo $keySiteWeb; ?>';
+</script>

@@ -259,11 +259,12 @@ function configQuestion(idPregunta) {
                 $("#formato").attr("name", "reg[formato]");
             }
             
-            $('#radNo').prop('checked', true);
+            //$('#radNo').prop('checked', true);
             $('#formModalAddQuestion').validate({
                 rules: {
                     'reg[etiqueta]': 'required',
                     'reg[idTipoCampo]': 'required',
+                    'reg[formato]': 'required',
                 },
                 errorPlacement: function(error, element) {
                     if (element.attr("elem-msg-error")) {
@@ -725,10 +726,12 @@ $(function () {
                 });
         
                 $('#radNoM').prop('checked', true);
+                $('#readNo').prop('checked', true);
                 $('#formModalAddQuestion').validate({
                     rules: {
                         'reg[etiqueta]': 'required',
                         'reg[idTipoCampo]': 'required',
+                        'reg[formato]': 'required',
                     },
                     errorPlacement: function(error, element) {
                         if (element.attr("elem-msg-error")) {
@@ -826,6 +829,8 @@ $(function () {
                 
                 if ($("#formModalAddQuestion").valid())
 					saveQuestion()
+                else
+                    msg(1, 'Por favor, complete todos los campos requeridos.');
             }
         },
         opened: function() {

@@ -1,0 +1,90 @@
+
+<div class="row mt-5">
+    <div class="col-10 offset-1">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="demographic-tab" data-bs-toggle="tab" data-bs-target="#demographic" type="button" role="tab" aria-controls="home" aria-selected="true">Demogr&aacute;ficos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link <?php echo empty($reg['idPaciente']) ? 'disabled' : ''; ?>" id="background-tab" data-bs-toggle="tab" data-bs-target="#background" type="button" role="tab" aria-controls="profile" aria-selected="false">Antecedentes</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link <?php echo empty($reg['idPaciente']) ? 'disabled' : ''; ?>" id="visits-tab" data-bs-toggle="tab" data-bs-target="#visits" type="button" role="tab" aria-controls="contact" aria-selected="false">Visitas</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link <?php echo empty($reg['idPaciente']) ? 'disabled' : ''; ?>" id="binnacle-tab" data-bs-toggle="tab" data-bs-target="#binnacle" type="button" role="tab" aria-controls="contact" aria-selected="false">Bit&aacute;cora</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+
+            <input type="hidden" name="reg[idPaciente]" id="txtIdPaciente" value="<?php echo !empty($reg['idPaciente']) ? $reg['idPaciente'] : ''; ?>">
+            
+            
+            <div class="tab-pane fade show active" id="demographic" role="tabpanel" aria-labelledby="home-tab">
+                <?php echo $demograficos ?>
+            </div>
+
+            <div class="tab-pane fade" id="background" role="tabpanel" aria-labelledby="profile-tab">
+                <?php echo $mod_ap ?>
+            </div>
+
+            <div class="tab-pane fade" id="visits" role="tabpanel" aria-labelledby="contact-tab">
+
+                <div class="container mt-5">
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-md-3">
+                            <a href="<?php echo site_url('patient/newVisit'); ?>" class="btn btn-success w-100">Nueva visita</a>
+                        </div>
+                    </div>
+                        
+                    <div class="row mb-3">
+                        <div class="col-md-12 col-12">
+                            <table class="table table-striped table-condensed table-bordered table-hover table-sm" id="tblVisitas">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th rowspan="2" width="60">Visita</th>
+                                        <th rowspan="2" width="80">Formulario</th>
+                                        <th rowspan="2" width="150">Avance</th>
+                                        <th colspan="2" width="140" style="vertical-align: bottom;" data-orderable="false">Ultima actualizaci&oacute;n</th>  
+                                        <th rowspan="2" width="60">Acci&oacute;n</th>
+                                    </tr> 
+                                    <tr>
+                                        <th width="70">Usuario</th>
+                                        <th width="70">Fecha y hora</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="tab-pane fade" id="binnacle" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="row mt-5">
+                    <div class="col-md-12 col-12">
+                        <table class="table table-bordered table-sm" id="tblBitacora">
+                            <thead class="text-center">
+                                <th>Estatus</th>
+                                <th>Usuario</th>
+                                <th>Fecha y Hora</th>
+                                <th>Observaci&oacute;n</th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="dialog-add-phone">
+    <div id="update_add_phone_load"></div>
+</div>
+
+<div id="dialog-add-responsable">
+    <div id="update_add_responsable_load"></div>
+</div>

@@ -8,7 +8,8 @@ class Utileria_Service extends Class_Service {
         
         parent::__construct();
 
-        $this->modelToLoad = array(            
+        $this->modelToLoad = array(    
+            'idx' => 'idx_model',
             'viewModel' => 'view_model'
         );
 

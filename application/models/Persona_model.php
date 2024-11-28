@@ -1,12 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Pregunta_condicion_model extends MY_Model {
+class Persona_model extends MY_Model {
     
     function  __construct() {
 
         parent::__construct();
         
-        $this->set_config('pregunta_condicion', "Condiciones por pregunta", ['cveStatusAdd' => 'REGISTERED_CONDTION_QUESTION', 'cveStatusUpdate' => 'UPDATE_CONDITION_QUESTION']);
+        $this->set_config('persona','Tabla de negocio de personas');
     }
     
     function buscar($filtros = array(), $extras = array()) {
@@ -21,31 +21,28 @@ class Pregunta_condicion_model extends MY_Model {
         
         if ( isset($filtros['id_NOT_IN']) )
             $condicion[] = $this->key_field . " NOT IN (" . $filtros['id_NOT_IN'] . ")";
+            
+        if ( isset($filtros['nombre_LIKE']) )
+            $condicion[] = "nombre LIKE '%{$filtros['nombre_LIKE']}%'";
+            
+        if ( isset($filtros['nombre']) )
+            $condicion[] = "nombre = '{$filtros['nombre']}'";
+        
+        if ( isset($filtros['idPersona']) )
+            $condicion[] = "idPersona = '{$filtros['idPersona']}'";
 
-        if ( isset($filtros['idPreguntaCondicion']) )
-            $condicion[] = "idPreguntaCondicion = '{$filtros['idPreguntaCondicion']}'";
+        if ( isset($filtros['idx']) )
+            $condicion[] = "idx = '{$filtros['idx']}'";
 
-        if ( isset($filtros['idPreguntaOpcion']) )
-            $condicion[] = "idPreguntaOpcion = '{$filtros['idPreguntaOpcion']}'";
-
-        if ( isset($filtros['idPregunta']) )
-            $condicion[] = "idPregunta = '{$filtros['idPregunta']}'";
-
-        if ( isset($filtros['pregunta_IN']) )
-			$condicion[] = "idPregunta IN ({$filtros['pregunta_IN']}) ";
-                        
         if ( isset($filtros['borrado']) )
             $condicion[] = "borrado = '{$filtros['borrado']}'";
-            
-        if ( !empty($filtros['vigente']) )
-            $condicion[] = "borrado = '0' AND activo = '1'";
-
+        
         return parent::buscar($condicion, $extras);
     }
     
     function get_rules(&$reg = array(), $name_reg = 'reg') {
         
-        $rules = array();
+        $rules = array();  
                 
         return $rules;
     }

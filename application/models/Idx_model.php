@@ -1,12 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Formulario_model extends MY_Model {
+class Idx_model extends MY_Model {
     
     function  __construct() {
 
         parent::__construct();
         
-        $this->set_config('formulario', "Formularios",['cveStatusAdd' => 'REGISTERED', 'cveStatusUpdate' => 'UPDATE']);
+        $this->title = "Cat\xE1logo de idx";
+        $this->set_config('idx');
     }
     
     function buscar($filtros = array(), $extras = array()) {
@@ -21,29 +22,17 @@ class Formulario_model extends MY_Model {
         
         if ( isset($filtros['id_NOT_IN']) )
             $condicion[] = $this->key_field . " NOT IN (" . $filtros['id_NOT_IN'] . ")";
-                        
-        if ( isset($filtros['clave']) )
-            $condicion[] = "clave = '{$filtros['clave']}'";
-
-        if ( isset($filtros['borrado']) )
-            $condicion[] = "borrado = '{$filtros['borrado']}'";
-            
-        if ( isset($filtros['vigenciaIni']) )
-			$condicion[] = " vigenciaIni <= '{$filtros['vigenciaIni']}'";
-			
-		if ( isset($filtros['vigenciaFin']) )
-            $condicion[] = "vigenciaFin >= '{$filtros['vigenciaFin']}'";  
-
-        if ( !empty($filtros['vigente']) )
-            $condicion[] = "borrado = '0' AND activo = '1'";
-
+                                
+        if ( isset($filtros['tabla']) )
+            $condicion[] = "tabla = '{$filtros['tabla']}'";
+        
         return parent::buscar($condicion, $extras);
     }
     
     function get_rules(&$reg = array(), $name_reg = 'reg') {
         
-        $rules = array();
-                
+        $rules = array(); 
+        
         return $rules;
     }
 }

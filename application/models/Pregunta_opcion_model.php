@@ -6,7 +6,7 @@ class Pregunta_opcion_model extends MY_Model {
 
         parent::__construct();
         
-        $this->set_config('pregunta_opcion', "Opciones de pregunta", ['cveStatusAdd' => '', 'cveStatusUpdate' => '']);
+        $this->set_config('pregunta_opcion', "Opciones de pregunta", ['cveStatusAdd' => 'REGISTERED_OPTION_QUESTION', 'cveStatusUpdate' => 'UPDATE_OPTION_QUESTION']);
     }
     
     function buscar($filtros = array(), $extras = array()) {
@@ -33,6 +33,9 @@ class Pregunta_opcion_model extends MY_Model {
 
         if ( isset($filtros['posicion']) )
             $condicion[] = "posicion = '{$filtros['posicion']}'";
+
+        if ( isset($filtros['opcion']) )
+            $condicion[] = "opcion = '{$filtros['opcion']}'";
                         
         if ( isset($filtros['borrado']) )
             $condicion[] = "borrado = '{$filtros['borrado']}'";

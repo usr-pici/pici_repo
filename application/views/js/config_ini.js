@@ -361,7 +361,7 @@ function aplicarClases($context) {
         rightAlign: false,
     });
 
-    $(".hideShowPassword-toggle").css({'font-size': '1.3rem', 'padding-right': '10px', 'top': '25px', 'background': 'transparent', 'border': 'none'}).on('click ini', function () {
+    $(".hideShowPassword-toggle").css({'font-size': '1.3rem', 'padding-right': '10px', 'top': '18px', 'background': 'transparent', 'border': 'none'}).on('click ini', function () {
 
 //            console.log("pasooo");
         var $elem = $(this);
@@ -391,6 +391,24 @@ function isJson(strData) {
         return false;
     }
     return true;
+}
+
+function updStudyClues() {
+
+    var id = $("#contextoStudyClues option:selected").val();
+    
+    $.post(
+        URL_SITE + "user/saveSesionStudyClues",
+        {
+            idEstudioClues: id
+        },
+        function(resp) {
+            msg(resp.error, resp.msg);
+            if (resp.error == 0)
+                window.location.reload();
+        },
+        'json'
+    );	
 }
 
 $(document)
@@ -668,6 +686,9 @@ jQuery.validator.addMethod("checkNumeros", function (value) {
 });
 
 $(function () {
+
+    if( statusLogin )
+        $("#contextoStudyClues").load( URL_SITE + "user/getStudyClues", {}, function (resp) {});
 
     $.fn.datepicker.dates["es"] = {
         days: [

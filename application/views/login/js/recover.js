@@ -10,7 +10,7 @@ function enviarToken(){
 			function(resp) {
 				msg(resp.error, resp.msg);
 				if (resp.error == 0) {			
-					setTimeout(validar, 2000);
+					setTimeout(validate, 2000);
 				} else {
 					$('#btnRecuperar, #btnRegresar, #btnReenviarCodigo').prop('disabled', false);
 				}
@@ -107,12 +107,12 @@ function actualizarPassword(){
 	}
 }
 
-function validar(){
-	window.location = URL_SITE + 'login/validar';
+function validate(){
+	window.location = URL_SITE + 'login/validate';
 }
 
 function validarReenvio(){
-	window.location = 'validar';
+	window.location = 'validate';
 }
 
 function reset(){
@@ -186,17 +186,13 @@ $(function() {
 
 	$("#password").on('keyup', ValidatePassword);
 
-	$('#btnRegresar').on('click', () => {
-		window.location = URL_SITE + 'login';
-	});
-
 	$('#btnRegresarEnvio').on('click', () => {
 		window.location = URL_SITE + 'login/recuperar';
 	});
 
-	$('#btnRegresarValidar').on('click', () => {
-		window.location = URL_SITE + 'login/validar';
-	});
+	/*$('#btnRegresarValidar').on('click', () => {
+		window.location = URL_SITE + 'login/validate';
+	});*/
 
 	$('#btnReenviarCodigo').on('click', () => {
 		grecaptcha.ready(function() {

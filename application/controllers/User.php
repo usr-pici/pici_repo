@@ -462,52 +462,45 @@ class User extends MY_Controller {
 
         if ($validRecaptcha['success'] == 1 && $validRecaptcha['score'] >= 0.5) {
 
-            $contacto = current( $this->persona_service->getContactMean('', [], [], $email) );
+            $contacto = current( $this->person_service->getContactMean('', [], [], $email) );
         
             $user_bd = current( $this->usuario_service->search(['idPersona' => !empty($contacto) ? $contacto['idPersona'] : '']) );
 
             if(!empty($user_bd)){
 
-                if( $user_bd['tipo'] !== 'FACEBOOK' && $user_bd['tipo'] !== 'GOOGLE' && $user_bd['tipo'] == 'APP_WEB'){
+                //Validar que el token actual este vigente
+                date_default_timezone_set('America/Mexico_City');
+                $horaActual = date("H:i");
+                $fechaActual = date("Y-m-d");
+                $fecha = $fechaActual . ' ' . $horaActual;
+                $token = current( $this->seguridad_service->searchPasswordReset(['email' => $email, 'vigenciaToken' => $fecha, 'activo' => 1], ['imprimirSQL' => 0, 'limit' => 1, 'orderBy' => 'idReset DESC']) );
 
-                    //Validar que el token actual este vigente
-                    date_default_timezone_set('America/Mexico_City');
-                    $horaActual = date("H:i");
-                    $fechaActual = date("Y-m-d");
-                    $fecha = $fechaActual . ' ' . $horaActual;
-                    $token = current( $this->seguridad_service->searchPasswordReset(['email' => $email, 'vigenciaToken' => $fecha, 'activo' => 1], ['imprimirSQL' => 0, 'limit' => 1, 'orderBy' => 'idReset DESC']) );
+                $hora1 = strtotime($horaActual);
 
-                    $hora1 = strtotime($horaActual);
+                if( !empty($token['vigencia']) )
+                    $hora2 = strtotime(substr($token['vigencia'], 11, 5));
+                else 
+                    $hora2 = strtotime($horaActual);
 
-                    if( !empty($token['vigencia']) )
-                        $hora2 = strtotime(substr($token['vigencia'], 11, 5));
-                    else 
-                        $hora2 = strtotime($horaActual);
+                if( $hora1 < $hora2 ) {
+                    echo json_encode(['error' => 0, 'msg' => 'Tienes un codigo vigente']);
+                } else {
 
-                    if( $hora1 < $hora2 ) {
-                        echo json_encode(['error' => 0, 'msg' => 'Tienes un codigo vigente']);
-                    } else {
+                    $reg = ['idUsuario' => $user_bd['idUsuario'], 'email' => $email];
+    
+                    $result = $this->seguridad_service->savePasswordReset($reg);
+                    
+                    $dataSession['idPersona'] = $user_bd['idPersona'];
+    
+                    $dataSession['email'] = $email;
+    
+                    $this->session->set_userdata($dataSession);
 
-                        $reg = ['idUsuario' => $user_bd['idUsuario'], 'email' => $email];
-        
-                        $result = $this->seguridad_service->savePasswordReset($reg);
-                        
-                        $dataSession['idPersona'] = $user_bd['idPersona'];
-        
-                        $dataSession['email'] = $email;
-        
-                        $this->session->set_userdata($dataSession);
-
-                        if( $result['error'] == 0 )
-                            $result['msg'] = 'En breve se enviará un correo electrónico con el código de verificación';
-        
-                        echo json_encode($result);
-                    }
-
-
-                } else if($user_bd['tipo'] == 'FACEBOOK' || $user_bd['tipo'] == 'GOOGLE'){
-                    return $this->msg_error("Esta cuenta esta asociado a otro tipo de usuario.");
-                } 
+                    if( $result['error'] == 0 )
+                        $result['msg'] = 'En breve se enviará un correo electrónico con el código de verificación';
+    
+                    echo json_encode($result);
+                }                 
                 
             } else {
                 $this->msg_error("Medio de contacto no encontrado, verifique.");
@@ -786,6 +779,36 @@ class User extends MY_Controller {
 			echo json_encode(['error' => 1, 'msg' => 'NO SE TIENE REGISTRADO LA CONFIRMACIÓN REQUIERE FACTURA, VERIFIQUE Y ACTUALICE.']);
 		else if( empty( $person['contact'] ) && empty($person['nombre']) && empty($person['apellidos']) && empty($order['requiereFactura']) )
 			echo json_encode(['error' => 1, 'msg' => 'NO SE TIENE REGISTRADO SI REQUIERE FACTURA, EL NOMBRE Y EL CELULAR EN LA CONFIRMACIÓN DE DATOS, VERIFIQUE Y ACTUALICE.']);
+    }
+
+    function getStudyClues(){
+
+        $user_data = $this->session->userdata();
+
+        $getStudyClues = $this->seguridad_service->searchByModel('viewModel', ['idUsuario' => $user_data['idUsuario']], ['imprimirSQL' => 0, 'orderBy' => 'e.nombre ASC'], 'getStudyClues');       
+
+        $studyClues = $this->catalogo_service->get_list_to_select(
+            [
+                'index_id' => 'idEstudioClues',
+                'id_reg' => !empty($user_data['idEstudioClues']) ? $user_data['idEstudioClues'] : '',
+                'index_desc' => 'estudioClues',
+                'regs' => $getStudyClues,
+                'etiqueta' => '- Estudio / CLUES -'
+            ]
+        );
+
+        echo $studyClues;
+    }
+
+    function saveSesionStudyClues() {
+
+        $reg = $this->input->post();
+
+        $data['idEstudioClues'] = !empty($reg['idEstudioClues']) ? $reg['idEstudioClues'] : '';
+    
+        $this->session->set_userdata($data);        
+
+        echo json_encode(['error' => 0, 'msg' => 'Cambiando Estudio / Clues']);
     }
 }
 

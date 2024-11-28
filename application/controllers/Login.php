@@ -13,7 +13,8 @@ class Login extends MY_Controller {
 
         $data['fileToLoad']  = ['login/js/login.js'];
         $data['main_content']  = $this->load->view('login/login.html', [
-          
+          'title' => 'Inicio de Sesión',
+          'keySiteWeb' => GOOGLE_RECAPTCHA_KEY['keySiteWeb']
         ], TRUE);
         
         $this->loadTemplate($data);
@@ -91,33 +92,35 @@ class Login extends MY_Controller {
         echo json_encode( $this->seguridad_service->login($app_key, $reg['correo'], NULL, FALSE, NULL, NULL) );
     }
 
-    function recuperar() {
+    function recover() {
 
         if ( LOGGED ) redirect();
 		    
-        $data['fileToLoad']  = ['login/js/recuperar.js'];
-        $data['main_content']  = $this->load->view('login/recuperar.html', [
-            'keySiteWeb' => GOOGLE_RECAPTCHA_KEY['keySiteWeb']
+        $data['fileToLoad']  = ['login/js/recover.js'];
+        $data['main_content']  = $this->load->view('login/recover.html', [
+            'keySiteWeb' => GOOGLE_RECAPTCHA_KEY['keySiteWeb'],
+            'title' => 'Recuperar contraseña'
         ], TRUE);
         
         $this->loadTemplate($data);
     }
 
-    function validar() {
+    function validate() {
 
         if ( LOGGED ) redirect();
 
-        $usuario = current( $this->usuario_service->search(['idPersona' => !empty( $this->session->userdata()['idPersona'] ) ? $this->session->userdata()['idPersona'] : '']) );
+        //$usuario = current( $this->usuario_service->search(['idPersona' => !empty( $this->session->userdata()['idPersona'] ) ? $this->session->userdata()['idPersona'] : '']) );
 
-        $token = current( $this->seguridad_service->searchPasswordReset(['idUsuario' => !empty($usuario['idUsuario']) ? $usuario['idUsuario'] : ''], ['limit' => 1, 'orderBy' => 'idReset DESC']) );
+        //$token = current( $this->seguridad_service->searchPasswordReset(['idUsuario' => !empty($usuario['idUsuario']) ? $usuario['idUsuario'] : ''], ['limit' => 1, 'orderBy' => 'idReset DESC']) );
 	    
-		$fecha = str_replace('-','/',$token['vigencia']);
+		//$fecha = str_replace('-','/',$token['vigencia']);
 
-        $data['fileToLoad']  = ['login/js/recuperar.js','js/clases/Temporizador.js'];
-        $data['main_content']  = $this->load->view('login/codigo.html', [
+        //$data['fileToLoad']  = ['login/js/recover.js','js/clases/Temporizador.js'];
+        $data['fileToLoad']  = ['login/js/recover.js'];
+        $data['main_content']  = $this->load->view('login/validate.html', [
             "idPersona" => !empty($this->session->userdata()['idPersona']) ? $this->session->userdata()['idPersona'] : '',
 			"email" => !empty($this->session->userdata()['email']) ? $this->session->userdata()['email'] : '',
-            "fecha" => str_replace('-','/',$token['vigencia']),
+            //"fecha" => '2024-11-12 19:15:16',//str_replace('-','/',$token['vigencia']),
             'keySiteWeb' => GOOGLE_RECAPTCHA_KEY['keySiteWeb']
         ], TRUE);
         
@@ -130,10 +133,11 @@ class Login extends MY_Controller {
                      
         $user_bd = current( $this->usuario_service->search(['idPersona' => !empty( $this->session->userdata()['idPersona'] ) ? $this->session->userdata()['idPersona'] : '']) );
 
-        $data['fileToLoad']  = ['login/js/recuperar.js'];
+        $data['fileToLoad']  = ['login/js/recover.js'];
         $data['main_content']  = $this->load->view('login/reset.html', [
             "idUsuario" => !empty($user_bd) ? $user_bd['idUsuario'] : '',
-            'keySiteWeb' => GOOGLE_RECAPTCHA_KEY['keySiteWeb']
+            'keySiteWeb' => GOOGLE_RECAPTCHA_KEY['keySiteWeb'],
+            'title' => 'Restablecer contraseña'
         ], TRUE);
                
         $this->loadTemplate($data);

@@ -23,6 +23,8 @@ class Catalogo_service extends Class_Service {
             'estatus' => 'cat_estatus_model',
             'tipoCampo' => 'cat_tipo_campo_model',
             'rol' => 'cat_rol_model',
+            'clasificacion' => 'cat_clasificacion_model',
+            'cat_medio_contacto' => 'cat_medio_contacto_model'
         );
 
         //Cargar los Modelos del Array        

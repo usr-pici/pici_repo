@@ -12,8 +12,7 @@ function login() {
                 msg(resp.error, resp.msg);
 
                 if (resp.error == 0)
-					//setTimeout(window.location = urlConfirmLogin, 2000);
-					window.location = urlConfirmLogin;
+					window.location = URL_SITE + 'patient';
                 else
                     habilitarOpciones();
             },
@@ -24,14 +23,11 @@ function login() {
 
 function deshabilitarOpciones(){
 	$('#btn_enviar').prop('disabled', true);
-	$('#linkOlvidastePass, #btn-Google, #btn-facebook, #registrate').addClass('disabled');
-	$('#registrate').addClass('d-none');
+	$('#linkOlvidastePass').addClass('disabled');
 }
 
 function habilitarOpciones(){
 	$('#btn_enviar').prop('disabled', false);
-	$('#registrate').removeClass('d-none');
-	$('#btn-Google, #btn-facebook').removeClass('disabled');
 }
 
 $(function() {	
@@ -39,8 +35,15 @@ $(function() {
 	$('#form_login').submit(function(event) {
         
         event.preventDefault();
-		login();       
-
+        
+        grecaptcha.ready(function() {
+			grecaptcha.execute(keySiteWeb, {
+				action: 'login'
+			}).then(function(token) {
+				$('#tokenRecaptcha').val(token);
+				login();
+			});
+		});
     });
 
 	$('#form_login').validate({
@@ -49,7 +52,9 @@ $(function() {
 				required:true,
 				email:true
 			},
-			'password': 'required'
+			'password': 'required',
+			'avisoPrivacidad': 'required',
+			'terminosCond': 'required'
 		},
 		errorPlacement: function(error, element) {
 			if (element.attr("elem-msg-error")) {

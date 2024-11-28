@@ -13,10 +13,13 @@ class Formulario extends MY_Controller {
             'DELETE' => []            
         ];
         
-        //$this->validar_acceso([]);
+        $this->validar_acceso([]);
 
         $this->load->library('services/form_service');
+        $this->load->library('services/patient_service');
+        $this->load->library('services/person_service');
         $this->load->library('services/view_service');
+        $this->load->library('services/utileria_service');
     }
 
     public function index() {
@@ -82,9 +85,10 @@ class Formulario extends MY_Controller {
                 $reg['vigenciaIni'] = $this->formato_fecha_pantalla($reg['vigenciaIni']);
                 $reg['vigenciaFin'] = $this->formato_fecha_pantalla($reg['vigenciaFin']);
                 $reg['estatus'] = $reg['activo'] == '1' ? 'Activo' : 'Inactivo';
-                $reg['opciones'] = ' <a href="' . URL_SITE . 'formulario/editQuestion/' . $reg['idFormulario'] . '" title="Editar"><i class="fa fa-edit text-primary"></i></a>';
+                $reg['opciones'] = ' <a href="' . URL_SITE . 'formulario/editQuestion/' . $reg['idFormulario'] . '"><i title="Editar" class="fa fa-edit text-primary"></i></a>';
                 $reg['opciones'] .= ' <span>|</span> <a href="javascript:void(0);" onclick="delete_reg(this,'. $reg['idFormulario'] . ')"><i title="Eliminar" class="fa fa-trash-alt text-danger"></i></a>';
                 $reg['opciones'] .= ' <span>|</span> <a href="javascript:void(0);" onclick="clone_reg('. $reg['idFormulario'] . ')"><i title="Clonar" class="far fa-clone text-success"></i></a>';
+                $reg['opciones'] .= ' <span>|</span> <a target="_blank" href="' . URL_SITE . 'formulario/preview/' . $reg['idFormulario'] . '"> <i title="Vista previa" class="fas fa-eye text-secondary" ></i></a>';
             }
         }
         
@@ -282,7 +286,7 @@ class Formulario extends MY_Controller {
             $idPregunta = $reg['idPregunta'];
             unset($reg['idPregunta']);
         }
-
+        //$this->imprimir($reg,1);
         $result = $this->form_service->saveQuestion($reg, !empty($idPregunta) ? $idPregunta : NULL);
 
         if( $result['error'] == 0 ) {
@@ -477,7 +481,7 @@ class Formulario extends MY_Controller {
 
             //$this->imprimir($preguntas,1);
 
-            $options = $this->form_service->indexed_search_OptionForm(['idPreguntaOpcion','idPregunta'],['activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0]);
+            $options = $this->form_service->indexed_search_OptionForm(['idPreguntaOpcion','idPregunta'],['activo' => 1, 'borrado' => 0], ['orderBy' => 'posicion ASC', 'imprimirSQL' => 0]);
 
             $conditions = $this->form_service->indexed_search_conditionQuestion(['idPregunta'],['activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0]);
 
@@ -555,8 +559,15 @@ class Formulario extends MY_Controller {
     }
 
     function preview($idFormulario = 0) {
-        
+
         $configuration = $this->configuration($idFormulario);
+        
+        $formulario = current( $this->form_service->search(['id' => $idFormulario]) );
+
+        $configuration['dataForm'] = $formulario;
+
+        $configuration['flag'] = '0';
+        
         //$this->imprimir($configuration,1);
         $configuration['title'] = 'Previsualización de Formulario';
         $configuration['idFormulario'] = $idFormulario;
@@ -722,7 +733,7 @@ class Formulario extends MY_Controller {
         $cat_rol = $this->catalogo_service->search('rol', ['activo' => 1,'borrado' => 0]);
         $rolesSeleccionadas = $this->form_service->indexed_search_rol_question(['idRol'], ['idPregunta' => $reg['idPregunta'], 'borrado' => 0]);
 		$ids = !empty($rolesSeleccionadas) ? implode(',', array_keys($rolesSeleccionadas) ) : [];
-		$idsRoles = !empty($ids) ?$this->catalogo_service->search('rol', ['id_IN' => $ids]) : [];
+		$idsRoles = !empty($ids) ? $this->catalogo_service->search('rol', ['id_IN' => $ids]) : [];
 		$arreglo = [];
 		
 		foreach($idsRoles as $id) {
@@ -731,7 +742,7 @@ class Formulario extends MY_Controller {
 
         $questions = $this->catalogo_service->search('tipoCampo', []);
         $questionOptions = $this->view_service->searchByModel('viewModel', ['idFormulario' => $reg['idFormulario'], 'idPreguntaNot' => $question['idPregunta'], 'option_IN' => "'LIST', 'LIST_MULTIPLE', 'RADIO', 'CHECKBOX'"], ['imprimirSQL' => 0], 'getQuestions');
-        //$this->imprimir($numQuestion,1);    
+        //$this->imprimir($question,1);    
         $this->load->view('formulario/modal-add-question.html', [
             "posicion" => $numQuestion + 1,
             'idFormulario' => $reg['idFormulario'],
@@ -802,7 +813,7 @@ class Formulario extends MY_Controller {
 
         if( $idRegistro != '' ) {
             
-            $formulario = current( $this->form_service->search(['id' => $idRegistro, 'borrado' => 0], ['campos' => 'clave, nombre, vigenciaIni, vigenciaFin, descripcion']) );
+            $formulario = current( $this->form_service->search(['id' => $idRegistro, 'vigente' => 1], ['campos' => 'clave, nombre, vigenciaIni, vigenciaFin, descripcion', 'imprimirSQL' => 0]) );
 
             if( $formulario ) {
 
@@ -985,7 +996,21 @@ class Formulario extends MY_Controller {
         echo json_encode($result);
     }
 
-    function response() {
+    function calculateIMC() {
+
+        if(!empty($this->input->post('reg'))){
+            $reg = $this->input->post('reg');
+        } else {
+            $reg = $this->input->post();
+            $_POST['reg'] = $reg;
+        }
+        
+        $result = $this->form_service->calculateIMC($reg['peso'], $reg['talla']);
+
+        echo json_encode(['error' => 0, 'imc' => $result]);
+    }
+
+    function response($id = 0) {
 
         if(!empty($this->input->post('reg'))){
             $reg = $this->input->post('reg');
@@ -994,11 +1019,266 @@ class Formulario extends MY_Controller {
             $_POST['reg'] = $reg;
         }
 
-        $this->imprimir($reg,1);
-        
-        $result = $this->form_service->response($reg, $idRegistro);
+        $data = $patient = $filtrosFormResp = [];
+        $idFormulario = $idVisita = 0;
+        $fecha = date("Y-m-d");
 
-        echo json_encode($result);
+        if( isset($reg['idFormulario']) ) {
+            $idFormulario = $reg['idFormulario'];
+            unset($reg['idFormulario']);
+        }
+        
+        $validForm = current( $this->form_service->search(['id' => $idFormulario]) );
+
+        $filtrosFormResp['id'] = $idFormulario;
+
+        if( !empty($validForm['vigenciaIni']) && !empty($validForm['vigenciaFin']) ) {
+            $filtrosFormResp['vigenciaIni'] = $fecha;
+            $filtrosFormResp['vigenciaFin'] = $fecha;
+        }
+
+        $formulario = current( $this->form_service->search($filtrosFormResp) );
+
+        if ( (isset($formulario['activo']) && $formulario['activo'] == 0)  || empty($formulario) )
+            return $this->msg_error("Formulario no disponible, intente m\xE1s tarde.");
+
+        $questionsId = array_keys($reg);
+        $uniqueQuestionId = array_unique($questionsId);
+		$questionsIdIN = implode(",", $uniqueQuestionId);
+        /*$this->imprimir($id);
+        $this->imprimir($idFormulario);
+        $this->imprimir($questionsIdIN);
+        $this->imprimir($reg,1);*/   
+        $questions = $this->view_service->searchByModel('viewModel', ['idFormulario' => $idFormulario, 'vigente' => 1, 'idPregunta_IN' => $questionsIdIN], ['orderBy' => 'p.consecutivo ASC', 'imprimirSQL' => 0], 'getQuestions');
+        //$this->imprimir($formulario,1);
+        if( $formulario['clave'] == 'DT-DEMOGRAFICOS' ) {
+
+            foreach( $questions as &$pregunta ){
+
+                if( $pregunta['etiqueta'] == 'Nombre') {
+                    $data['nombre'] = $reg[$pregunta['idPregunta']];  
+                    unset($reg[$pregunta['idPregunta']]);
+                } 
+
+                if( $pregunta['etiqueta'] == 'Apellido') {
+                    $data['apellidos'] = $reg[$pregunta['idPregunta']];  
+                    unset($reg[$pregunta['idPregunta']]);
+                }
+
+                if( trim($pregunta['etiqueta']) == 'Fecha nacimiento' ) {
+                    $data['fechaNacimiento'] = str_replace('/', '-', $reg[$pregunta['idPregunta']]);
+                    unset($reg[$pregunta['idPregunta']]);
+                }
+
+                if( trim($pregunta['etiqueta']) == 'Tipo documento' ) {
+                    $optionValue = current( $this->form_service->search_OptionForm(['idPreguntaOpcion' => $reg[$pregunta['idPregunta']], 'vigente' => '1']) );
+                    $clasificacion = current( $this->catalogo_service->search('clasificacion', ['nombre_LIKE' => $optionValue['opcion'], 'activo' => 1,'borrado' => 0], ['imprimirSQL' => 0]) );
+                    $data['idTipoDocumento'] = $clasificacion['idClasificacion'];  
+                    unset($reg[$pregunta['idPregunta']]);
+                }
+
+                if( trim($pregunta['etiqueta']) == 'Número documento' ) {
+                    $data['numDocumento'] = $reg[$pregunta['idPregunta']];
+                    unset($reg[$pregunta['idPregunta']]);
+                }
+
+                if( trim($pregunta['etiqueta']) == 'Lugar de residencia' ) {
+                    $opcion = current( $this->form_service->search_OptionForm(['idPreguntaOpcion' =>  $reg[$pregunta['idPregunta']]]) );
+                    $data['direccion'] = $opcion['opcion'];
+                    unset($reg[$pregunta['idPregunta']]);
+                }
+            }
+
+            $data['telefono'] = 'N/A';
+            //$this->imprimir($reg,1);
+  
+            if( empty($id) ){
+
+                $idVisita = 1;
+
+                $idx = $this->utileria_service->getIdx('persona');
+                $data['idx'] = $idx['id'];
+
+                $person = $this->person_service->save($data, !empty($reg['idPersona']) ? $reg['idPersona'] : '', 'persona');
+                $numPatient =  COUNT($this->patient_service->search());
+                $numPatient = $numPatient + 1;  
+                $patient = $this->patient_service->save(['idPersona' => $person['id'], 'numPaciente' => str_pad($numPatient, 3, "0", STR_PAD_LEFT) ], !empty($reg['idPersona']) ? $reg['idPersona'] : '', 'persona');        
+
+                $questionsNew = $this->view_service->searchByModel('viewModel', ['idFormulario' => $idFormulario, 'vigente' => 1, 'idPregunta_IN' => $questionsIdIN], ['orderBy' => 'p.consecutivo ASC', 'imprimirSQL' => 0], 'getQuestions');
+
+                foreach( $reg as $pregunta => $respuesta ){
+
+                    $respuestaData = array();
+                    $respuestaData['idFormulario'] = $idFormulario;
+                    $respuestaData['idPregunta'] = $pregunta;
+                    $respuestaData['idPaciente'] = $patient['id'];
+                    $respuestaData['idVisita'] = NULL;
+                    
+                    foreach( $questionsNew as $q ) {
+
+                        if( ($pregunta == $q['idPregunta']) && in_array($q['cveField'], ['LIST', 'LIST_MULTIPLE', 'RADIO', 'CHECKBOX']) ) {
+                            $respuestaData['idPreguntaOpcion'] = $respuesta;
+                        } elseif( ($pregunta == $q['idPregunta']) && in_array($q['cveField'], ['TEXT', 'DATE', 'TEXT_AREA', 'TEXT_NUMERIC', 'FILE']) ) {
+                            $respuestaData['respuesta'] = $respuesta;
+                        }
+                    }
+                    
+                    if( is_array($respuesta) ){
+
+                        foreach($respuesta as $respuesta_opcion){
+                            $respuesta['idPreguntaOpcion'] = $respuesta_opcion;
+                            $this->patient_service->saveResponse($respuestaData);
+                        }
+
+                    } elseif( !empty($respuesta) ) {
+                        $this->patient_service->saveResponse($respuestaData);
+                    }
+                }
+            
+            } else {
+                
+                $dataPatient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $id], ['imprimirSQL' => 0], 'getPatients') );
+                $this->person_service->save($data, !empty($dataPatient['idPersona']) ? $dataPatient['idPersona'] : '', 'persona');
+                //Ajuste
+                $questionsResponse = $this->patient_service->search_response(['idPaciente' => $id, 'idFormulario' => $idFormulario, 'borrado' => 0]);
+    
+                if( !empty($questionsResponse) ) {
+        
+                    $questions_ids = implode(',', array_column($questionsResponse, 'idPregunta'));
+        
+                    $questionsIdIN = explode(",", $questionsIdIN);
+                    $questions_ids = explode(",", $questions_ids);
+                    
+                    foreach ($questionsIdIN as $valor) {
+                        foreach ($questions_ids as $valor2) {
+                            if($valor == $valor2){
+                                $borrar=array_search($valor,$questions_ids);
+                                unset($questions_ids[$borrar]);            
+                            }   
+                        }
+                    }
+        
+                    foreach ($questions_ids as $preg) {
+        
+                        $idRespuesta = current( $this->patient_service->search_response(['idPregunta' => $preg, 'idFormulario' => $idFormulario, 'idPaciente' => $id, 'borrado' => 0]) ); 
+        
+                        $del = ['borrado' => 1];
+        
+                        $result = $this->patient_service->deleteResponse($idRespuesta['idRespuesta'], NULL, $del, 'DELETE_RESPONSE');
+                    }
+        
+                    $questionsIdIN = implode(',', $questionsIdIN);
+                }
+                //Finaliza
+                $questionsNew = $this->view_service->searchByModel('viewModel', ['idFormulario' => $idFormulario, 'vigente' => 1, 'idPregunta_IN' => $questionsIdIN], ['orderBy' => 'p.consecutivo ASC', 'imprimirSQL' => 0], 'getQuestions');
+
+                //$this->imprimir($reg,1);
+                foreach( $reg as $pregunta => $respuesta ){
+
+                    $respuestaData = array();
+                    $responseId = current( $this->patient_service->search_response(['idPregunta' => $pregunta, 'idFormulario' => $idFormulario, 'idPaciente' => $id, 'borrado' => 0]) );     
+                    
+                    if( empty($responseId) ){
+                        $respuestaData['idFormulario'] = $idFormulario;
+                        $respuestaData['idPregunta'] = $pregunta;
+                        $respuestaData['idPaciente'] = $id;
+                        $respuestaData['idVisita'] = NULL;
+                    }
+
+                    foreach( $questionsNew as $q ) {
+
+                        if( ($pregunta == $q['idPregunta']) && in_array($q['cveField'], ['LIST', 'LIST_MULTIPLE', 'RADIO', 'CHECKBOX']) ) {
+                            $respuestaData['idPreguntaOpcion'] = $respuesta;
+                        } elseif( ($pregunta == $q['idPregunta']) && in_array($q['cveField'], ['TEXT', 'DATE', 'TEXT_AREA', 'TEXT_NUMERIC', 'FILE']) ) {
+                            $respuestaData['respuesta'] = $respuesta;
+                        }
+                    }
+                    
+                    if( is_array($respuesta) ){
+
+                        foreach($respuesta as $respuesta_opcion){
+                            $respuesta['idPreguntaOpcion'] = $respuesta_opcion;
+                            $this->patient_service->saveResponse($respuestaData, !empty($responseId['idRespuesta']) ? $responseId['idRespuesta'] : NULL);
+                        }
+
+                    } elseif( !empty($respuesta) ) {
+                        $this->patient_service->saveResponse($respuestaData, !empty($responseId['idRespuesta']) ? $responseId['idRespuesta'] : NULL);
+                    }
+                }
+
+            }    
+
+        } else {
+
+            $questionsResponse = $this->patient_service->search_response(['idPaciente' => $id, 'idFormulario' => $idFormulario, 'borrado' => 0]);
+    
+            if( !empty($questionsResponse) ) {
+    
+                $questions_ids = implode(',', array_column($questionsResponse, 'idPregunta'));
+    
+                $questionsIdIN = explode(",", $questionsIdIN);
+                $questions_ids = explode(",", $questions_ids);
+                
+                foreach ($questionsIdIN as $valor) {
+                    foreach ($questions_ids as $valor2) {
+                        if($valor == $valor2){
+                            $borrar=array_search($valor,$questions_ids);
+                            unset($questions_ids[$borrar]);            
+                        }   
+                    }
+                }
+    
+                foreach ($questions_ids as $preg) {
+    
+                    $idRespuesta = current( $this->patient_service->search_response(['idPregunta' => $preg, 'idFormulario' => $idFormulario, 'idPaciente' => $id, 'borrado' => 0]) ); 
+    
+                    $del = ['borrado' => 1];
+    
+                    $result = $this->patient_service->deleteResponse($idRespuesta['idRespuesta'], NULL, $del, 'DELETE_RESPONSE');
+                }
+    
+                $questionsIdIN = implode(',', $questionsIdIN);
+            }
+    
+            $questionsNew = $this->view_service->searchByModel('viewModel', ['idFormulario' => $idFormulario, 'vigente' => 1, 'idPregunta_IN' => $questionsIdIN], ['orderBy' => 'p.consecutivo ASC', 'imprimirSQL' => 0], 'getQuestions');
+            
+            foreach( $reg as $pregunta => $respuesta ){
+    
+                $respuestaData = array();
+    
+                $responseId = current( $this->patient_service->search_response(['idPregunta' => $pregunta, 'idFormulario' => $idFormulario, 'idPaciente' => $id, 'borrado' => 0]) );  
+                
+                if( empty($responseId) ) {
+    
+                    $respuestaData['idFormulario'] = $idFormulario;
+                    $respuestaData['idPregunta'] = $pregunta;
+                    $respuestaData['idPaciente'] =  $id;
+                    $respuestaData['idVisita'] = NULL;
+                }
+                
+                foreach( $questionsNew as $q ) {
+    
+                    if( ($pregunta == $q['idPregunta']) && in_array($q['cveField'], ['LIST', 'LIST_MULTIPLE', 'RADIO', 'CHECKBOX']) ) {
+                        $respuestaData['idPreguntaOpcion'] = $respuesta;
+                    } elseif( ($pregunta == $q['idPregunta']) && in_array($q['cveField'], ['TEXT', 'DATE', 'TEXT_AREA', 'TEXT_NUMERIC', 'FILE']) ) {
+                        $respuestaData['respuesta'] = $respuesta;
+                    }
+                }
+                
+                if( is_array($respuesta) ){
+    
+                    foreach($respuesta as $respuesta_opcion){
+                        $respuesta['idPreguntaOpcion'] = $respuesta_opcion;
+                        $this->patient_service->saveResponse($respuestaData, !empty($responseId['idRespuesta']) ? $responseId['idRespuesta'] : NULL);
+                    }
+    
+                } elseif( !empty($respuesta) ) {
+                    $this->patient_service->saveResponse($respuestaData, !empty($responseId['idRespuesta']) ? $responseId['idRespuesta'] : NULL);
+                }
+            }
+        }
+                
+        echo json_encode(['error' => 0, 'msg' => 'Respuestas guardadas correctamente.', 'idPaciente' => !empty($id) ? $id : $patient['id']]);        
     }
     
 }

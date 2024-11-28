@@ -186,8 +186,6 @@ class Form_Service extends Class_Service {
         
         $result = $this->saveByModel('optionQuestion', $reg, $id, $cond = NULL);
 
-        //$this->CI->session->set_userdata('idPregunta', $reg['idPregunta']);
-
         return $result;
     }
 
@@ -200,9 +198,11 @@ class Form_Service extends Class_Service {
         return $result;
     }
 
-    function clone($id = NULL){
+    function calculateIMC($peso, $talla) {
 
+        $imc = $peso / pow($talla, 2);
 
-        return $this->action_on_reg($this->CI->formulario_model, $reg, $action, $cond ? $cond : "idFormulario = '{$id}'");
+        return $imc;
     }
+
 }

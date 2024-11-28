@@ -1,33 +1,45 @@
 <!-- START LOGIN SECTION -->
-<div class="login_register_wrap section">
+<div class="login_register_wrap section mt-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-xl-6 col-md-10">
+            <div class="col-xl-4 col-md-10">
                 <div class="login_wrap">
             		<div class="padding_eight_all bg-white">
                         <form id="form_login" method="post">
+
+                            <div class="row mt-3">
+                                <h5 class="required text-end">* Campos obligatorios</h5>
+                            </div>
+
                             <input type="hidden" value="APP_WEB" name="APP_KEY" />
 							<input id="tokenRecaptcha" type="hidden" value="" name="token" />
                             <div class="mb-3">
+                                <h6 class="fw-bold">Usuario:&nbsp;<span class="required">*</span></h6>
                                 <input type="text" class="form-control" name="usuario" placeholder="Usuario">
                             </div>
                             <div class="mb-3">
+                                <h6 class="fw-bold">Contraseña:&nbsp;<span class="required">*</span></h6>
                                 <input id="password" class="form-control" type="password" name="password" placeholder="Contraseña">
                             </div>
-                            <div class="login_footer mb-3">
+                            <div class="login_footer mb-3 text-end">
+                                <a class="mt-2" id="linkOlvidastePass" href="<?php echo site_url('login/recover'); ?>">¿Has olvidado tu contraseña?</a>
+                            </div>
+                            <div class="login_footer mb-3 text-center" style="display: block;">
                                 <div class="chek-form">
-                                    <div class="custome-checkbox d-none">
-                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
-                                        <label class="form-check-label" for="exampleCheckbox1"><span>Recuerdame</span></label>
+                                    <div class="custome-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="avisoPrivacidad" id="chkAviso" value="1">
+                                        <a href="<?php echo URL_SITE . 'files/AVISO DE PRIVACIDAD TSM vnov2023.pdf' ?>" download="AVISO DE PRIVACIDAD TSM.pdf" target="_blank" class="form-check-label" for="chkAviso"><span>Acepto Aviso de Privacidad</span>&nbsp;<span class="required">*</span></a>
+                                    </div>
+                                    <div class="custome-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="terminosCond" id="chkTerminos" value="1">
+                                        <a href="<?php echo URL_SITE . 'files/TermyCond ILD CONNECT Vnov2023.pdf' ?>" download="TermyCond ILD CONNEC.pdf" target="_blank" class="form-check-label" for="chkTerminos"><span>Acepto T&eacute;rminos y Condiciones</span>&nbsp;<span class="required">*</span></a>
                                     </div>
                                 </div>
-                                <a id="linkOlvidastePass" href="<?php echo site_url('login/recuperar'); ?>">¿Has olvidado tu contraseña?</a>
                             </div>
-                            <div class="mb-3">
-                                <button id="btn_enviar" type="submit" class="btn btn-fill-out btn-block" name="login">Iniciar sesi&oacute;n</button>
+                            <div class="mb-3 text-center">
+                                <button id="btn_enviar" type="submit" class="btn btn-success btn-block" name="login">Iniciar sesi&oacute;n</button>
                             </div>
                         </form>
-                        <div class="form-note text-center">¿No tienes una cuenta? <a id="registrate" href="<?php echo site_url('user/register'); ?>">Reg&iacute;strate ahora</a></div>
                     </div>
                 </div>
             </div>
@@ -35,3 +47,6 @@
     </div>
 </div>
     
+<script>
+    const keySiteWeb = '<?php echo $keySiteWeb; ?>';
+</script>

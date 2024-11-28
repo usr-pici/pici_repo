@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- SITE TITLE -->
-<title>Programa Integral de Cuestionarios para Investigaci&oacute;n</title>
+<title>Plataforma Integral de Cuestionarios para Investigaci&oacute;n</title>
 <!-- Favicon Icon -->
 <link rel="shortcut icon" type="image/x-icon" href="<?php echo URL_VIEWS . 'images/banner_pici.jpg'; ?>">	
 
@@ -34,37 +34,59 @@
     <header>
 
         <div class="row mt-5">
-            <div class="col-md-2 text-end">
+            <div id="divImgTic" class="col-md-2 text-end">
                 <img src="<?php echo URL_VIEWS; ?>images/ticSocial.png" alt="Tic Social" style="width: 11rem;">
             </div>
             <div class="col-md-8 text-center">
                 <h4 class="mt-2 fw-bold">Plataforma Integral de Cuestionarios para Investigaci&oacute;n</h4>
             </div>
-            <div class="col-md-2">
+            <div id="divImgForm" class="col-md-2">
                 <img src="<?php echo URL_VIEWS; ?>images/imgForms.png" alt="Tic Social" style="width: 3.5rem;">
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-3">
-
+                <div class="row mb-2">
+                    <?php if( LOGGED && CLAVE_PERFIL == 'INVESTIGADOR' ){ ?>
+                        <div class="offset-md-2 col-md-8 col-12">
+                            <select id="contextoStudyClues" name="contextoStudyClues" class="form-select form-select-sm form-control" onchange="updStudyClues()">
+                                <!--<option value="">- Estudio / CLUES -</option>
+                                <option value="ALL">ILD-Connect / INSTITUTO DE SEGURIDAD Y SERVICIOS SOCIALES PARA LOS TRABAJADORES DEL ESTADO</option>-->
+                            </select>
+                        </div>
+                    <?php } ?>
+                </div>                
             </div>
             <div class="col-md-6 text-center">
                 <label class="medium"><?php echo !empty($title) ? $title : '' ?></label>
             </div>
             <div class="col-md-3">
-                  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <div class="container-fluid">
-                      <a class="navbar-brand" href="#" style="font-size: small;">Darchbps / Administrador</a>
-                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                      </button>
-                      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav">
-                          <a style="font-size: small;" class="nav-link active" aria-current="page" href="<?php echo site_url('formulario'); ?>">Formularios</a>
+                  <div id="divUser" class="justify-content-md-center" style="margin-right: 120px;">
+                    <div class="row align-items-center">
+                        <div class="col-md-12 text-center col-12 text-md-end">
+                            <?php if( LOGGED ){ ?>
+                                <div class="dropdown">
+                                    <button style="border-radius:28px;" class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span style="font-size: 12px; font-weight: bold;"><?php echo $this->session->userdata()['persona']['nombre']; ?> <?php echo $this->session->userdata()['persona']['apellidos']; ?> / <?php echo $this->session->userdata()['rol']['nombre']; ?></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <center><span style="font-size: small;">Hola, <?php echo $this->session->userdata()['persona']['nombre']; ?> <?php echo $this->session->userdata()['persona']['apellidos']; ?></span></center>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <!--<?php if ( $accessToController['formulario'] ) { ?>-->
+                                            <li><a class="dropdown-item nav_item" href="<?php echo site_url('formulario'); ?>"> <i class="fas fa-question"></i> Formularios</a></li>
+                                        <!--<?php } ?>-->
+                                        <li><a class="dropdown-item nav_item" href="<?php echo site_url('patient'); ?>"> <i class="fas fa-user-injured"></i> Pacientes</a></li>
+                                        <li><a class="dropdown-item nav_item" href="<?php echo site_url('catalogo/clues'); ?>"> <i class="fas fa-hospital"></i> Clues</a></li>
+                                        <li><a class="dropdown-item nav_item" href="#"> <i class="fas fa-band-aid"></i> Farmac&eacute;ticas</a></li>
+                                        <li><a class="dropdown-item nav_item" href="#"> <i class="fas fa-users"></i> Usuarios</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item nav_item" href="javascript:logout()"> <i class="fa fa-door-closed"></i> Cerrar sesi&oacute;n</a></li>
+                                    </ul>
+                                </div>  
+                            <?php } ?>                             
                         </div>
-                      </div>
-                    </div>
-                  </nav>
+                    </div>                       
+                </div>
             </div>
         </div>
 	
@@ -123,6 +145,11 @@
 <script defer src="<?php echo URL_VIEWS; ?>js/datapicker/bootstrap-datepicker.min.js"></script>
 
 <script defer src="<?php echo URL_VIEWS; ?>js/validate/additional-methods.min.js"></script>
+
+<!-- Recaptcha -->
+<script src="https://www.google.com/recaptcha/api.js?render=<?php echo !empty($keySiteWeb) ? $keySiteWeb : ''; ?>"></script>
+
+
    
 <?php
 
@@ -147,3 +174,7 @@
 <div id="dialog-confirm"></div>
 </body>
 </html>
+
+<script>
+    let statusLogin = "<?php echo LOGGED ?>";
+</script>

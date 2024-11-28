@@ -1,0 +1,41 @@
+<!-- START LOGIN SECTION -->
+<div class="login_register_wrap section mt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-md-10">
+                <div class="login_wrap">
+            		<div class="padding_eight_all bg-white">
+                        <p style="text-align: justify;" class="mb-2">Para reestablecer la contraseña de tu cuenta de correo, ingrese el c&oacute;digo 
+                            de verificaci&oacute;n que fue enviado al correo <strong><?php echo $email ?></strong>. Por favor revisa la bandeja de 
+                            correos no deseados.
+                        </p>
+                        <!--<h6 style="font-size: small;">Tienes un c&oacute;digo de verificaci&oacute;n vigente, puedes solicitar uno en:</h6>
+                        <div style="padding-bottom: 30px; width: 100%;" id="temporizador" class="countdown_time_p countdown_style4 mb-5" data-time="<?php echo $fecha; ?>"></div>-->
+                 
+                        <form id="formValidarCodigo">
+							<input type="hidden" id="txtEmail" value="<?php echo $email ?>" name="reg[email]" />
+							<input id="tokenRecaptcha" type="hidden" value="" name="token" />
+
+                            <div class="mb-3">
+                                <h6 class="fw-bold">C&oacute;digo de verificaci&oacute;n:&nbsp;<span class="required">*</span></h6>
+                                <input id="txtToken" type="text" class="form-control" name="reg[token]" placeholder="Ingresa c&oacute;digo de verificaci&oacute;n" />
+                            </div>
+                            <div class="text-end mb-3">
+                                <label class="pb-2 required">* Campos obligatorios</label>
+                            </div>
+                            <div class="justify-content-md-center mb-5">
+                                <button id="btnValidarCodigo" type="button" class="btn btn-success w-100 mb-3">Validar c&oacute;digo de verificaci&oacute;n</button>
+                                <button id="btnRegresarEnvio" type="button" class="btn btn-secondary w-100 mb-3">Regresar</button>
+                                <button disabled id="btnReenviarCodigo" type="button" class="btn btn-primary w-100 d-none">Enviar otro c&oacute;digo de verificaci&oacute;n</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END LOGIN SECTION -->
+<script>
+    const keySiteWeb = '<?php echo $keySiteWeb; ?>';
+</script>

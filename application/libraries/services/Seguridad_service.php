@@ -17,6 +17,8 @@ class Seguridad_Service extends Class_Service implements Seguridad_interface {
 
         $this->modelToLoad = array(            
             'viewModel' => 'view_model',
+            'token' => 'token_sesion_model',
+            'password' => 'password_reset_model',
          );
 
         $this->loadModel(); 
@@ -200,9 +202,9 @@ class Seguridad_Service extends Class_Service implements Seguridad_interface {
                 
         //Enviar email
         $msg = $this->CI->load->view('email/correo.html', [
-            'clasif' => "Portal Ecommerce",
+            'clasif' => "Plataforma Integral de Cuestionarios para Investigaci&oacute;n",
             'title' => "Recuperaci&oacute;n de contrase&ntilde;a",
-            'body'  => '<p>Portal Ecommerce recibió una solicitud para recuperar la contraseña de la cuenta asociada a este correo. Para seguir con el proceso debe introducir el siguiente código:</p>
+            'body'  => '<p>Portal Plataforma Integral de Cuestionarios para Investigacion recibió una solicitud para recuperar la contraseña de la cuenta asociada a este correo. Para seguir con el proceso debe introducir el siguiente código:</p>
         <center><em><h3>' . $reg['token'] . '</h3></em></center>
         <small>Este código expira en 10 minutos o deja de ser válido al requerir uno nuevo.</small>'
         ], TRUE);
@@ -239,10 +241,10 @@ class Seguridad_Service extends Class_Service implements Seguridad_interface {
         if ( empty($token) || $this->CI->input->ip_address() !== $token['IP'] )
             $this->CI->msg_error('', 'PARAMETRO');
         
-        $rolxappxuser = empty($idRol) ? FALSE : current( $this->searchAppRol(['idUsuario' => $token['idUsuario'], 'activo' => 1, 'borrado' => 0]) );
+        /*$rolxappxuser = empty($idRol) ? FALSE : current( $this->searchAppRol(['idUsuario' => $token['idUsuario'], 'activo' => 1, 'borrado' => 0]) );
 
         if ( empty($rolxappxuser) ) 
-            $this->CI->msg_error("No tiene acceso a esta aplicaci\xF3n, verifique.");
+            $this->CI->msg_error("No tiene acceso a esta aplicaci\xF3n, verifique.");*/
     
         if ( empty($data) ) {      
 
@@ -255,12 +257,12 @@ class Seguridad_Service extends Class_Service implements Seguridad_interface {
             $data['device'] = empty($token['idDispositivo']) ? FALSE : current( $this->CI->catalogo_service->buscar('device', ['id' => $token['dDispositivo'], 'activo' => 1, 'borrado' => 0]) );
         }
         
-        $data['persona'] = current( $this->CI->persona_service->search( ['id' => $data['idPersona']] ) );
+        $data['persona'] = current( $this->CI->person_service->search( ['id' => $data['idPersona']] ) );
         
-        $telefono = current( $this->CI->persona_service->getContactMean($data['idPersona'], ['CEL']) );
+        $telefono = current( $this->CI->person_service->getContactMean($data['idPersona'], ['CEL']) );
         $data['telefono'] = !empty($telefono['contact'] ) ? current( $telefono['contact'] )['valor'] : NULL;
         
-        $correo = current( $this->CI->persona_service->getContactMean($data['idPersona'], ['MAIL']) );
+        $correo = current( $this->CI->person_service->getContactMean($data['idPersona'], ['MAIL']) );
         $data['email'] = !empty($correo['contact']) ? current( $correo['contact'] )['valor'] : NULL;       
         
         $data['rol'] = current( $this->CI->catalogo_service->search('rol', ['id' => $idRol, 'activo' => 1, 'borrado' => 0]) );
@@ -274,7 +276,7 @@ class Seguridad_Service extends Class_Service implements Seguridad_interface {
         $time = time();        
         
         $token_reg = [
-            'dDispositivo' => empty($data['device']) ? NULL : $data['device']['idDispositivo'],
+            'idDispositivo' => empty($data['device']) ? NULL : $data['device']['idDispositivo'],
             'idUsuario' => $data['idUsuario'],
             'idApp' => $data['app']['idApp']
         ];
@@ -297,14 +299,16 @@ class Seguridad_Service extends Class_Service implements Seguridad_interface {
 
     function login($cveApp, $user, $pswd, $int = TRUE, $cveDisp = NULL, $tokenDevice = NULL) {
         
-        $app = $this->CI->catalogo_service->get_regxclave('app', $cveApp);
+        $app = $this->CI->catalogo_service->get_regxclave('clasificacion', $cveApp);
 
         if ( empty($app) )
             $this->CI->msg_error("", 'PARAMETRO');
-            
-        $contacto = current( $this->CI->persona_service->getContactMean('', [], [], trim($user)) );
+        else
+            $app['idApp'] = $app['idClasificacion'];
+
+        $contacto = current( $this->CI->person_service->getContactMean('', [], [], trim($user)) );
         
-        $user_bd = empty($contacto) ? FALSE : current( $this->CI->usuario_service->search(['idPersona' => $contacto['idPersona'], 'vigente' => 1], ['imprimirSQL' => 0]) );
+        $user_bd = empty($contacto) ? FALSE : current( $this->CI->usuario_service->search(['idPersona' => $contacto['idPersona'], 'vigente' => 1], ['imprimirSQL' => 0]) );           
 
         if ( empty($user_bd) ) {
             
@@ -322,10 +326,10 @@ class Seguridad_Service extends Class_Service implements Seguridad_interface {
         unset($user_bd['password']);
 
         // Podría agregarse la condición de buscar el rol primario ('primario' => 1) para cuando esté implementado el registro de usuario completo.
-        $primaryRol = current( $this->searchAppRol(['idUsuario' => $user_bd['idUsuario'], 'activo' => 1, 'borrado' => 0]) );
+        /*$primaryRol = current( $this->searchAppRol(['idUsuario' => $user_bd['idUsuario'], 'activo' => 1, 'borrado' => 0]) );
 
         if ( empty($primaryRol) )
-            $this->CI->msg_error("No tiene acceso a esta aplicaci\xF3n, verifique.");
+            $this->CI->msg_error("No tiene acceso a esta aplicaci\xF3n, verifique.");*/
         
         if ( ! $this->CI->agent->is_browser() ) {
             
@@ -352,7 +356,7 @@ class Seguridad_Service extends Class_Service implements Seguridad_interface {
         $user_bd['app'] = $app;      
         $user_bd['token_device'] = $tokenDevice;      
         $this->CI->session->set_userdata($user_bd);
-        $response = $this->getToken($user_bd, $primaryRol['idRol']);
+        $response = $this->getToken($user_bd, $user_bd['idRol']);
 
         return $response;
     }

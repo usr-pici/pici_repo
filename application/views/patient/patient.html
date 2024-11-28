@@ -1,0 +1,82 @@
+
+<div class="login_register_wrap">
+    <div class="container">
+        <form class="mt-5" id="form_search" method="POST">
+            
+            <div class="row mb-4">
+                                
+                <div class="col-md-4 mb-2">
+                    <h6 class="fw-bold">Nombre:</h6>
+                    <input type="text" class="form-control" id="txtNombre" name="nombre" placeholder="Nombre">
+                </div>
+                
+                <div class="col-md-5 mb-2">
+                    <div class="form-group">
+                        <h6 class="fw-bold">Fecha Nacimiento:</h6>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Del</span>
+                                    </div>
+                                    <input id="txtFechaIni" type="text" name="fechaIni" class="form-control fecha" placeholder="dd/mm/aaaa" />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Al</span>
+                                    </div>
+                                    <input id="txtFechaFin" type="text" name="fechaFin" class="form-control fecha" placeholder="dd/mm/aaaa" />
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-2">
+                    <h6 class="fw-bold">G&eacute;nero:</h6>
+                    <select id="idGenero" name="idGenero" class="form-select form-control">
+                        <option value="">- Elegir -</option>
+                        <option value="ALL">- Todas -</option>
+                        <option value="Hombre">Hombre</option>
+                        <option value="Mujer">Mujer</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3 justify-content-end">
+                <div class="col-md-3 mb-3">
+                    <button type="button" id="btn_buscar" class="btn btn-primary w-100">Buscar</button>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a onclick="cleanFilter();" href="javascript:void(0);" class="btn btn-secondary w-100">Limpiar Filtros</a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <button type="button" id="btn_exportar" style="color: white;" class="btn btn-warning w-100">Exportar Data</button>
+                </div>
+                <div class="col-md-3">
+                    <a href="<?php echo site_url('patient/add'); ?>" class="btn btn-success w-100">Nuevo</a>
+                </div>
+            </div>
+                
+            <div class="row mb-3">
+                <div class="col-md-12 col-12">
+                    <table class="table table-bordered table-sm" id="tblPatients">
+                        <thead>
+                            <th>ID</th>
+                            <th>Nombre Completo</th>
+                            <th>G&eacute;nero</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Tipo Documento</th>
+                            <th># de Documento</th>
+                            <th>Acci&oacute;n</th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

@@ -44,19 +44,8 @@ class MY_Controller extends CI_controller {
 			define('GOOGLE_API_KEYS', 'AIzaSyDMkdTil9zezgTB8nPhgDMdEQS9NAu8pbg'); // PRODUCTION   DEVELOPMENT
 
         if ( !defined('GOOGLE_RECAPTCHA_KEY') )
-			define('GOOGLE_RECAPTCHA_KEY', ['keySiteWeb' => '6LdHjSImAAAAALOagnxpczgqk0ccPpZZtos7Oegd', 
-                                            'keySecret' => '6LdHjSImAAAAAG3sZaLNwipcAaYXd2rSXzguvI5u']); // RECAPTCHA
-
-        if ( !defined('KEY_APP_FACEBOOK') )
-			define('KEY_APP_FACEBOOK', '411174144475732'); // FACEBOOK
-
-        if ( !defined('FIREBASE_CONFIG') )
-			define('FIREBASE_CONFIG', ['apiKey' => 'AIzaSyChwjhvg5ACe39NtRO5Oiz1lAoYU-CUW9I',
-                                       'authDomain' => 'general-ecommerce-3766e.firebaseapp.com',
-                                       'projectId' => 'general-ecommerce-3766e',
-                                       'storageBucket' => 'general-ecommerce-3766e.appspot.com',
-                                       'messagingSenderId' => '110065707903',
-                                       'appId' => '1:110065707903:web:e7430fd85ca21eddf1884a']); // GOOGLE
+			define('GOOGLE_RECAPTCHA_KEY', ['keySiteWeb' => '6Lfb8H0qAAAAALFoqM3Xa9TD9OeRtEh1pkxM8nRN', 
+                                            'keySecret' => '6Lfb8H0qAAAAALuSMj0djvkXL0AW2gB-pxBOXUBY']); // RECAPTCHA
 		
 		if ( !defined('CLAVE_PERFIL') )
             define('CLAVE_PERFIL', empty($session['rol']) ? FALSE : $session['rol']['clave']);
@@ -84,9 +73,6 @@ class MY_Controller extends CI_controller {
         
         if ( !defined('SERVER') )
             define('SERVER', $_SERVER['SERVER_NAME'] === 'vacantesepn.conacyt.mx' ? 'PROD' : ( $_SERVER['SERVER_NAME'] === '172.16.6.14' ? 'DEV' : 'LOCAL' ));
-
-        if ( !defined('URL_PORTAL_ADMINISTRACION') )
-            define('URL_PORTAL_ADMINISTRACION','https://localhost/general_admin_ecommerce/');
         
         $this->load->library('form_validation');
         $this->load->library('services/seguridad_service');
@@ -208,7 +194,7 @@ class MY_Controller extends CI_controller {
         //$this->imprime($mail, 1); 
         
         //$this->email->from($mail['from']);
-        $this->email->from('desarrollo.webmx2021@gmail.com', 'Ecommerce');
+        $this->email->from('desarrollo.webmx2021@gmail.com', 'Plataforma Integral de Cuestionarios para Investigación');
         $this->email->to($mail['to']);
 //        $this->email->to('a.v.felipe@gmail.com');
         $this->email->subject( utf8_encode( $mail['subject'] ) );
@@ -250,25 +236,13 @@ class MY_Controller extends CI_controller {
 
         $data = array();
 
-        $controllers_methods_google = ['login' => ['/', '']];
-        $controllers_method_facebook = ['login' => ['/','']];
         $controllers_method_input_mask = ['login' => ['/', '', 'recuperar', 'validar', 'reset'], 'user' => ['register', 'profile', 'notified']];
         $controllers_method_recaptcha = ['login' => ['/', '', 'recuperar', 'validar', 'reset'], 'user' => ['register', 'profile']];
-        $controllers_method_payment_gateway = ['checkout' => ['getCards', 'registerCard'], 'order' => ['/', '']];
-        $controllers_method_maps = ['address' => ['register', 'edit'], 'product' => ['detailBranch']];
-        $controllers_method_card_style = ['checkout' => ['registerCard']];
         //$controllers_method_datatable = ['address' => ['/', ''], 'checkout' => ['getCards'], 'user' => ['billing'], 'product' => ['wishList'], 'order' => ['/', '', 'history']];
-        $controllers_method_oxxo_barcode = ['order' => ['checkout', 'history', 'detail', 'orderCompleted']];
 
-        $data['loadGoogle'] = !empty($controllers_methods_google[CONTROLLER]) && in_array(METHOD, $controllers_methods_google[CONTROLLER]);
-        $data['loadFacebook'] = !empty($controllers_method_facebook[CONTROLLER]) && in_array(METHOD, $controllers_method_facebook[CONTROLLER]);
         $data['loadInputMask'] = !empty($controllers_method_input_mask[CONTROLLER]) && in_array(METHOD, $controllers_method_input_mask[CONTROLLER]);
         $data['loadRecatpcha'] = !empty($controllers_method_recaptcha[CONTROLLER]) && in_array(METHOD, $controllers_method_recaptcha[CONTROLLER]);
-        $data['loadPaymentGateway'] = !empty($controllers_method_payment_gateway[CONTROLLER]) && in_array(METHOD, $controllers_method_payment_gateway[CONTROLLER]);
-        $data['loadMaps'] = !empty($controllers_method_maps[CONTROLLER]) && in_array(METHOD, $controllers_method_maps[CONTROLLER]);
-        $data['loadCardStyle'] = !empty($controllers_method_card_style[CONTROLLER]) && in_array(METHOD, $controllers_method_card_style[CONTROLLER]);
         //$data['loadDatatable'] = !empty($controllers_method_datatable[CONTROLLER]) && in_array(METHOD, $controllers_method_datatable[CONTROLLER]);
-        $data['loadBarcodeOxxo'] = !empty($controllers_method_oxxo_barcode[CONTROLLER]) && in_array(METHOD, $controllers_method_oxxo_barcode[CONTROLLER]);
 
         return $data;
     }
@@ -280,8 +254,33 @@ class MY_Controller extends CI_controller {
         else
             return FALSE;
     }
+
+    function checkAccess($controller, $method = '') {
+
+        $rol_x_controlador = [
+            'ADM' => ['formulario', 'patient', 'user', 'catalogo/clues', 'catalogo/farmaceutica'],
+            'INVESTIGADOR' => ['patient'],
+            'COORD.' => ['patient'],
+            'SUBINVESTIGADOR' => ['patient']
+        ];
+
+        $key =  ( CLAVE_PERFIL == 'ADM' && $controller == 'catalogo' && $method == 'clues' ) 
+        ? 'catalogo/clues' : ( (CLAVE_PERFIL == 'ADM' && $controller == 'catalogo' && $method == 'farmaceutica') 
+        ? 'catalogo/farmaceutixa' : $controller
+        );
+               
+        return ( empty($rol_x_controlador[CLAVE_PERFIL]) || in_array($key, $rol_x_controlador[CLAVE_PERFIL]) ); // FALSE;
+    }
     
     function loadTemplate($data = []) {
+
+        $data['accessToController'] = [
+            'formulario' => $this->checkAccess('formulario'),
+            'paciente' => $this->checkAccess('patient'),
+            'usuario' => $this->checkAccess('user'),
+            'clues' => $this->checkAccess('catalogo','clues'),
+            'farmaceutica' => $this->checkAccess('catalogo','farmaceutica')
+        ];
                 
         $data['controller'] = $this->uri->segment(1);
         $data['method'] = $this->uri->segment(2);
@@ -532,7 +531,7 @@ class MY_Controller extends CI_controller {
 
         } else {
             
-            $result = $this->seguridad_service->validPrivilege($this->methodByPrivilege);
+            /*$result = $this->seguridad_service->validPrivilege($this->methodByPrivilege);
             //Error -10 indica que no tienes acceso
             if( $result['error'] == -10 ) {
                 if ($this->input->is_ajax_request())
@@ -540,7 +539,7 @@ class MY_Controller extends CI_controller {
                 else
                     redirect('login');
                 
-            }
+            }*/
         }
     }
 

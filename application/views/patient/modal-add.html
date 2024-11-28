@@ -1,0 +1,43 @@
+<div class="container">
+
+    <form id="formContact" method="POST">
+		
+        <input type="hidden" name="reg[idContacto]" id="idContacto" value="<?php echo !empty($contact['idContacto']) ? $contact['idContacto'] : '' ?>">
+        <input type="hidden" name="reg[idPaciente]" id="idPaciente">
+
+        <div class="row mt-3">
+            <h5 class="required text-end">* Campos obligatorios</h5>
+        </div>
+
+        <div class="mb-3 row">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-12 col-12 mb-2">
+                    <h6 class="fw-bold">Tel&eacute;fono:&nbsp;<span class="required">*</span></h6>
+                    <input type="text" maxlength="10" class="form-control" name="reg[valor]" id="txtTelefono" placeholder="Tel&eacute;fono:&nbsp;" value="<?php echo !empty($contact['valor']) ? $contact['valor'] : '' ?>" >
+                </div> 
+                <div class="col-md-12 col-12 mb-2">
+                    <h6 class="fw-bold">Tipo:&nbsp;<span class="required">*</span></h6>
+                    <select id="cveContact" name="reg[cveContact]" class="form-select form-control form-control-lg">
+                        <option value=""> - Elegir - </option>
+                        <option value="CEL" <?php echo $contact['clave'] == 'CEL' ? 'selected' : '' ?>>C&eacute;lular</option>
+                        <option value="TEL" <?php echo $contact['clave'] == 'TEL' ? 'selected' : '' ?>>Tel&eacute;fono</option>
+                    </select> 
+                </div> 
+                <div class="col-md-12 col-12 mb-2">
+                    <h6 class="fw-bold">Principal:&nbsp;<span class="required">*</span></h6>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="reg[prioridad]" id="radSiP" value="1" <?php echo isset($contact['prioridad']) && $contact['prioridad'] == '1' ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="radSiP">Si</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="reg[prioridad]" id="radNoP" value="0" <?php echo isset($contact['prioridad']) && $contact['prioridad'] == '0' ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="radNoP">No</label>
+                    </div>
+                </div>                                
+            </div> 
+
+        </div>
+
+    </form>
+</div>
