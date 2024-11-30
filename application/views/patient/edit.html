@@ -19,7 +19,6 @@
 
             <input type="hidden" name="reg[idPaciente]" id="txtIdPaciente" value="<?php echo !empty($reg['idPaciente']) ? $reg['idPaciente'] : ''; ?>">
             
-            
             <div class="tab-pane fade show active" id="demographic" role="tabpanel" aria-labelledby="home-tab">
                 <?php echo $demograficos ?>
             </div>
@@ -90,5 +89,6 @@
 </div>
 
 <script>
-    let patientId = "<?php echo $patient['idPaciente'] ?>";
+    let patientId = "<?php echo !empty($patient['idPaciente']) ? $patient['idPaciente'] : '' ?>";
+    let tab_initial = "<?php echo !empty($tab_initial) ? $tab_initial : '' ?>"
 </script>

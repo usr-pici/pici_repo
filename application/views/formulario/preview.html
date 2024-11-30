@@ -4,13 +4,23 @@
 
         <?php if(!empty($dataForm['nombre']) ){ ?>
             <div class="row justify-content-md-center mb-4">
-                <h4 style="font-size: x-large; font-weight: bold; color: blue" class="text-center"><?php echo $dataForm['nombre'] ?></h4>
+                <h4 style="font-size: x-large; font-weight: bold; color: black" class="text-center"><?php echo $dataForm['nombre'] ?></h4>
             </div>
         <?php } ?>
 
         <form id="data_form_patient<?php echo $idFormulario ?>" enctype="multipart/form-data" data-id-reg="<?php echo !empty($reg) ? $reg['idPaciente'] : ''; ?>">
 
             <input type="hidden" name="reg[idFormulario]" value="<?php echo $idFormulario; ?>">
+
+            <?php if(isset($action) && $action == 'addAD'){ ?>
+                <input type="hidden" name="reg[action]" value="addAD">
+            <?php } ?>
+
+            <?php if(isset($action) && $action == 'editForm'){ ?>
+                <input type="hidden" name="reg[idVisita]" value="<?php echo $idVisita ?>">
+                <input type="hidden" name="reg[action]" value="editForm">
+            <?php } ?>
+
 
             <div class="row mt-3">
                 <div class="offset-md-7 col-md-3 col-12 text-end">
@@ -60,7 +70,7 @@
                         <?php if( (isset($pregunta['cveField']) && $pregunta['cveField'] == 'TEXT') || isset($pregunta['cveField']) && $pregunta['cveField'] == 'DATE' || isset($pregunta['cveField']) && $pregunta['cveField'] == 'TEXT_NUMERIC' ){ ?>
                         
                             <?php if( !empty($pregunta['longitud'])){ ?>
-                                <input <?php echo $pregunta['soloLectura'] == '1' ? 'disabled' : '' ?> type="text" name="reg[<?php echo $p; ?>]" class="<?php echo $clase_campo; ?> <?php echo $pregunta['etiqueta'] ?>" maxlength="<?php echo $pregunta['longitud']; ?>" placeholder="<?php echo !empty($pregunta['etiqueta']) ? nl2br($pregunta['etiqueta']) : ''; ?>" />
+                                <input <?php echo $pregunta['soloLectura'] == '1' ? (!empty($pregunta['metodo']) ? 'readonly' : 'disabled') : '' ?> type="text" name="reg[<?php echo $p; ?>]" class="<?php echo $clase_campo; ?> <?php echo $pregunta['etiqueta'] ?>" maxlength="<?php echo $pregunta['longitud']; ?>" placeholder="<?php echo !empty($pregunta['etiqueta']) ? nl2br($pregunta['etiqueta']) : ''; ?>" value="<?php echo !empty($pregunta['respuesta']) ? $pregunta['respuesta'] : ''; ?>" />
                             <?php } else { ?>
                                 <input <?php echo $pregunta['soloLectura'] == '1' ? 'disabled' : '' ?> type="text" name="reg[<?php echo $p; ?>]" class="<?php echo $clase_campo; ?> <?php echo $pregunta['etiqueta'] ?>" placeholder="<?php echo !empty($pregunta['etiqueta']) ? nl2br($pregunta['etiqueta']): ''; ?>" value="<?php echo !empty($pregunta['respuesta']) ? $pregunta['respuesta'] : ''; ?>"/>
                             <?php } ?>
@@ -104,8 +114,16 @@
                         <?php } elseif( isset($pregunta['cveField']) && $pregunta['cveField'] == 'LIST' ){
                             $name = !empty($multiple) ? 'reg['.$p.'][]' : 'reg['.$p.']'; ?>
                             <select name="<?php echo $name; ?>" class="form-select form-control <?php echo $clase_campo; ?>" <?php echo $onchange; ?> >
-                                <?php if(empty($multiple)){ ?>
+                                <?php if( empty($multiple) ){ ?>
                                     <option value=""> - Elige - </option>
+                                <?php } ?>
+
+                                <?php if( $pregunta['etiqueta'] == 'CLUES' && !empty($this->session->userdata()['idClues']) && !empty($this->session->userdata()['clues']) && $action == 'add' ){ ?>
+                                    <option selected value="<?php echo $this->session->userdata()['idClues']; ?> "><?php echo $this->session->userdata()['clues']; ?> </option>
+                                <?php } ?>
+
+                                <?php if( $pregunta['etiqueta'] == 'CLUES' && !empty($cluesId) && !empty($cluesName) && $action == 'edit' ){ ?>
+                                    <option selected value="<?php echo $cluesId; ?> "><?php echo $cluesName; ?> </option>
                                 <?php } ?>
                                 
                                 <?php foreach($pregunta['opciones'] as $clave => $valor){ ?>
@@ -136,7 +154,7 @@
             <div class="mb-5" style="text-align: center;">
                 <div id="msg_result" style="width:100%; text-align:left; margin-bottom:10px;"></div>
                 <button id="btn_enviar" onclick="sendResponse(<?php echo $idFormulario; ?>)" type="button" class="btn btn-success">Guardar</button>
-                <a style="margin-left: 0px;" href="<?php echo isset($return) && $return == 1 ? site_url('patient/edit/'.$idPaciente) : site_url('patient'); ?>" id="btnRegresar" class="btn btn-secondary">Regresar</a>
+                <a style="margin-left: 0px;" href="<?php echo isset($return) && $return == 1 ? site_url('patient/edit/'.$idPaciente.'/visit') : site_url('patient'); ?>" id="btnRegresar" class="btn btn-secondary">Regresar</a>
             </div>
         <?php } ?>
 

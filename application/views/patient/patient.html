@@ -52,9 +52,11 @@
                 <div class="col-md-3 mb-3">
                     <a onclick="cleanFilter();" href="javascript:void(0);" class="btn btn-secondary w-100">Limpiar Filtros</a>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <button type="button" id="btn_exportar" style="color: white;" class="btn btn-warning w-100">Exportar Data</button>
-                </div>
+                <?php if( CLAVE_PERFIL == 'ADM' ){ ?>
+                    <div class="col-md-3 mb-3">
+                        <button type="button" id="btn_exportar" style="color: white;" class="btn btn-warning w-100">Exportar Data</button>
+                    </div>
+                <?php } ?>
                 <div class="col-md-3">
                     <a href="<?php echo site_url('patient/add'); ?>" class="btn btn-success w-100">Nuevo</a>
                 </div>

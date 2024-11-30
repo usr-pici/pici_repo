@@ -785,12 +785,14 @@ class User extends MY_Controller {
 
         $user_data = $this->session->userdata();
 
+        //$this->imprimir($user_data,1);
+
         $getStudyClues = $this->seguridad_service->searchByModel('viewModel', ['idUsuario' => $user_data['idUsuario']], ['imprimirSQL' => 0, 'orderBy' => 'e.nombre ASC'], 'getStudyClues');       
 
         $studyClues = $this->catalogo_service->get_list_to_select(
             [
-                'index_id' => 'idEstudioClues',
-                'id_reg' => !empty($user_data['idEstudioClues']) ? $user_data['idEstudioClues'] : '',
+                'index_id' => 'idEstudioUsuario',
+                'id_reg' => !empty($user_data['idEstudioUsuario']) ? $user_data['idEstudioUsuario'] : '',
                 'index_desc' => 'estudioClues',
                 'regs' => $getStudyClues,
                 'etiqueta' => '- Estudio / CLUES -'
@@ -804,8 +806,16 @@ class User extends MY_Controller {
 
         $reg = $this->input->post();
 
-        $data['idEstudioClues'] = !empty($reg['idEstudioClues']) ? $reg['idEstudioClues'] : '';
+        if( !empty($reg['idEstudioUsuario']) )
+            $getStudyClues = current( $this->seguridad_service->searchByModel('viewModel', ['idEstudioUsuario' => $reg['idEstudioUsuario']], ['imprimirSQL' => 0, 'orderBy' => 'e.nombre ASC'], 'getStudyClues') );       
+
+        $data['idEstudioUsuario'] = !empty($reg['idEstudioUsuario']) ? $reg['idEstudioUsuario'] : '';
+        $data['idEstudioClues'] = !empty($getStudyClues['idEstudioClues']) ? $getStudyClues['idEstudioClues'] : '';
+        $data['idClues'] = !empty($getStudyClues['idClues']) ? $getStudyClues['idClues'] : '';
+        $data['clues'] = !empty($getStudyClues['clues']) ? $getStudyClues['clues'] : '';
     
+        //$this->imprimir($reg,1);
+
         $this->session->set_userdata($data);        
 
         echo json_encode(['error' => 0, 'msg' => 'Cambiando Estudio / Clues']);

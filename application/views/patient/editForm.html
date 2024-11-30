@@ -1,11 +1,22 @@
 <div class="login_register_wrap">
     <div class="container">
 
+        <input type="hidden" name="reg[idPaciente]" id="txtIdPaciente" value="<?php echo  $idPaciente; ?>">
+        
         <?php echo $editForm ?>
             
     </div>
 </div>
 
+<div id="dialog-add-phone">
+    <div id="update_add_phone_load"></div>
+</div>
+
+<div id="dialog-add-responsable">
+    <div id="update_add_responsable_load"></div>
+</div>
+
 <script>
     let patientId = "<?php echo $idPaciente ?>";
+    let tab_initial = "<?php echo !empty($tab_initial) ? $tab_initial : '' ?>";
 </script>

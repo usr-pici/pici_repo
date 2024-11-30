@@ -1,6 +1,5 @@
 let pantientIdGlobal = 0;
 
-
 function validar_grupo_pregunta(grupo, comparacion, valor){ 
 
 	resultado = false;
@@ -77,7 +76,7 @@ function sendPhone(idFormulario) {
 
     idReg = $('#data_form_patient'+idFormulario).data('idReg');
 
-    console.log('aaaa: '+idReg)
+    console.log('idPaciente: '+idReg)
 
     if( idReg != '' ) {
 
@@ -114,7 +113,7 @@ function sendResponsible(idFormulario) {
 
     idReg = $('#data_form_patient'+idFormulario).data('idReg');
 
-    console.log('aaaa: '+idReg)
+    console.log('idPaciente: '+idReg)
 
     if( idReg != '' ) {
 
@@ -124,7 +123,7 @@ function sendResponsible(idFormulario) {
             },
             function() {
                                 
-                //$('#idPaciente').val(idReg)
+                $('#idPaciente').val(idReg)
                 $('#dialog-add-responsable').modal('show');
                 
                 $('#formResponsible').validate({
@@ -187,6 +186,9 @@ function sendResponse(idFormulario) {
                 success: function(resp){
 
                     msg(resp.error, resp.msg);
+                    if ( resp.idPaciente && resp.urlGo )
+                        window.location = URL_SITE + 'patient/edit/'+ pantientIdGlobal + '/visit'
+
                     if ( resp.idPaciente ) {
                         initTable(resp.idPaciente)
                         pantientIdGlobal = resp.idPaciente
@@ -280,7 +282,9 @@ function initTable(idPaciente) {
 
 $(function () {
 
-    
-    
+    $("#btnDirectionEdit").on('click', function(){
+        if( pantientIdGlobal != 0 )
+            window.location = URL_SITE + 'patient/edit/' + pantientIdGlobal 
+    });   
 	
 });

@@ -1,12 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Respuesta_model extends MY_Model {
+class Visita_model extends MY_Model {
     
     function  __construct() {
 
         parent::__construct();
         
-        $this->set_config('respuesta', "Respuestas del formulario",['cveStatusAdd' => 'REGISTERED_RESPONSE',  'cveStatusUpdate' => '']);
+        $this->set_config('visita', "Visitas por paciente.");
     }
     
     function buscar($filtros = array(), $extras = array()) {
@@ -22,27 +22,18 @@ class Respuesta_model extends MY_Model {
         if ( isset($filtros['id_NOT_IN']) )
             $condicion[] = $this->key_field . " NOT IN (" . $filtros['id_NOT_IN'] . ")";
                         
-        if ( isset($filtros['borrado']) )
-            $condicion[] = "borrado = '{$filtros['borrado']}'";
-
-        if ( isset($filtros['idFormulario']) )
-            $condicion[] = "idFormulario = '{$filtros['idFormulario']}'";
-
-        if ( isset($filtros['idPregunta']) )
-            $condicion[] = "idPregunta = '{$filtros['idPregunta']}'";
-
         if ( isset($filtros['idPaciente']) )
             $condicion[] = "idPaciente = '{$filtros['idPaciente']}'";
 
-        if ( !empty($filtros['idVisita']) )
+        if ( isset($filtros['idVisita']) )
             $condicion[] = "idVisita = '{$filtros['idVisita']}'";
+
+        if ( isset($filtros['idEstudioClues']) )
+            $condicion[] = "idEstudioClues = '{$filtros['idEstudioClues']}'";
+
+        if ( isset($filtros['borrado']) )
+            $condicion[] = "borrado = '{$filtros['borrado']}'";
             
-        if ( !empty($filtros['vigente']) )
-            $condicion[] = "borrado = '0' AND activo = '1'";
-
-        if ( isset($filtros['idVisitaNull']) )
-            $condicion[] = "idVisita IS NULL";
-
         return parent::buscar($condicion, $extras);
     }
     

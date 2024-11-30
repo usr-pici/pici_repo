@@ -400,7 +400,7 @@ function updStudyClues() {
     $.post(
         URL_SITE + "user/saveSesionStudyClues",
         {
-            idEstudioClues: id
+            idEstudioUsuario: id
         },
         function(resp) {
             msg(resp.error, resp.msg);

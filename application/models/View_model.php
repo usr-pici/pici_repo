@@ -241,6 +241,9 @@ class View_model extends MY_Model {
         if ( isset($filtros['idGenero']) )
             $condicion[] = "po.opcion = '{$filtros['idGenero']}'";
 
+        if ( isset($filtros['idClues']) )
+            $condicion[] = "rClues.idPreguntaOpcion = '{$filtros['idClues']}'";
+
         if ( isset($filtros['idPaciente']) )
             $condicion[] = "patient.idPaciente = '{$filtros['idPaciente']}'";
 
@@ -258,7 +261,9 @@ class View_model extends MY_Model {
                     person.*,
                     ccTypeDoc.nombre AS tipoDocumento,
                     r.idPreguntaOpcion,
-                    po.opcion AS genero
+                    po.opcion AS genero,
+                    rClues.idPreguntaOpcion AS idClues,
+                    cc.nombre AS clues
                 ';        
 
         $sql = "
@@ -267,7 +272,10 @@ class View_model extends MY_Model {
                 ON (patient.idPersona = person.idPersona) LEFT JOIN cat_clasificacion ccTypeDoc
                 ON (ccTypeDoc.idClasificacion = person.idTipoDocumento) LEFT JOIN respuesta r
                 ON (r.idPaciente = patient.idPaciente AND r.idPregunta = (SELECT idPregunta FROM pregunta WHERE etiqueta = 'Sexo' )) LEFT JOIN pregunta_opcion po
-                ON (r.idPreguntaOpcion = po.idPreguntaOpcion)
+                ON (r.idPreguntaOpcion = po.idPreguntaOpcion) LEFT JOIN respuesta rClues
+                ON (rClues.idPaciente = patient.idPaciente AND rClues.idPregunta = (SELECT idPregunta FROM pregunta WHERE etiqueta = 'CLUES' )) LEFT JOIN pregunta_opcion poClues
+                ON (rClues.idPreguntaOpcion = poClues.idPreguntaOpcion) LEFT JOIN cat_clues cc
+                ON (cc.idClues = rClues.idPreguntaOpcion)
             ";
 
         if ($condicion)
@@ -354,7 +362,7 @@ class View_model extends MY_Model {
         if ( isset($filtros['idPaciente']) )
             $condicion[] = "v.idPaciente = '{$filtros['idPaciente']}'";
 
-        $extras = ["groupBy" => 'f.idFormulario'];
+        $extras = ["groupBy" => 'v.idVisita, f.idFormulario'];
         $campos = !empty($extras['campos']) ? $extras['campos'] : "
                             v.idVisita,
                             v.idEstudioClues,
@@ -371,9 +379,12 @@ class View_model extends MY_Model {
                 ON (e.idEstudio = exc.idEstudio) INNER JOIN formulario_x_estudio fxe
                 ON (fxe.idEstudio = e.idEstudio) INNER JOIN formulario f
                 ON (f.idFormulario = fxe.idFormulario) INNER JOIN paciente p
-                ON (p.idPaciente = v.idPaciente) INNER JOIN respuesta resp
+                ON (p.idPaciente = v.idPaciente) LEFT JOIN respuesta resp
                 ON (resp.idPaciente = v.idPaciente AND v.idVisita = resp.idVisita AND f.idFormulario = resp.idFormulario)
             ";
+
+        if ($condicion)
+            $sql .= " WHERE " . implode(' AND ', $condicion);
 
         if ( !empty($extras['groupBy']) )
             $sql .= " GROUP BY " . ( is_array($extras['groupBy']) ? implode(", ", $extras['groupBy']) : $extras['groupBy'] );
@@ -415,6 +426,9 @@ class View_model extends MY_Model {
         
         if ( isset($filtros['idUsuario']) )
             $condicion[] = "exu.idUsuario = '{$filtros['idUsuario']}'";
+
+        if ( isset($filtros['idEstudioUsuario']) )
+            $condicion[] = "exu.idEstudioUsuario = '{$filtros['idEstudioUsuario']}'";
       
         $campos = !empty($extras['campos']) ? $extras['campos'] : '
                     exu.*, 
@@ -435,6 +449,45 @@ class View_model extends MY_Model {
             ";
 
         return $this->execute_view($sql, $condicion, $extras);
+    }
+
+    function get_regs_binnacle($filtros = array(), $extras = array()) {
+
+        $condicion = [];
+
+        $condicion = ["vue.tabla = 'respuesta'"];
+
+        if ( !empty($filtros['idRegistro_IN']) )
+            $condicion[] = "vue.idRegistro IN ({$filtros['idRegistro_IN']}) ";
+
+        if ( !empty($filtros['comentarioISNULL']) )
+            $condicion[] = " vue.comentario IS NOT NULL";
+
+        if ( !empty($filtros['cveEstatus']) )
+            $condicion[] = "vue.clave = '{$filtros['cveEstatus']}'";
+
+        $campos = !empty($extras['campos']) ? $extras['campos'] : '
+                    vue.*,
+	                CONCAT(p.nombre, " ", p.apellidos) as usuario
+                ';        
+
+        $sql = "
+                SELECT {$campos}
+                FROM view_ultimo_estatus vue INNER JOIN usuario u
+                ON (vue.idUsuario = u.idusuario) INNER JOIN persona p
+                ON (p.idPersona = u.idPersona) 
+            ";
+
+        if ($condicion)
+            $sql .= " WHERE " . implode(' AND ', $condicion);
+
+        if (!empty($extras['orderBy']))
+            $sql .= " ORDER BY " . ( is_array($extras['orderBy']) ? implode(", ", $extras['orderBy']) : $extras['orderBy'] );
+
+        if (!empty($extras['getBy']))
+            $sql .= " LIMIT " . (!empty($filtros['offset']) ? $filtros['offset'] : 0) . " , " . (!empty($filtros['fetch']) ? $filtros['fetch'] : 1) . " ";
+
+        return parent::execute_query($sql, $extras);
     }
 
     

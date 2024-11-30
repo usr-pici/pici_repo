@@ -57,6 +57,8 @@ class Patient extends MY_Controller {
 
     function get_regs() {
 
+		$user_data = $this->session->userdata();
+
         parse_str($this->input->post('filtros'), $filtros);
 
 		foreach ($filtros as $idF => $f) {
@@ -65,6 +67,9 @@ class Patient extends MY_Controller {
 
         if( !empty($filtros['idGenero']) && $filtros['idGenero'] == 'ALL' )
             unset($filtros['idGenero']);
+
+        if( isset($user_data['idClues']) && !empty($user_data['idClues']) )
+            $filtros['idClues'] = $user_data['idClues'];
 
         $filtros = $this->ajustarParametros($filtros);
 
@@ -90,6 +95,7 @@ class Patient extends MY_Controller {
             
             if ( $regs ) {
                 foreach ( $regs as &$reg ) {
+                    $reg['principal'] = $reg['principal'] == 1 ? 'Si' : 'No';
                     $reg['opciones'] = ' <a href="javascript:void(0);" onclick="showModalContact('. $reg['idContacto'] . ')"><i title="Editar" class="fa fa-edit text-primary"></i></a>';
                     $reg['opciones'] .= ' <span>|</span> <a href="javascript:void(0);" onclick="delete_reg_contact(this,'. $reg['idContacto'] . ')"><i title="Eliminar" class="fa fa-trash-alt text-danger"></i></a>';
                 }
@@ -125,29 +131,38 @@ class Patient extends MY_Controller {
 
         if( !empty($idPaciente) ) {
 
-            $regs = $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0, 'orderBy' => 'f.idFormulario ASC'], 'getVisits');           
-            $response = $this->patient_service->indexed_search_response(['idFormulario','idRespuesta'],['idPaciente' => $idPaciente, 'borrado' => 0], ['imprimirSQL' => 0]);   
+            $regs = $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 1, 'orderBy' => 'f.idFormulario ASC'], 'getVisits');
+            $response = $this->patient_service->indexed_search_response(['idFormulario','idVisita','idRespuesta'],['idPaciente' => $idPaciente, 'borrado' => 0], ['imprimirSQL' => 0]);   
             $forms = $this->form_service->indexed_search(['idFormulario'],['activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0]);   
             
             if ( $regs ) {
                 foreach ( $regs as &$reg ) {
 
                     $countQuestion = count( $this->form_service->search_questions(['idFormulario' => $reg['idFormulario'], 'activo' => 1, 'borrado' => 0], [ 'imprimirSQL' => 0]) );
-                    $searxhIds = $response[$reg['idFormulario']];
+                    $searxhIds = !empty($response[$reg['idFormulario']][$reg['idVisita']]) ? $response[$reg['idFormulario']][$reg['idVisita']] : [];
                     $countResponse = $forms[$reg['idFormulario']]['clave'] == 'DT-DEMOGRAFICOS' ? (count($searxhIds) + 6) :  count($searxhIds);
 
-                    $reg['avance'] = number_format((($countResponse / $countQuestion) * 100)) . '%';
+                    $reg['avance'] = '<span class="avance">' . number_format((($countResponse / $countQuestion) * 100)) . '%' . '</span>';
 
-                    $responses_ids = implode(',', array_column($searxhIds, 'idRespuesta'));
-                    $historic = current( $this->historico_estatus_service->search(['tabla' => 'respuesta', 'idRegistro_IN' => $responses_ids], ['orderBy' => 'fecha DESC', 'imprimirSQL' => 0]) );   
-                    $user = current( $this->usuario_service->search(['id' => $historic['idUsuario']], [ 'imprimirSQL' => 0]) );   
-                    $person = current( $this->person_service->search(['id' => $user['idPersona']], [ 'imprimirSQL' => 0]) );
-                    $reg['usuario'] = $person['nombre'] . ' ' . $person['apellidos'];                      
-                    $fecha = $this->formato_fecha_pantalla($historic['fecha'], 10);
-    	            $hora = substr($historic['fecha'], 11, 5);
-                    $reg['fechaHora'] = $fecha . ' ' . $hora;
-                    $reg['fechaHoraPlus'] = $historic['fecha'];
-                    $reg['opciones'] = ' <a href="' . URL_SITE . 'patient/editForm/' . $reg['idFormulario'] . '/'. $reg['visita'] .'/'. $reg['idPaciente'] .'"><i title="Editar" class="fa fa-edit text-primary"></i></a>';
+                    if( !empty($searxhIds) ) {
+
+                        $responses_ids = implode(',', array_column($searxhIds, 'idRespuesta'));
+                        $historic = current( $this->historico_estatus_service->search(['tabla' => 'respuesta', 'idRegistro_IN' => $responses_ids], ['orderBy' => 'fecha DESC', 'imprimirSQL' => 0]) );   
+                        $user = current( $this->usuario_service->search(['id' => $historic['idUsuario']], [ 'imprimirSQL' => 0]) );   
+                        $person = current( $this->person_service->search(['id' => $user['idPersona']], [ 'imprimirSQL' => 0]) );
+                        $reg['usuario'] = $person['nombre'] . ' ' . $person['apellidos'];  
+                        
+                        $fecha = $this->formato_fecha_pantalla($historic['fecha'], 10);
+                        $hora = substr($historic['fecha'], 11, 5);
+                        $reg['fechaHora'] = $fecha . ' ' . $hora;
+                        $reg['fechaHoraPlus'] = $historic['fecha'];
+                    } else {
+                        $reg['usuario'] = '';
+                        $reg['fechaHora'] = '';
+                        $reg['fechaHoraPlus'] = '';
+                    }
+                    
+                    $reg['opciones'] = ' <a href="' . URL_SITE . 'patient/editForm/' . $reg['idFormulario'] . '/'. $reg['idVisita'] .'/'. $reg['idPaciente'] .'"><i title="Editar" class="fa fa-edit text-primary"></i></a>';
                 }
             }
         } else {
@@ -155,6 +170,37 @@ class Patient extends MY_Controller {
         }
         
         echo json_encode($regs);
+    }
+
+    function get_regs_binnacle($idPaciente = 0) {
+
+        if( !empty($idPaciente) ) {
+
+            $responses = $this->patient_service->search_response(['idPaciente' => $idPaciente, 'borrado' => '0']);
+            
+            $response_ids = implode(',', array_column($responses, 'idRespuesta'));
+
+            $regsRegistered = $this->view_service->searchByModel('viewModel', ['idRegistro_IN' => $response_ids, 'cveEstatus' => 'REGISTERED_RESPONSE'], ['imprimirSQL' => 0, 'getBy' => '1'], 'get_regs_binnacle');
+            
+            $regs = $this->view_service->searchByModel('viewModel', ['idRegistro_IN' => $response_ids, 'comentarioISNULL' => '1'], ['imprimirSQL' => 0], 'get_regs_binnacle');
+
+            $data = array_merge($regsRegistered, $regs);
+
+            //$this->imprimir($data,1);            
+            if ( $data ) {
+                foreach ( $data as &$reg ) {
+
+                    $fecha = $this->formato_fecha_pantalla($reg['fecha'], 10);
+                    $hora = substr($reg['fecha'], 11, 5);
+                    $reg['fechaHora'] = $fecha . ' ' . $hora;
+                    $reg['observacion'] = $reg['comentario'];
+                }
+            }
+        } else {
+            $data = [];
+        }
+       
+        echo json_encode($data);
     }
 
     function saveContact() {
@@ -216,7 +262,7 @@ class Patient extends MY_Controller {
         echo json_encode($result);
     }
 
-    function add(){ 
+    function add($tab_initial = ''){ 
 
         $demograficos = current( $this->form_service->search(['clave' => 'DT-DEMOGRAFICOS', 'vigente' => '1']) );
         $mod_ap = current( $this->form_service->search(['clave' => 'MOD-AP', 'vigente' => '1']) );
@@ -226,6 +272,7 @@ class Patient extends MY_Controller {
             $configurationDemo['idFormulario'] = $demograficos['idFormulario'];
             $configurationDemo['context'] = $demograficos['clave'];
             $configurationDemo['flag'] = '1';
+            $configurationDemo['action'] = 'add';
         } else {
             $configurationDemo = array();
         }
@@ -242,6 +289,7 @@ class Patient extends MY_Controller {
         $data['fileToLoad']  = ['patient/js/add.js', 'formulario/js/preview.js'];
         $data['main_content']  = $this->load->view('patient/add.html', [
             'title' => 'Registro de Paciente',
+        	'tab_initial' => $tab_initial,
             'demograficos' => !empty($configurationDemo) ? $this->load->view('formulario/preview.html', $configurationDemo, TRUE) : '<h3 class="text-center mt-3">Formulario No disponible</h3>',
             'mod_ap' => !empty($configurationAP) ? $this->load->view('formulario/preview.html', $configurationAP, TRUE) : '<h3 class="text-center mt-3">Formulario No disponible</h3>'
         ], TRUE);
@@ -249,7 +297,7 @@ class Patient extends MY_Controller {
         $this->loadTemplate($data);
     }
 
-    function edit($idPaciente = 0){ 
+    function edit($idPaciente = 0, $tab_initial = ''){ 
 
         $patient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0], 'getPatients') );
 
@@ -262,6 +310,8 @@ class Patient extends MY_Controller {
             $configurationDemo['context'] = $demograficos['clave'];
             $configurationDemo['flag'] = '1';
             $configurationDemo['patient'] = $patient;
+            $configurationDemo['action'] = 'edit';
+            $configurationDemo['reg'] = ['idPaciente' => $idPaciente];
         } else {
             $configurationDemo = array();
         }
@@ -280,6 +330,7 @@ class Patient extends MY_Controller {
         $data['main_content']  = $this->load->view('patient/edit.html', [
             'title' => 'Paciente: ' . $patient['nombre'] . ' ' . $patient['apellidos'],
             'patient' => $patient,
+        	'tab_initial' => $tab_initial,
             'demograficos' => !empty($configurationDemo) ? $this->load->view('formulario/preview.html', $configurationDemo, TRUE) : '<h3 class="text-center mt-3">Formulario No disponible</h3>',
             'mod_ap' => !empty($configurationAP) ? $this->load->view('formulario/preview.html', $configurationAP, TRUE) : '<h3 class="text-center mt-3">Formulario No disponible</h3>'
         ], TRUE);
@@ -289,7 +340,13 @@ class Patient extends MY_Controller {
 
     function newVisit($idPaciente = 0){ 
 
+        $patient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0], 'getPatients') );
+
         $newVisit = current( $this->form_service->search(['clave' => 'DATA_AD', 'vigente' => '1']) );
+        
+        $numVisit = count( $this->patient_service->search_visit(['idPaciente' => $idPaciente]) );
+
+        $numVisit = $numVisit + 1;
 
         if( !empty($newVisit) ) {
             $configurationVisit = $this->configuration($newVisit['idFormulario']);
@@ -298,37 +355,47 @@ class Patient extends MY_Controller {
             $configurationVisit['context'] = $newVisit['clave'];
             $configurationVisit['flag'] = '1';
             $configurationVisit['return'] = '1';
+            $configurationVisit['dataForm'] = ['nombre' => 'Visita ' . $numVisit . ': ' . $newVisit['nombre']];
+            $configurationVisit['action'] = 'addAD';
         } else {
             $configurationVisit = array();
         }
         
         $data['fileToLoad']  = ['patient/js/newVisit.js', 'formulario/js/preview.js'];
         $data['main_content']  = $this->load->view('patient/newVisit.html', [
-            'title' => 'Antecedentes Demográficos',
+            'title' => 'Paciente: ' . $patient['nombre'] . ' ' . $patient['apellidos'],
+            'idPaciente' => $idPaciente,
             'newVisit' => !empty($configurationVisit) ? $this->load->view('formulario/preview.html', $configurationVisit, TRUE) : '<h3 class="text-center mt-3">Formulario No disponible</h3>',
         ], TRUE);
         
         $this->loadTemplate($data);
     }
 
-    function editForm($idFormulario = 0, $numVisita = 0, $idPaciente = 0){ 
+    function editForm($idFormulario = 0, $idVisita = 0, $idPaciente = 0){ 
 
         $form = current( $this->form_service->search(['id' => $idFormulario, 'vigente' => '1']) );
+        
+        $visit = current( $this->patient_service->search_visit(['id' => $idVisita, 'vigente' => '1']) );
+
+        $patient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0], 'getPatients') );
 
         if( !empty($form) ) {
-            $configurationVisitEdit = $this->configurationEdit($form['idFormulario'], $idPaciente);
+            $configurationVisitEdit = $this->configurationEdit($form['idFormulario'], $idPaciente, $idVisita);
             $configurationVisitEdit['idFormulario'] = $form['idFormulario'];
             $configurationVisitEdit['idPaciente'] = $idPaciente;
             $configurationVisitEdit['context'] = $form['clave'];
             $configurationVisitEdit['flag'] = '1';
             $configurationVisitEdit['return'] = '1';
+            $configurationVisitEdit['dataForm'] = ['nombre' => 'Visita ' . $visit['numVisita'] . ': ' . $form['nombre']];
+            $configurationVisitEdit['idVisita'] = $idVisita;
+            $configurationVisitEdit['action'] = 'editForm';
         } else {
             $configurationVisitEdit = array();
         }
         
         $data['fileToLoad']  = ['patient/js/edit.js', 'formulario/js/preview.js'];
         $data['main_content']  = $this->load->view('patient/editForm.html', [
-            'title' => 'Visita ' . ' ' . $numVisita . ': ' . $form['nombre'],
+            'title' => 'Paciente: ' . $patient['nombre'] . ' ' . $patient['apellidos'],
             'editForm' => !empty($configurationVisitEdit) ? $this->load->view('formulario/preview.html', $configurationVisitEdit, TRUE) : '<h3 class="text-center mt-3">Formulario No disponible</h3>',
         ], TRUE);
         
@@ -348,22 +415,13 @@ class Patient extends MY_Controller {
             
             $preguntas = $this->view_service->indexedSearchByModel('viewModel', ['idPregunta'],['idFormulario' => $idFormulario], ['imprimirSQL' => 0, 'orderBy' => 'p.consecutivo ASC'], FALSE, 'getQuestions');
 
-            //$this->imprimir($preguntas,1);
-
             $options = $this->form_service->indexed_search_OptionForm(['idPreguntaOpcion','idPregunta'],['activo' => 1, 'borrado' => 0], ['orderBy' => 'posicion ASC', 'imprimirSQL' => 0]);
 
             $conditions = $this->form_service->indexed_search_conditionQuestion(['idPregunta'],['activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0]);
 
             $questions_ids = implode(',', array_column($preguntas, 'idPregunta'));
 
-            $showFieldsQuestion = $this->view_service->indexedSearchByModel(
-                'viewModel',
-                ['idPreguntaOpcion'],
-                ['idPregunta_IN' => $questions_ids],
-                ['imprimirSQL' => 0],
-                FALSE,
-                'showFieldsQuestion'
-            );
+            $showFieldsQuestion = $this->view_service->indexedSearchByModel('viewModel', ['idPreguntaOpcion'], ['idPregunta_IN' => $questions_ids], ['imprimirSQL' => 0], FALSE, 'showFieldsQuestion');
 
             $listaPreguntas = [];
 
@@ -427,7 +485,7 @@ class Patient extends MY_Controller {
         return $configuracion;
     }
 
-    function configurationEdit($idFormulario = '', $idPaciente = NULL) {
+    function configurationEdit($idFormulario = '', $idPaciente = NULL, $idVisita = NULL) {
 
         $configuracion = [];
         $restricciones = '';
@@ -443,26 +501,15 @@ class Patient extends MY_Controller {
             
             $preguntas = $this->view_service->indexedSearchByModel('viewModel', ['idPregunta'],['idFormulario' => $idFormulario], ['imprimirSQL' => 0, 'orderBy' => 'p.consecutivo ASC'], FALSE, 'getQuestions');
 
-            //$this->imprimir($preguntas,1);
-
             $options = $this->form_service->indexed_search_OptionForm(['idPreguntaOpcion','idPregunta'],['activo' => 1, 'borrado' => 0], ['orderBy' => 'posicion ASC', 'imprimirSQL' => 0]);
 
             $conditions = $this->form_service->indexed_search_conditionQuestion(['idPregunta'],['activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0]);
 
             $questions_ids = implode(',', array_column($preguntas, 'idPregunta'));
 
-            $showFieldsQuestion = $this->view_service->indexedSearchByModel(
-                'viewModel',
-                ['idPreguntaOpcion'],
-                ['idPregunta_IN' => $questions_ids],
-                ['imprimirSQL' => 0],
-                FALSE,
-                'showFieldsQuestion'
-            );
+            $showFieldsQuestion = $this->view_service->indexedSearchByModel('viewModel', ['idPreguntaOpcion'], ['idPregunta_IN' => $questions_ids], ['imprimirSQL' => 0], FALSE, 'showFieldsQuestion');
 
-            $responses = $this->patient_service->indexed_search_response(['idPregunta'],['idFormulario' => $idFormulario, 'idPaciente' => $idPaciente, 'borrado' => 0], ['imprimirSQL' => 0]);
-
-            //$this->imprimir($responses,1);
+            $responses = $this->patient_service->indexed_search_response(['idPregunta'],['idFormulario' => $idFormulario, 'idPaciente' => $idPaciente, 'idVisita' => $idVisita, 'borrado' => 0], ['imprimirSQL' => 0]);
 
             $listaPreguntas = [];
 
@@ -498,6 +545,15 @@ class Patient extends MY_Controller {
                 if( trim($pregunta['etiqueta']) == 'Lugar de residencia' && !empty($patient) ) {
                     $optionValue = current( $this->form_service->search_OptionForm(['opcion' => $patient['direccion'], 'vigente' => '1']) );
                     $listaPreguntas[$pregunta['idPregunta']]['respuesta'] = $optionValue['idPreguntaOpcion'];
+                }
+
+                if( trim($pregunta['etiqueta']) == 'CLUES' && !empty($patient) ) {
+
+                    $responseClues = current( $this->patient_service->search_response(['idPregunta' => $pregunta['idPregunta'], 'idPaciente' => $idPaciente, 'borrado' => '0']) );
+                    $cluesData = current( $this->catalogo_service->search('clues', ['id' => $responseClues['idPreguntaOpcion'], 'activo' => 1,'borrado' => 0], ['imprimirSQL' => 0]) );
+
+                    $configuracion['cluesId'] = $cluesData['idClues'];
+                    $configuracion['cluesName'] = $cluesData['nombre'];
                 }
 
                 //Adjuntar respuestas
