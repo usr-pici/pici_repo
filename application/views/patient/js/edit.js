@@ -256,7 +256,6 @@ $(function () {
 			method: 'POST',
 			data: function (d) {}
 		},
-//        "order": [[ 2, "desc" ]],
         rowGroup: {
             dataSrc: 'visita',
             startRender: function ( rows, group ) {
@@ -344,6 +343,7 @@ $(function () {
 				targets: [-2, -3, -4, -5, -6],
 			}
 		],
+		paging: false,
     }).on( 'draw', function () {
         
 		$(".avance").each(function( index ) {

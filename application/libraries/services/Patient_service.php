@@ -133,7 +133,7 @@ class Patient_Service extends Class_Service {
 			$registroOrigen = current( $this->search_response(['id' => $id, 'borrado' => 0]) );
             
             if( !empty($registroOrigen['idVisita']))
-			    $visit = current( $this->search_visit(['id' => $registroOrigen['idVisita']], ['imprimirSQL' => 1]) );
+			    $visit = current( $this->search_visit(['id' => $registroOrigen['idVisita']], ['imprimirSQL' => 0]) );
             else
                 $visit = NULL;
 

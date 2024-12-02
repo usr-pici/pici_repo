@@ -3,7 +3,7 @@
     <form id="formResponsible" method="POST">
 		
         <input type="hidden" name="reg[idResponsable]" id="idResponsable" value="<?php echo !empty($responsible['idResponsable']) ? $responsible['idResponsable'] : '' ?>">
-        <input type="hidden" name="reg[idPaciente]" id="idPaciente" value="<?php echo !empty($responsible['idPaciente']) ? $responsible['idPaciente'] : '' ?>">
+        <input type="hidden" name="reg[idPaciente]" id="idPaciente" value="<?php echo !empty($reg['idPaciente']) ? $reg['idPaciente'] : '' ?>">
 
         <div class="row mt-3">
             <h5 class="required text-end">* Campos obligatorios</h5>
@@ -24,6 +24,7 @@
                         <option value="Madre" <?php echo isset($responsible['parentesco']) && $responsible['parentesco'] == 'Madre' ? 'selected' : '' ?>>Madre</option>
                         <option value="Hermano" <?php echo isset($responsible['parentesco']) && $responsible['parentesco'] == 'Hermano' ? 'selected' : '' ?>>Hermano</option>
                         <option value="Hijo" <?php echo  isset($responsible['parentesco']) && $responsible['parentesco'] == 'Hijo' ? 'selected' : '' ?>>Hijo</option>
+                        <option value="Esposo(a)" <?php echo  isset($responsible['parentesco']) && $responsible['parentesco'] == 'Esposo(a)' ? 'selected' : '' ?>>Esposo(a)</option>
                     </select> 
                 </div>                               
             </div> 

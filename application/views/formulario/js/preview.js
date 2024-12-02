@@ -186,7 +186,9 @@ function sendResponse(idFormulario) {
                 success: function(resp){
 
                     msg(resp.error, resp.msg);
-                    if ( resp.idPaciente && resp.urlGo )
+                    if ( resp.idPaciente && resp.action == 2 )
+                        window.location = URL_SITE + 'patient/add/'+ pantientIdGlobal + '/visit'
+                    else if ( resp.idPaciente && resp.action == 1 )
                         window.location = URL_SITE + 'patient/edit/'+ pantientIdGlobal + '/visit'
 
                     if ( resp.idPaciente ) {
@@ -278,13 +280,181 @@ function initTable(idPaciente) {
 		paging: false,
         bDestroy: true
 	});
+
+    $('#tblBitacora').addClass('table').DataTable({
+		order: [[1, "ASC"]],
+		ajax: {
+			url: URL_SITE + 'patient/get_regs_binnacle/' + idPaciente,
+			dataSrc: '', 
+			method: 'POST',
+			data: function (d) {}
+		},
+		columns: [
+			{ data: 'estatus' },
+			{ data: 'usuario' },
+			{ data: 'fechaHora' },
+			{ data: 'observacion' }
+		],
+		columnDefs: [
+			{
+				orderable: false,
+				className: "text-center",
+				width: "25%",
+				targets: [-1],
+			},
+			{
+				orderable: false,
+				className: "text-center",
+				targets: [-2,-3, -4],
+			}
+		],
+		serverSide: false,
+		searching: false,
+		fixedHeader: true,
+		scrollY: '1000px',
+		scrollX: false,
+		responsive: true,
+		scrollCollapse: true,
+		paging: false,
+        bDestroy: true
+	});
+
+    var collapsedGroups = {};
+    var table = $('#tblVisitas').DataTable({
+        ajax: {
+            url: URL_SITE + 'patient/get_visits/' + idPaciente,
+            dataSrc: '', 
+            method: 'POST',
+            data: function (d) {}
+        },
+        rowGroup: {
+            dataSrc: 'visita',
+            startRender: function ( rows, group ) {
+                var collapsed = !!collapsedGroups[group];
+                    rows.nodes().each(function (r) {
+                    r.style.display = 'none';
+                    if (collapsed) {
+                        r.style.display = '';
+                    }});
+
+                    let avance = rows.data().pluck('avance').reduce((a, b) => a + b.replace(/[^\d]/g, '') * 1, 0) / rows.count();
+                    avance = DataTable.render.number(',', '.', 0, '', '%').display(avance)
+
+                    var maxDate = null;
+                var usuario = null;
+
+                //seleccionar la fecha mayor del todos los rows de cada grupo y su usuario
+                rows.data().each(function (row) {
+                    if (row) {
+                        var rowDate = new Date(row.fechaHoraPlus); // Suponiendo que fechaHora está en formato ISO 8601
+                        if (!isNaN(rowDate)) { // Validar si rowDate es una fecha válida
+                            maxDate = maxDate ? Math.max(maxDate, rowDate) : rowDate;
+                            usuario = row.usuario;
+                        }
+                    }
+                })
+                    
+                var date;
+
+                if( maxDate == null )
+                    date = ''
+                else {
+                    date = new Date(maxDate);						
+                    date = date.toLocaleString()
+                    //Quitar segundos en la hora
+                    date = date.split(' ')[0] + ' ' + date.split(' ')[1].split(':')[0] + ':' + date.split(' ')[1].split(':')[1];
+                }
+
+                var toggleClass = collapsed ? 'fa-minus-square' : 'fa-plus-square';
+
+                    return $('<tr/>')
+                        .append('<td class="text-center">' + '<span class="fa fa-fw ' + toggleClass + ' toggler"/> ' + group + ' (' + rows.count() + ')</td>')
+                        .attr('data-name', group)
+                        .toggleClass('collapsed', collapsed)
+                    
+                        .append('<td class="text-center">Avance Global</td>')
+                        .attr('data-name', group)
+                        .toggleClass('collapsed', collapsed)
+
+                        .append('<td class="text-center"><span class="avance">' + avance + '</span></td>')
+                        .attr('data-name', group)
+                        .toggleClass('collapsed', collapsed)
+
+                        .append('<td class="text-center">'+ usuario +'</td>')
+                        .attr('data-name', group)
+                        .toggleClass('collapsed', collapsed)
+
+                        .append('<td class="text-center">'+  date.toLocaleString() +'</td>')
+                        .attr('data-name', group)
+                        .toggleClass('collapsed', collapsed)
+
+                        .append('<td></td>')
+                        .attr('data-name', group)
+                        .toggleClass('collapsed', collapsed);
+            },
+        },
+        columns: [
+            { data: 'visita' },
+            { data: 'formulario' },
+            { data: 'avance' },
+            { data: 'usuario' },
+            { data: 'fechaHora' },
+            { data: 'opciones' }
+        ],
+        columnDefs: [
+            {
+                orderable: false,
+                className: "text-center",
+                width: "25%",
+                targets: [-1],
+            },
+            {
+                orderable: false,
+                className: "text-center",
+                targets: [-2, -3, -4, -5, -6],
+            }
+        ],
+        paging: false,
+        bDestroy: true
+    }).on( 'draw', function () {
+    
+        $(".avance").each(function( index ) {
+            var avance = $(this).text();
+
+            avance = avance.replace('%','');
+
+            if( avance  == 0 )
+                $(this).parent().css( "background-color", "rgba(255, 0, 0, .6)" );
+            else if( avance > 0 && avance < 50 )
+                $(this).parent().css( "background-color", "rgba(255, 165, 0, .6)" );
+            else if( avance > 50 && avance < 90 )
+                $(this).parent().css( "background-color", "rgba(60, 178, 232, .6)" );
+            else if( avance == 100 )
+                $(this).parent().css( "background-color", "rgba(60, 179, 113, .6)" );
+        });
+    });
+
+    $('#tblVisitas tbody').on('click', 'tr.dtrg-start', function() {
+        var name = $(this).data('name');
+        collapsedGroups[name] = !collapsedGroups[name];
+        table.draw(false);
+    });
 }
 
 $(function () {
 
+    $("#demographic-tab").on('click', function(){
+        $("#tblTelefono").DataTable().ajax.reload();
+        $("#tblResponsable").DataTable().ajax.reload();
+    });
+
     $("#btnDirectionEdit").on('click', function(){
+
+        if( idPaciente != 0 )
+            pantientIdGlobal = idPaciente
+
         if( pantientIdGlobal != 0 )
-            window.location = URL_SITE + 'patient/edit/' + pantientIdGlobal 
+            window.location = URL_SITE + 'patient/newVisit/' + pantientIdGlobal + '/2' 
     });   
 	
 });

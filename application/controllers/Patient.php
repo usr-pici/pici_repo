@@ -185,8 +185,7 @@ class Patient extends MY_Controller {
             $regs = $this->view_service->searchByModel('viewModel', ['idRegistro_IN' => $response_ids, 'comentarioISNULL' => '1'], ['imprimirSQL' => 0], 'get_regs_binnacle');
 
             $data = array_merge($regsRegistered, $regs);
-
-            //$this->imprimir($data,1);            
+      
             if ( $data ) {
                 foreach ( $data as &$reg ) {
 
@@ -196,6 +195,7 @@ class Patient extends MY_Controller {
                     $reg['observacion'] = $reg['comentario'];
                 }
             }
+
         } else {
             $data = [];
         }
@@ -262,34 +262,65 @@ class Patient extends MY_Controller {
         echo json_encode($result);
     }
 
-    function add($tab_initial = ''){ 
+    function add($idPaciente = 0, $tab_initial = ''){ 
 
         $demograficos = current( $this->form_service->search(['clave' => 'DT-DEMOGRAFICOS', 'vigente' => '1']) );
         $mod_ap = current( $this->form_service->search(['clave' => 'MOD-AP', 'vigente' => '1']) );
 
-        if( !empty($demograficos) ) {
-            $configurationDemo = $this->configuration($demograficos['idFormulario']);
-            $configurationDemo['idFormulario'] = $demograficos['idFormulario'];
-            $configurationDemo['context'] = $demograficos['clave'];
-            $configurationDemo['flag'] = '1';
-            $configurationDemo['action'] = 'add';
-        } else {
-            $configurationDemo = array();
-        }
+        if( $idPaciente != 0 && $tab_initial != '' ) {
+            $patient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0], 'getPatients') );
 
-        if( !empty($mod_ap) ) {
-            $configurationAP = $this->configuration($mod_ap['idFormulario']);
-            $configurationAP['idFormulario'] = $mod_ap['idFormulario'];
-            $configurationAP['context'] = $mod_ap['clave'];
-            $configurationAP['flag'] = '1';
+            if( !empty($demograficos) ) {
+                $configurationDemo = $this->configurationEdit($demograficos['idFormulario'], $idPaciente);
+                $configurationDemo['idFormulario'] = $demograficos['idFormulario'];
+                $configurationDemo['context'] = 'dataDemograficos';
+                $configurationDemo['flag'] = '1';
+                $configurationDemo['patient'] = $patient;
+                $configurationDemo['action'] = 'formDemograficosEdit';
+                $configurationDemo['reg'] = ['idPaciente' => $idPaciente];
+            } else {
+                $configurationDemo = array();
+            }
+    
+            if( !empty($mod_ap) ) {
+                $configurationAP = $this->configurationEdit($mod_ap['idFormulario'], $idPaciente);
+                $configurationAP['idFormulario'] = $mod_ap['idFormulario'];
+                $configurationAP['context'] = $mod_ap['clave'];
+                $configurationAP['flag'] = '1';
+                $configurationAP['patient'] = $patient;
+            } else {
+                $configurationAP = array();
+            }
+
         } else {
-            $configurationAP = array();
+
+            if( !empty($demograficos) ) {
+                $configurationDemo = $this->configuration($demograficos['idFormulario']);
+                $configurationDemo['idFormulario'] = $demograficos['idFormulario'];
+                $configurationDemo['context'] = 'dataDemograficos';
+                $configurationDemo['flag'] = '1';
+                $configurationDemo['action'] = 'formDemograficosAdd';
+            } else {
+                $configurationDemo = array();
+            }
+    
+            if( !empty($mod_ap) ) {
+                $configurationAP = $this->configuration($mod_ap['idFormulario']);
+                $configurationAP['idFormulario'] = $mod_ap['idFormulario'];
+                $configurationAP['context'] = $mod_ap['clave'];
+                $configurationAP['flag'] = '1';
+            } else {
+                $configurationAP = array();
+            }
+
         }
         
         $data['fileToLoad']  = ['patient/js/add.js', 'formulario/js/preview.js'];
         $data['main_content']  = $this->load->view('patient/add.html', [
-            'title' => 'Registro de Paciente',
-        	'tab_initial' => $tab_initial,
+            'title' => $idPaciente == 0 ? 'Registro de Paciente' : 'Paciente: ' . $patient['nombre'] . ' ' . $patient['apellidos'],
+            'patient' => !empty($patient) ? $patient : [],
+            'tab_initial' => $tab_initial,
+            'idPaciente' => $idPaciente,
             'demograficos' => !empty($configurationDemo) ? $this->load->view('formulario/preview.html', $configurationDemo, TRUE) : '<h3 class="text-center mt-3">Formulario No disponible</h3>',
             'mod_ap' => !empty($configurationAP) ? $this->load->view('formulario/preview.html', $configurationAP, TRUE) : '<h3 class="text-center mt-3">Formulario No disponible</h3>'
         ], TRUE);
@@ -297,7 +328,7 @@ class Patient extends MY_Controller {
         $this->loadTemplate($data);
     }
 
-    function edit($idPaciente = 0, $tab_initial = ''){ 
+    /*function edit($idPaciente = 0, $tab_initial = ''){ 
 
         $patient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0], 'getPatients') );
 
@@ -307,10 +338,10 @@ class Patient extends MY_Controller {
         if( !empty($demograficos) ) {
             $configurationDemo = $this->configurationEdit($demograficos['idFormulario'], $idPaciente);
             $configurationDemo['idFormulario'] = $demograficos['idFormulario'];
-            $configurationDemo['context'] = $demograficos['clave'];
+            $configurationDemo['context'] = 'dataDemograficos';
             $configurationDemo['flag'] = '1';
             $configurationDemo['patient'] = $patient;
-            $configurationDemo['action'] = 'edit';
+            $configurationDemo['action'] = 'formDemograficosEdit';
             $configurationDemo['reg'] = ['idPaciente' => $idPaciente];
         } else {
             $configurationDemo = array();
@@ -336,9 +367,9 @@ class Patient extends MY_Controller {
         ], TRUE);
         
         $this->loadTemplate($data);
-    }
+    }*/
 
-    function newVisit($idPaciente = 0){ 
+    function newVisit($idPaciente = 0, $actionAD = ''){ 
 
         $patient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0], 'getPatients') );
 
@@ -354,9 +385,10 @@ class Patient extends MY_Controller {
             $configurationVisit['idPaciente'] = $idPaciente;
             $configurationVisit['context'] = $newVisit['clave'];
             $configurationVisit['flag'] = '1';
-            $configurationVisit['return'] = '1';
+            $configurationVisit['return'] = $actionAD;
             $configurationVisit['dataForm'] = ['nombre' => 'Visita ' . $numVisit . ': ' . $newVisit['nombre']];
             $configurationVisit['action'] = 'addAD';
+            $configurationVisit['actionAD'] = $actionAD;
         } else {
             $configurationVisit = array();
         }
@@ -652,7 +684,7 @@ class Patient extends MY_Controller {
             $responsible = current( $this->patient_service->search_response_responsable(['id' => $reg['idResponsable']]) );
         else
             $responsible = [];
-           
+  
         $this->load->view('patient/modal-add-resp.html', [
             'reg' => $reg,
             'responsible' => $responsible

@@ -1010,7 +1010,7 @@ class Formulario extends MY_Controller {
         echo json_encode(['error' => 0, 'imc' => $result]);
     }
 
-    function response($id = 0) {
+    function response($idPaciente = 0) {
 
         if(!empty($this->input->post('reg'))){
             $reg = $this->input->post('reg');
@@ -1022,8 +1022,11 @@ class Formulario extends MY_Controller {
 		$user_data = $this->session->userdata();
         $data = $patient = $saveVisit = $filtrosFormResp = [];
         $idFormulario = $idVisita = $numVisit = 0;
-        $action = '';
+        $action = $actionAD = '';
         $fecha = date("Y-m-d");
+        //$this->imprimir($reg,1);
+        if( empty($user_data['idEstudioClues']) )
+            return $this->msg_error("Debe seleccionar el Estudio/Clues correspondiente.");
 
         if( isset($reg['idFormulario']) ) {
             $idFormulario = $reg['idFormulario'];
@@ -1049,6 +1052,11 @@ class Formulario extends MY_Controller {
             unset($reg['action']);
         }
 
+        if( isset($reg['actionAD']) ) {
+            $actionAD = $reg['actionAD'];
+            unset($reg['actionAD']);
+        }
+
         if( isset($reg['idVisita']) ) {
             $idVisita = $reg['idVisita'];
             unset($reg['idVisita']);
@@ -1057,15 +1065,16 @@ class Formulario extends MY_Controller {
         $questionsId = array_keys($reg);
         $uniqueQuestionId = array_unique($questionsId);
 		$questionsIdIN = implode(",", $uniqueQuestionId);
-        /*$this->imprimir($action);
+        /*$this->imprimir($actionAD);
+        $this->imprimir($action);
         $this->imprimir($idVisita);
-        $this->imprimir($id);
+        $this->imprimir($idPaciente);
         $this->imprimir($idFormulario);
         $this->imprimir($questionsIdIN);
         $this->imprimir($reg,1);*/
         $questions = $this->view_service->searchByModel('viewModel', ['idFormulario' => $idFormulario, 'vigente' => 1, 'idPregunta_IN' => $questionsIdIN], ['orderBy' => 'p.consecutivo ASC', 'imprimirSQL' => 0], 'getQuestions');
-        //$this->imprimir($formulario,1);
-        if( $formulario['clave'] == 'DT-DEMOGRAFICOS' ) {
+
+        if( $action == 'demograficos' ) {
 
             foreach( $questions as &$pregunta ){
 
@@ -1106,7 +1115,7 @@ class Formulario extends MY_Controller {
             $data['telefono'] = 'N/A';
             //$this->imprimir($reg,1);
   
-            if( empty($id) ){
+            if( empty($idPaciente) ){
 
                 $idx = $this->utileria_service->getIdx('persona');
                 $data['idx'] = $idx['id'];
@@ -1138,8 +1147,10 @@ class Formulario extends MY_Controller {
                     if( is_array($respuesta) ){
 
                         foreach($respuesta as $respuesta_opcion){
-                            $respuesta['idPreguntaOpcion'] = $respuesta_opcion;
-                            $this->patient_service->saveResponse($respuestaData);
+                            if( !empty($respuesta_opcion) ) {
+                                $respuestaData['idPreguntaOpcion'] = $respuesta_opcion;
+                                $this->patient_service->saveResponse($respuestaData);
+                            }
                         }
 
                     } elseif( !empty($respuesta) ) {
@@ -1149,10 +1160,10 @@ class Formulario extends MY_Controller {
             
             } else {
                 
-                $dataPatient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $id], ['imprimirSQL' => 0], 'getPatients') );
+                $dataPatient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0], 'getPatients') );
                 $this->person_service->save($data, !empty($dataPatient['idPersona']) ? $dataPatient['idPersona'] : '', 'persona');
                 //Ajuste
-                $questionsResponse = $this->patient_service->search_response(['idPaciente' => $id, 'idFormulario' => $idFormulario, 'borrado' => 0]);
+                $questionsResponse = $this->patient_service->search_response(['idPaciente' => $idPaciente, 'idFormulario' => $idFormulario, 'borrado' => 0]);
     
                 if( !empty($questionsResponse) ) {
         
@@ -1172,7 +1183,7 @@ class Formulario extends MY_Controller {
         
                     foreach ($questions_ids as $preg) {
         
-                        $idRespuesta = current( $this->patient_service->search_response(['idPregunta' => $preg, 'idFormulario' => $idFormulario, 'idPaciente' => $id, 'borrado' => 0]) ); 
+                        $idRespuesta = current( $this->patient_service->search_response(['idPregunta' => $preg, 'idFormulario' => $idFormulario, 'idPaciente' => $idPaciente, 'borrado' => 0]) ); 
         
                         $del = ['borrado' => 1];
         
@@ -1188,12 +1199,12 @@ class Formulario extends MY_Controller {
                 foreach( $reg as $pregunta => $respuesta ){
 
                     $respuestaData = array();
-                    $responseId = current( $this->patient_service->search_response(['idPregunta' => $pregunta, 'idFormulario' => $idFormulario, 'idPaciente' => $id, 'borrado' => 0]) );     
+                    $responseId = current( $this->patient_service->search_response(['idPregunta' => $pregunta, 'idFormulario' => $idFormulario, 'idPaciente' => $idPaciente, 'borrado' => 0]) );     
                     
                     if( empty($responseId) ){
                         $respuestaData['idFormulario'] = $idFormulario;
                         $respuestaData['idPregunta'] = $pregunta;
-                        $respuestaData['idPaciente'] = $id;
+                        $respuestaData['idPaciente'] = $idPaciente;
                         $respuestaData['idVisita'] = NULL;
                     }
 
@@ -1226,17 +1237,17 @@ class Formulario extends MY_Controller {
             //Save visit
             if( $action == 'addAD') {
 
-                $numVisit = count( $this->patient_service->search_visit(['idPaciente' => $id]) );
+                $numVisit = count( $this->patient_service->search_visit(['idPaciente' => $idPaciente]) );
 
                 $numVisit = $numVisit + 1;
 
-                $saveVisit = $this->patient_service->saveVisit(['idEstudioClues' => $user_data['idEstudioClues'], 'idPaciente' => $id, 'numVisita' => $numVisit], NULL);
+                $saveVisit = $this->patient_service->saveVisit(['idEstudioClues' => $user_data['idEstudioClues'], 'idPaciente' => $idPaciente, 'numVisita' => $numVisit], NULL);
             }
 
             if( $action == 'addAD' )
-                $questionsResponse = $this->patient_service->search_response(['idPaciente' => $id, 'idFormulario' => $idFormulario, 'idVisitaNull' => '1', 'borrado' => 0]);
+                $questionsResponse = $this->patient_service->search_response(['idPaciente' => $idPaciente, 'idFormulario' => $idFormulario, 'idVisitaNull' => '1', 'borrado' => 0]);
             else
-                $questionsResponse = $this->patient_service->search_response(['idPaciente' => $id, 'idFormulario' => $idFormulario, 'borrado' => 0]);
+                $questionsResponse = $this->patient_service->search_response(['idPaciente' => $idPaciente, 'idFormulario' => $idFormulario, 'borrado' => 0]);
     
             if( !empty($questionsResponse) ) {
     
@@ -1254,7 +1265,7 @@ class Formulario extends MY_Controller {
                 }
     
                 foreach ($questions_ids as $preg) {
-                    $idRespuesta = current( $this->patient_service->search_response(['idPregunta' => $preg, 'idFormulario' => $idFormulario, 'idPaciente' => $id, 'borrado' => 0]) ); 
+                    $idRespuesta = current( $this->patient_service->search_response(['idPregunta' => $preg, 'idFormulario' => $idFormulario, 'idPaciente' => $idPaciente, 'borrado' => 0]) ); 
                     $del = ['borrado' => 1];
                     $result = $this->patient_service->deleteResponse($idRespuesta['idRespuesta'], NULL, $del, 'DELETE_RESPONSE');
                 }
@@ -1269,17 +1280,17 @@ class Formulario extends MY_Controller {
                 $respuestaData = array();
     
                 if( $action == 'addAD' )
-                    $responseId = current( $this->patient_service->search_response(['idPregunta' => $pregunta, 'idFormulario' => $idFormulario, 'idPaciente' => $id, 'idVisitaNull' => '1', 'borrado' => 0]) );
+                    $responseId = current( $this->patient_service->search_response(['idPregunta' => $pregunta, 'idFormulario' => $idFormulario, 'idPaciente' => $idPaciente, 'idVisitaNull' => '1', 'borrado' => 0]) );
                 else if( $action == 'editForm' )
-                    $responseId = current( $this->patient_service->search_response(['idPregunta' => $pregunta, 'idFormulario' => $idFormulario, 'idPaciente' => $id, 'idVisita' => $idVisita, 'borrado' => 0]) );  
+                    $responseId = current( $this->patient_service->search_response(['idPregunta' => $pregunta, 'idFormulario' => $idFormulario, 'idPaciente' => $idPaciente, 'idVisita' => $idVisita, 'borrado' => 0]) );  
                 else
-                    $responseId = current( $this->patient_service->search_response(['idPregunta' => $pregunta, 'idFormulario' => $idFormulario, 'idPaciente' => $id, 'borrado' => 0]) );  
+                    $responseId = current( $this->patient_service->search_response(['idPregunta' => $pregunta, 'idFormulario' => $idFormulario, 'idPaciente' => $idPaciente, 'borrado' => 0]) );  
 
                 if( empty($responseId) ) {
     
                     $respuestaData['idFormulario'] = $idFormulario;
                     $respuestaData['idPregunta'] = $pregunta;
-                    $respuestaData['idPaciente'] =  $id;
+                    $respuestaData['idPaciente'] =  $idPaciente;
                     $respuestaData['idVisita'] = !empty($saveVisit) ? $saveVisit['id'] : ($action == 'editForm' ? $idVisita : NULL);
                 }
                 
@@ -1306,7 +1317,7 @@ class Formulario extends MY_Controller {
             }
         }
                 
-        echo json_encode(['error' => 0, 'msg' => 'Respuestas guardadas correctamente.', 'idPaciente' => !empty($id) ? $id : $patient['id'], 'urlGo' => (($action == 'addAD' || $action == 'editForm') ? 'pantient' : '')]);        
+        echo json_encode(['error' => 0, 'msg' => 'Respuestas guardadas correctamente.', 'idPaciente' => !empty($idPaciente) ? $idPaciente : $patient['id'], 'action' => !empty($actionAD) ? $actionAD : '', 'urlGo' => (($action == 'addAD' || $action == 'editForm') ? 'pantient' : '')]);        
     }
     
 }

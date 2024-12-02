@@ -16,6 +16,14 @@
                 <input type="hidden" name="reg[action]" value="addAD">
             <?php } ?>
 
+            <?php if( isset($actionAD) ){ ?>
+                <input type="hidden" name="reg[actionAD]" value="<?php echo $actionAD ?>">
+            <?php } ?>
+
+            <?php if(isset($action) && ($action == 'formDemograficosAdd' || $action == 'formDemograficosEdit') ){ ?>
+                <input type="hidden" name="reg[action]" value="demograficos">
+            <?php } ?>
+
             <?php if(isset($action) && $action == 'editForm'){ ?>
                 <input type="hidden" name="reg[idVisita]" value="<?php echo $idVisita ?>">
                 <input type="hidden" name="reg[action]" value="editForm">
@@ -118,11 +126,11 @@
                                     <option value=""> - Elige - </option>
                                 <?php } ?>
 
-                                <?php if( $pregunta['etiqueta'] == 'CLUES' && !empty($this->session->userdata()['idClues']) && !empty($this->session->userdata()['clues']) && $action == 'add' ){ ?>
+                                <?php if( $pregunta['etiqueta'] == 'CLUES' && !empty($this->session->userdata()['idClues']) && !empty($this->session->userdata()['clues']) && $action == 'formDemograficosAdd' ){ ?>
                                     <option selected value="<?php echo $this->session->userdata()['idClues']; ?> "><?php echo $this->session->userdata()['clues']; ?> </option>
                                 <?php } ?>
 
-                                <?php if( $pregunta['etiqueta'] == 'CLUES' && !empty($cluesId) && !empty($cluesName) && $action == 'edit' ){ ?>
+                                <?php if( $pregunta['etiqueta'] == 'CLUES' && !empty($cluesId) && !empty($cluesName) && $action == 'formDemograficosEdit' ){ ?>
                                     <option selected value="<?php echo $cluesId; ?> "><?php echo $cluesName; ?> </option>
                                 <?php } ?>
                                 
@@ -154,11 +162,11 @@
             <div class="mb-5" style="text-align: center;">
                 <div id="msg_result" style="width:100%; text-align:left; margin-bottom:10px;"></div>
                 <button id="btn_enviar" onclick="sendResponse(<?php echo $idFormulario; ?>)" type="button" class="btn btn-success">Guardar</button>
-                <a style="margin-left: 0px;" href="<?php echo isset($return) && $return == 1 ? site_url('patient/edit/'.$idPaciente.'/visit') : site_url('patient'); ?>" id="btnRegresar" class="btn btn-secondary">Regresar</a>
+                <a style="margin-left: 0px;" href="<?php echo isset($return) && $return == 1 ? site_url('patient/edit/'.$idPaciente.'/visit') : (isset($return) && $return == 2 ? site_url('patient/add/'.$idPaciente.'/visit') : site_url('patient')); ?>" id="btnRegresar" class="btn btn-secondary">Regresar</a>
             </div>
         <?php } ?>
 
-        <?php if( $context == 'DT-DEMOGRAFICOS' ){ ?>
+        <?php if( $context == 'dataDemograficos' ){ ?>
             <div class="container">
                 <div class="row mb-3">
                     <div class="col-md-6 col-12 text-end table-responsive">
