@@ -1052,11 +1052,6 @@ class Formulario extends MY_Controller {
             unset($reg['action']);
         }
 
-        if( isset($reg['actionAD']) ) {
-            $actionAD = $reg['actionAD'];
-            unset($reg['actionAD']);
-        }
-
         if( isset($reg['idVisita']) ) {
             $idVisita = $reg['idVisita'];
             unset($reg['idVisita']);
@@ -1065,8 +1060,7 @@ class Formulario extends MY_Controller {
         $questionsId = array_keys($reg);
         $uniqueQuestionId = array_unique($questionsId);
 		$questionsIdIN = implode(",", $uniqueQuestionId);
-        /*$this->imprimir($actionAD);
-        $this->imprimir($action);
+        /*$this->imprimir($action);
         $this->imprimir($idVisita);
         $this->imprimir($idPaciente);
         $this->imprimir($idFormulario);
@@ -1192,10 +1186,9 @@ class Formulario extends MY_Controller {
         
                     $questionsIdIN = implode(',', $questionsIdIN);
                 }
-                //Finaliza
+
                 $questionsNew = $this->view_service->searchByModel('viewModel', ['idFormulario' => $idFormulario, 'vigente' => 1, 'idPregunta_IN' => $questionsIdIN], ['orderBy' => 'p.consecutivo ASC', 'imprimirSQL' => 0], 'getQuestions');
 
-                //$this->imprimir($reg,1);
                 foreach( $reg as $pregunta => $respuesta ){
 
                     $respuestaData = array();
@@ -1317,7 +1310,7 @@ class Formulario extends MY_Controller {
             }
         }
                 
-        echo json_encode(['error' => 0, 'msg' => 'Respuestas guardadas correctamente.', 'idPaciente' => !empty($idPaciente) ? $idPaciente : $patient['id'], 'action' => !empty($actionAD) ? $actionAD : '', 'urlGo' => (($action == 'addAD' || $action == 'editForm') ? 'pantient' : '')]);        
+        echo json_encode(['error' => 0, 'msg' => 'Respuestas guardadas correctamente.', 'idPaciente' => !empty($idPaciente) ? $idPaciente : $patient['id'], 'action' => $action]);        
     }
     
 }

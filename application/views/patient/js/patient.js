@@ -44,6 +44,30 @@ $(function () {
         $("#tblPatients").DataTable().ajax.reload();
     });
 
+	$("#btn_exportar").on('click', function(){
+       
+		$.ajax({
+			url: URL_SITE + "patient/exportar_excel",
+			destroy: true,
+			type: 'POST',
+			data: {},
+			processData: false,
+			contentType: false,
+			beforeSend: function() {
+				$('#btn_exportar').prop('disabled', true);
+			},
+			success: function(response){
+				window.open(URL_SITE + "patient/exportar_excel");
+				$('#btn_exportar').prop('disabled', false);
+			},
+			error: function(){
+				$('#btn_exportar').prop('disabled', false);
+				msg(1, "Error al exportar");
+			}
+		});	
+
+    });
+
 	$('#tblPatients').addClass('table table-striped table-condensed table-bordered table-hover w-100').DataTable({
 		ajax: {
 			url: URL_SITE + 'patient/get_regs',

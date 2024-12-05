@@ -266,7 +266,7 @@ class MY_Controller extends CI_controller {
 
         $key =  ( CLAVE_PERFIL == 'ADM' && $controller == 'catalogo' && $method == 'clues' ) 
         ? 'catalogo/clues' : ( (CLAVE_PERFIL == 'ADM' && $controller == 'catalogo' && $method == 'farmaceutica') 
-        ? 'catalogo/farmaceutixa' : $controller
+        ? 'catalogo/farmaceutica' : $controller
         );
                
         return ( empty($rol_x_controlador[CLAVE_PERFIL]) || in_array($key, $rol_x_controlador[CLAVE_PERFIL]) ); // FALSE;

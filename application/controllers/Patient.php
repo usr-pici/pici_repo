@@ -79,7 +79,7 @@ class Patient extends MY_Controller {
             foreach ( $regs as &$reg ) {
                 $reg['nombre'] = $reg['nombre'] . ' ' . $reg['apellidos'];
                 $reg['fechaNacimiento'] = $this->formato_fecha_pantalla($reg['fechaNacimiento']);
-                $reg['opciones'] = ' <a href="' . URL_SITE . 'patient/edit/' . $reg['idPaciente'] . '"><i title="Editar" class="fa fa-edit text-primary"></i></a>';
+                $reg['opciones'] = ' <a href="' . URL_SITE . 'patient/add/' . $reg['idPaciente'] . '"><i title="Editar" class="fa fa-edit text-primary"></i></a>';
                 $reg['opciones'] .= ' <span>|</span> <a href="javascript:void(0);" onclick="delete_reg(this,'. $reg['idPaciente'] . ')"><i title="Eliminar" class="fa fa-trash-alt text-danger"></i></a>';
             }
         }
@@ -131,7 +131,7 @@ class Patient extends MY_Controller {
 
         if( !empty($idPaciente) ) {
 
-            $regs = $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 1, 'orderBy' => 'f.idFormulario ASC'], 'getVisits');
+            $regs = $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0, 'orderBy' => 'f.idFormulario ASC', 'groupBy' => 'v.idVisita, f.idFormulario'], 'getVisits');
             $response = $this->patient_service->indexed_search_response(['idFormulario','idVisita','idRespuesta'],['idPaciente' => $idPaciente, 'borrado' => 0], ['imprimirSQL' => 0]);   
             $forms = $this->form_service->indexed_search(['idFormulario'],['activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0]);   
             
@@ -267,9 +267,10 @@ class Patient extends MY_Controller {
         $demograficos = current( $this->form_service->search(['clave' => 'DT-DEMOGRAFICOS', 'vigente' => '1']) );
         $mod_ap = current( $this->form_service->search(['clave' => 'MOD-AP', 'vigente' => '1']) );
 
-        if( $idPaciente != 0 && $tab_initial != '' ) {
+        if( $idPaciente != 0 ) {
+            
             $patient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0], 'getPatients') );
-
+        
             if( !empty($demograficos) ) {
                 $configurationDemo = $this->configurationEdit($demograficos['idFormulario'], $idPaciente);
                 $configurationDemo['idFormulario'] = $demograficos['idFormulario'];
@@ -278,6 +279,7 @@ class Patient extends MY_Controller {
                 $configurationDemo['patient'] = $patient;
                 $configurationDemo['action'] = 'formDemograficosEdit';
                 $configurationDemo['reg'] = ['idPaciente' => $idPaciente];
+                $configurationDemo['return'] = '0';
             } else {
                 $configurationDemo = array();
             }
@@ -288,6 +290,7 @@ class Patient extends MY_Controller {
                 $configurationAP['context'] = $mod_ap['clave'];
                 $configurationAP['flag'] = '1';
                 $configurationAP['patient'] = $patient;
+                $configurationAP['return'] = '0';
             } else {
                 $configurationAP = array();
             }
@@ -300,6 +303,7 @@ class Patient extends MY_Controller {
                 $configurationDemo['context'] = 'dataDemograficos';
                 $configurationDemo['flag'] = '1';
                 $configurationDemo['action'] = 'formDemograficosAdd';
+                $configurationDemo['return'] = '0';
             } else {
                 $configurationDemo = array();
             }
@@ -309,6 +313,7 @@ class Patient extends MY_Controller {
                 $configurationAP['idFormulario'] = $mod_ap['idFormulario'];
                 $configurationAP['context'] = $mod_ap['clave'];
                 $configurationAP['flag'] = '1';
+                $configurationAP['return'] = '0';
             } else {
                 $configurationAP = array();
             }
@@ -328,48 +333,7 @@ class Patient extends MY_Controller {
         $this->loadTemplate($data);
     }
 
-    /*function edit($idPaciente = 0, $tab_initial = ''){ 
-
-        $patient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0], 'getPatients') );
-
-        $demograficos = current( $this->form_service->search(['clave' => 'DT-DEMOGRAFICOS', 'vigente' => '1']) );
-        $mod_ap = current( $this->form_service->search(['clave' => 'MOD-AP', 'vigente' => '1']) );
-
-        if( !empty($demograficos) ) {
-            $configurationDemo = $this->configurationEdit($demograficos['idFormulario'], $idPaciente);
-            $configurationDemo['idFormulario'] = $demograficos['idFormulario'];
-            $configurationDemo['context'] = 'dataDemograficos';
-            $configurationDemo['flag'] = '1';
-            $configurationDemo['patient'] = $patient;
-            $configurationDemo['action'] = 'formDemograficosEdit';
-            $configurationDemo['reg'] = ['idPaciente' => $idPaciente];
-        } else {
-            $configurationDemo = array();
-        }
-
-        if( !empty($mod_ap) ) {
-            $configurationAP = $this->configurationEdit($mod_ap['idFormulario'], $idPaciente);
-            $configurationAP['idFormulario'] = $mod_ap['idFormulario'];
-            $configurationAP['context'] = $mod_ap['clave'];
-            $configurationAP['flag'] = '1';
-            $configurationAP['patient'] = $patient;
-        } else {
-            $configurationAP = array();
-        }
-        
-        $data['fileToLoad']  = ['patient/js/edit.js', 'formulario/js/preview.js'];
-        $data['main_content']  = $this->load->view('patient/edit.html', [
-            'title' => 'Paciente: ' . $patient['nombre'] . ' ' . $patient['apellidos'],
-            'patient' => $patient,
-        	'tab_initial' => $tab_initial,
-            'demograficos' => !empty($configurationDemo) ? $this->load->view('formulario/preview.html', $configurationDemo, TRUE) : '<h3 class="text-center mt-3">Formulario No disponible</h3>',
-            'mod_ap' => !empty($configurationAP) ? $this->load->view('formulario/preview.html', $configurationAP, TRUE) : '<h3 class="text-center mt-3">Formulario No disponible</h3>'
-        ], TRUE);
-        
-        $this->loadTemplate($data);
-    }*/
-
-    function newVisit($idPaciente = 0, $actionAD = ''){ 
+    function newVisit($idPaciente = 0){ 
 
         $patient = current( $this->view_service->searchByModel('viewModel', ['idPaciente' => $idPaciente], ['imprimirSQL' => 0], 'getPatients') );
 
@@ -385,10 +349,9 @@ class Patient extends MY_Controller {
             $configurationVisit['idPaciente'] = $idPaciente;
             $configurationVisit['context'] = $newVisit['clave'];
             $configurationVisit['flag'] = '1';
-            $configurationVisit['return'] = $actionAD;
+            $configurationVisit['return'] = 1;
             $configurationVisit['dataForm'] = ['nombre' => 'Visita ' . $numVisit . ': ' . $newVisit['nombre']];
             $configurationVisit['action'] = 'addAD';
-            $configurationVisit['actionAD'] = $actionAD;
         } else {
             $configurationVisit = array();
         }
@@ -425,7 +388,7 @@ class Patient extends MY_Controller {
             $configurationVisitEdit = array();
         }
         
-        $data['fileToLoad']  = ['patient/js/edit.js', 'formulario/js/preview.js'];
+        $data['fileToLoad']  = ['patient/js/add.js', 'formulario/js/preview.js'];
         $data['main_content']  = $this->load->view('patient/editForm.html', [
             'title' => 'Paciente: ' . $patient['nombre'] . ' ' . $patient['apellidos'],
             'editForm' => !empty($configurationVisitEdit) ? $this->load->view('formulario/preview.html', $configurationVisitEdit, TRUE) : '<h3 class="text-center mt-3">Formulario No disponible</h3>',
@@ -519,6 +482,7 @@ class Patient extends MY_Controller {
 
     function configurationEdit($idFormulario = '', $idPaciente = NULL, $idVisita = NULL) {
 
+		$user_data = $this->session->userdata();
         $configuracion = [];
         $restricciones = '';
 
@@ -536,6 +500,8 @@ class Patient extends MY_Controller {
             $options = $this->form_service->indexed_search_OptionForm(['idPreguntaOpcion','idPregunta'],['activo' => 1, 'borrado' => 0], ['orderBy' => 'posicion ASC', 'imprimirSQL' => 0]);
 
             $conditions = $this->form_service->indexed_search_conditionQuestion(['idPregunta'],['activo' => 1, 'borrado' => 0], ['imprimirSQL' => 0]);
+            
+            $rol_x_question = $this->form_service->indexed_search_rol_question(['idPregunta'],['borrado' => 0], ['imprimirSQL' => 0]);
 
             $questions_ids = implode(',', array_column($preguntas, 'idPregunta'));
 
@@ -634,8 +600,18 @@ class Patient extends MY_Controller {
 
                 } else {
                     $listaPreguntas[$pregunta['idPregunta']]['display'] = 'block';
-                }              
+                } 
+                
+                //Validar rol_x_pregunta
+                if( !empty($rol_x_question[$pregunta['idPregunta']]) ) {
+                    
+                    if( $rol_x_question[$pregunta['idPregunta']]['idRol'] !== $user_data['rol']['idRol'] )
+                        unset($listaPreguntas[$pregunta['idPregunta']]);
+                }
+
             }
+
+
 
             //$this->imprimir($listaPreguntas,1);            
             $configuracion['lista_preguntas'] = $listaPreguntas;
@@ -706,6 +682,9 @@ class Patient extends MY_Controller {
 
         $result = $this->patient_service->deleteResponsible($idRegistro, NULL, $reg);
 
+        if( $result['error'] == 0 )
+            $result['msg'] = 'El registro ha sido eliminado.';
+
         echo json_encode($result);  
 	}
 
@@ -715,6 +694,16 @@ class Patient extends MY_Controller {
 
         $result = $this->patient_service->deleteContact($idRegistro, NULL, $reg);
 
+        if( $result['error'] == 0 )
+            $result['msg'] = 'El registro ha sido eliminado.';
+
         echo json_encode($result);  
-	}    
+	}  
+    
+    function exportar_excel() {
+        
+        $data = $this->patient_service->exportar_excel();
+        
+        $this->imprimir($data,1);
+    }
 }

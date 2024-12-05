@@ -186,10 +186,8 @@ function sendResponse(idFormulario) {
                 success: function(resp){
 
                     msg(resp.error, resp.msg);
-                    if ( resp.idPaciente && resp.action == 2 )
+                    if (resp.action == 'addAD' || resp.action == 'editForm' )
                         window.location = URL_SITE + 'patient/add/'+ pantientIdGlobal + '/visit'
-                    else if ( resp.idPaciente && resp.action == 1 )
-                        window.location = URL_SITE + 'patient/edit/'+ pantientIdGlobal + '/visit'
 
                     if ( resp.idPaciente ) {
                         initTable(resp.idPaciente)
@@ -368,7 +366,7 @@ function initTable(idPaciente) {
                 var toggleClass = collapsed ? 'fa-minus-square' : 'fa-plus-square';
 
                     return $('<tr/>')
-                        .append('<td class="text-center">' + '<span class="fa fa-fw ' + toggleClass + ' toggler"/> ' + group + ' (' + rows.count() + ')</td>')
+                        .append('<td class="text-center">' + '<span class="fa fa-fw ' + toggleClass + ' toggler"/> ' + group + ' (Formularios: ' + rows.count() + ')</td>')
                         .attr('data-name', group)
                         .toggleClass('collapsed', collapsed)
                     
@@ -448,13 +446,13 @@ $(function () {
         $("#tblResponsable").DataTable().ajax.reload();
     });
 
-    $("#btnDirectionEdit").on('click', function(){
+    $("#btnNewVisit").on('click', function(){
 
         if( idPaciente != 0 )
             pantientIdGlobal = idPaciente
 
         if( pantientIdGlobal != 0 )
-            window.location = URL_SITE + 'patient/newVisit/' + pantientIdGlobal + '/2' 
+            window.location = URL_SITE + 'patient/newVisit/' + pantientIdGlobal 
     });   
 	
 });

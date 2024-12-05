@@ -43,6 +43,9 @@ class Respuesta_model extends MY_Model {
         if ( isset($filtros['idVisitaNull']) )
             $condicion[] = "idVisita IS NULL";
 
+        if ( isset($filtros['idVisitaIsNotNull']) )
+            $condicion[] = "idVisita IS NOT NULL";
+
         return parent::buscar($condicion, $extras);
     }
     

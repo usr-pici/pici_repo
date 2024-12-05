@@ -263,7 +263,10 @@ class View_model extends MY_Model {
                     r.idPreguntaOpcion,
                     po.opcion AS genero,
                     rClues.idPreguntaOpcion AS idClues,
-                    cc.nombre AS clues
+                    cc.nombre AS clues,
+                    poCivil.opcion AS estadoCivil,
+                    poRaza.opcion AS raza,
+                    IFNULL(rOcupacion.respuesta, IF(poOcupacion.opcion = "OTRO", rOcupacionOtro.respuesta, poOcupacion.opcion)) as ocupacion
                 ';        
 
         $sql = "
@@ -275,7 +278,15 @@ class View_model extends MY_Model {
                 ON (r.idPreguntaOpcion = po.idPreguntaOpcion) LEFT JOIN respuesta rClues
                 ON (rClues.idPaciente = patient.idPaciente AND rClues.idPregunta = (SELECT idPregunta FROM pregunta WHERE etiqueta = 'CLUES' )) LEFT JOIN pregunta_opcion poClues
                 ON (rClues.idPreguntaOpcion = poClues.idPreguntaOpcion) LEFT JOIN cat_clues cc
-                ON (cc.idClues = rClues.idPreguntaOpcion)
+                ON (cc.idClues = rClues.idPreguntaOpcion) LEFT JOIN respuesta rCivil
+                ON (rCivil.idPaciente = patient.idPaciente AND rCivil.idPregunta = (SELECT idPregunta FROM pregunta WHERE etiqueta = 'Estado Civil' )) LEFT JOIN pregunta_opcion poCivil
+                ON (rCivil.idPreguntaOpcion = poCivil.idPreguntaOpcion) LEFT JOIN respuesta rRaza
+                ON (rRaza.idPaciente = patient.idPaciente AND rRaza.idPregunta = (SELECT idPregunta FROM pregunta WHERE etiqueta = 'Raza' )) LEFT JOIN pregunta_opcion poRaza
+                ON (rRaza.idPreguntaOpcion = poRaza.idPreguntaOpcion) LEFT JOIN respuesta rOcupacion
+                ON (rOcupacion.idPaciente = patient.idPaciente AND rOcupacion.idPregunta = (SELECT idPregunta FROM pregunta WHERE etiqueta = 'Ocupación' )) LEFT JOIN pregunta_opcion poOcupacion
+                ON (rOcupacion.idPreguntaOpcion = poOcupacion.idPreguntaOpcion) LEFT JOIN respuesta rOcupacionOtro
+                ON (rOcupacionOtro.idPaciente = patient.idPaciente AND rOcupacionOtro.idPregunta = (SELECT idPregunta FROM pregunta WHERE etiqueta = 'Otra ocupación' ))
+                
             ";
 
         if ($condicion)
@@ -362,14 +373,15 @@ class View_model extends MY_Model {
         if ( isset($filtros['idPaciente']) )
             $condicion[] = "v.idPaciente = '{$filtros['idPaciente']}'";
 
-        $extras = ["groupBy" => 'v.idVisita, f.idFormulario'];
+        //$extras = ["groupBy" => 'v.idVisita, f.idFormulario'];
         $campos = !empty($extras['campos']) ? $extras['campos'] : "
                             v.idVisita,
                             v.idEstudioClues,
                             v.idPaciente,
                             v.numVisita AS visita,
                             f.idFormulario,
-                            f.nombre AS formulario
+                            f.nombre AS formulario,
+                            CONCAT(CONCAT('v',v.numVisita), '-', f.nombre) AS sheets
                             ";        
 
         $sql = "
