@@ -389,7 +389,7 @@ class View_model extends MY_Model {
                 FROM visita v INNER JOIN estudio_x_clues exc
                 ON (v.idEstudioClues = exc.idEstudioClues) INNER JOIN estudio e
                 ON (e.idEstudio = exc.idEstudio) INNER JOIN formulario_x_estudio fxe
-                ON (fxe.idEstudio = e.idEstudio) INNER JOIN formulario f
+                ON (fxe.idEstudio = e.idEstudio AND fxe.borrado = 0) INNER JOIN formulario f
                 ON (f.idFormulario = fxe.idFormulario) INNER JOIN paciente p
                 ON (p.idPaciente = v.idPaciente) LEFT JOIN respuesta resp
                 ON (resp.idPaciente = v.idPaciente AND v.idVisita = resp.idVisita AND f.idFormulario = resp.idFormulario)

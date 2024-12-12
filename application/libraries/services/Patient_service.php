@@ -305,64 +305,63 @@ class Patient_Service extends Class_Service {
             }
         }
 
-        $sheets = $this->searchByModel('viewModel', [], ['imprimirSQL' => 0, 'orderBy' => 'v.numVisita, f.idFormulario ASC', 'groupBy' => 'v.idEstudioClues, v.idVisita, f.idFormulario', 'campos' => ' DISTINCT(f.nombre) AS formulario, f.idFormulario, CONCAT(CONCAT("v",v.numVisita), "-", f.nombre) AS sheets'], 'getVisits');
-        //$dataVisits = $this->searchByModel('viewModel', [], ['imprimirSQL' => 0, 'orderBy' => 'f.idFormulario ASC', 'groupBy' => 'v.idVisita, f.idFormulario'], 'getVisits');
-        $dataVisits = $this->indexedSearchByModel(
-            'viewModel',
-            ['idPaciente', 'idVisita', 'idFormulario'],
-            [],
-            ['imprimirSQL' => 0, 'orderBy' => 'f.idFormulario, v.idVisita ASC', 'groupBy' => 'v.idVisita, f.idFormulario'],
-            FALSE,
-            'getVisits'
-        );
+        //$sheets = $this->searchByModel('viewModel', [], ['imprimirSQL' => 0, 'orderBy' => 'v.numVisita, f.idFormulario ASC', 'groupBy' => 'v.idEstudioClues, v.idVisita, f.idFormulario', 'campos' => ' DISTINCT(f.nombre) AS formulario, f.idFormulario, v.idVisita, v.idPaciente, CONCAT(CONCAT("v",v.numVisita), "-", f.nombre) AS sheets'], 'getVisits');
+        $sheets = $this->searchByModel('viewModel', [], ['imprimirSQL' => 0, 'orderBy' => 'v.numVisita, f.idFormulario ASC', 'groupBy' => 'v.idEstudioClues, v.idVisita, f.idFormulario', 'campos' => ' DISTINCT(f.nombre) AS formulario, f.idFormulario, v.idVisita, v.idPaciente, CONCAT(CONCAT("v",v.numVisita), "-", f.nombre) AS sheets'], 'getVisits');
+        //$this->CI->imprimir($sheets,1);
+        $formsByName=array();
+        foreach ($sheets as $k => $amigo) {
+            $edad=$amigo["sheets"];
+            unset($amigo['sheets']);
+            $formsByName[$edad][$amigo['idPaciente']] = $amigo;
+        }
 
         $contador = 2;
-        //$this->CI->imprimir($sheets,1);
-        foreach( $sheets as $s ) {
-            $responsesSheets = $this->indexed_search_response(['idFormulario', 'idPregunta', 'idVisita'],['idVisitaIsNotNull' => '1', 'borrado' => 0], ['imprimirSQL' => 0]);
-            //$this->CI->imprimir($responsesSheets,1);
+        foreach( $formsByName as $keyS=> $s ) {
+            
             $sheet = $objPHPExcel->createSheet();
-            $sheet->setTitle($s['sheets']);
+            $sheet->setTitle($keyS);
 
             $objPHPExcel->setActiveSheetIndex($contador);
             $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'ID Paciente');
             $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
-            $ultima_letra = chr(ord('B') + count($questions[$s['idFormulario']]) - 1);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:'.$ultima_letra.'1')->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:'.$ultima_letra.'1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:'.$ultima_letra.'1')->getFont()->setBold(true);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:'.$ultima_letra.'1')->applyFromArray(
-                array(
-                    'fill' => array(
-                        'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                        'color' => array('rgb' => '5fa322')
-                    )
-                )
-            );
-
+            
             $contadorForm = 1;
             if ( $patients ) {
                 foreach ( $patients as &$reg ) {
+
                     $contadorForm++;
-                    $objPHPExcel->getActiveSheet()->setCellValueExplicit("A{$contadorForm}", $reg['numPaciente'], PHPExcel_Cell_DataType::TYPE_STRING);
-
-                    $cont = 0;
-                    foreach( $questions[$s['idFormulario']] as $q ) {
-                        $letraForm = chr(ord('B') + $cont);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($letraForm.'1', $q['etiqueta']);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension($letraForm)->setAutoSize(true);
+                    if( !empty($s[$reg['idPaciente']]['idFormulario']) ) {
                         
-                        //$this->CI->imprimir($dataVisits[$reg['idPaciente']],1);
-                        foreach( $dataVisits[$reg['idPaciente']] as $visitId => $dv ) {
-
-                            //$this->CI->imprimir($responsesSheets[$dv[$s['idFormulario']]['idFormulario']][$q['idPregunta']][$dv[$s['idFormulario']]['idVisita']],1);
-                            $resp = !empty($responsesSheets[$dv[$s['idFormulario']]['idFormulario']][$q['idPregunta']][$dv[$s['idFormulario']]['idVisita']]) ? ( !empty(current($responsesSheets[$dv[$s['idFormulario']]['idFormulario']][$q['idPregunta']][$dv[$s['idFormulario']]['idVisita']])['respuesta'] ) ? current($responsesSheets[$dv[$s['idFormulario']]['idFormulario']][$q['idPregunta']][$dv[$s['idFormulario']]['idVisita']])['respuesta'] : ( !empty($optionsQuestion[current($responsesSheets[$dv[$s['idFormulario']]['idFormulario']][$q['idPregunta']][$dv[$s['idFormulario']]['idVisita']])['idPreguntaOpcion']]) ? $optionsQuestion[current($responsesSheets[$dv[$s['idFormulario']]['idFormulario']][$q['idPregunta']][$dv[$s['idFormulario']]['idVisita']])['idPreguntaOpcion']]['opcion'] : ''  )) : '';
+                        $ultima_letra = chr(ord('B') + count($questions[$s[$reg['idPaciente']]['idFormulario']]) - 1);
+                        $objPHPExcel->getActiveSheet()->getStyle('A1:'.$ultima_letra.'1')->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+                        $objPHPExcel->getActiveSheet()->getStyle('A1:'.$ultima_letra.'1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                        $objPHPExcel->getActiveSheet()->getStyle('A1:'.$ultima_letra.'1')->getFont()->setBold(true);
+                        $objPHPExcel->getActiveSheet()->getStyle('A1:'.$ultima_letra.'1')->applyFromArray(
+                            array(
+                                'fill' => array(
+                                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                    'color' => array('rgb' => '5fa322')
+                                )
+                            )
+                        );
+                        $responsesSheets = $this->indexed_search_response(['idPregunta'],['idFormulario' => $s[$reg['idPaciente']]['idFormulario'], 'idPaciente' => $reg['idPaciente'], 'idVisita' => $s[$reg['idPaciente']]['idVisita'], 'borrado' => 0], ['imprimirSQL' => 0]);
+                        $objPHPExcel->getActiveSheet()->setCellValueExplicit("A{$contadorForm}", $reg['numPaciente'], PHPExcel_Cell_DataType::TYPE_STRING);
+    
+                        $cont = 0;
+                        foreach( $questions[$s[$reg['idPaciente']]['idFormulario']] as $q ) {
+                            $letraForm = chr(ord('B') + $cont);
+                            $objPHPExcel->getActiveSheet()->SetCellValue($letraForm.'1', $q['etiqueta']);
+                            $objPHPExcel->getActiveSheet()->getColumnDimension($letraForm)->setAutoSize(true);
+                            
+                            $resp = !empty($responsesSheets[$q['idPregunta']]) ? ( !empty($responsesSheets[$q['idPregunta']]['respuesta'] ) ? $responsesSheets[$q['idPregunta']]['respuesta'] : ( !empty($optionsQuestion[$responsesSheets[$q['idPregunta']]['idPreguntaOpcion']]) ? $optionsQuestion[$responsesSheets[$q['idPregunta']]['idPreguntaOpcion']]['opcion'] : ''  )) : '';
                             $celda = $letraForm.$contadorForm;
-                            $objPHPExcel->getActiveSheet()->setCellValue($celda, $resp);
-                        }     
-                        
-                        $cont++;
-                    }
+                            $objPHPExcel->getActiveSheet()->setCellValue($celda, $resp);                       
+                                                    
+                            $cont++;
+                        }
+                    }  else {
+                        $objPHPExcel->getActiveSheet()->setCellValueExplicit("A{$contadorForm}", $reg['numPaciente'], PHPExcel_Cell_DataType::TYPE_STRING);
+                    }                  
                 }
 
             }
